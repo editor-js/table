@@ -1,0 +1,36 @@
+{
+  "name": "codex.editor.table",
+  "description": "Table for CodeX.Editor",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./dist/bundle.js",
+  "repository": "https://github.com/codex-editor/table",
+  "author": {
+    "name": "CodeX Team",
+    "email": "team@ifmo.su"
+  },
+  "keywords": [
+    "codex",
+    "codex-editor",
+    "table"
+  ],
+  "devDependencies": {
+    "autoprefixer": "^9.3.1",
+    "css-loader": "^1.0.0",
+    "cssnano": "^4.1.7",
+    "eslint": "^5.8.0",
+    "eslint-config-codex": "github:codex-team/eslint-config",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.0",
+    "postcss-nesting": "^7.0.0",
+    "style-loader": "^0.23.1",
+    "svg-inline-loader": "^0.8.0",
+    "webpack": "^4.21.0",
+    "webpack-cli": "^3.1.2"
+  },
+  "scripts": {
+    "build": "webpack --mode=development",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "dependencies": {}
+}
