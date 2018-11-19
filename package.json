@@ -29,7 +29,8 @@
     "webpack-cli": "^3.1.2"
   },
   "scripts": {
-    "build": "webpack --mode=development",
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
     "lint": "./node_modules/.bin/eslint"
   },
   "dependencies": {}
