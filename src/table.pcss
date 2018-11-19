@@ -1,0 +1,47 @@
+/* tc- project's prefix*/
+
+.tc-table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  &__wrap {
+    border: 1px solid #DBDBE2;
+    border-radius: 3px;
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__cell {
+    border: 1px solid #DBDBE2;
+    padding: 10px;
+    position: relative;
+  }
+
+  &__inp {
+    outline: none;
+    flex-grow: 100;
+    min-height: 1em;
+    height: 100%;
+    overflow: hidden;
+    line-height: 1em;
+  }
+
+  tbody tr:first-child td {
+    border-top: none;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr td:last-child {
+    border-right: none;
+  }
+
+  tbody tr td:first-child {
+    border-left: none;
+  }
+}
