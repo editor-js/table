@@ -94,8 +94,10 @@ export class TableConstructor {
     // value of config have to be positive number
     const configRows = !isNaN(parsedRows) && parsedRows > 0 ? parsedRows : undefined;
     const configCols = !isNaN(parsedCols) && parsedCols > 0 ? parsedCols : undefined;
-    const rows = configRows || contentRows || 1;
-    const cols = configCols || contentCols || 1;
+    const defaultRows = 2;
+    const defaultCols = 2;
+    const rows = configRows || contentRows || defaultRows;
+    const cols = configCols || contentCols || defaultCols;
 
     for (let i = 0; i < rows; i++) {
       this._table.addRow();
