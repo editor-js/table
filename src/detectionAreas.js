@@ -14,14 +14,14 @@ const CSS = {
 /**
  * Adds areas near borders of element, which throw event with kind of border when mouse is near the border
  * @param {HTMLElement} elem - the element
- * @param {boolean} isOutside - Determines which side of border to use, internal to the element or external
+ * @param {boolean} isInside - Determines which side of border to use, internal to the element or external
  */
-export function addDetectionAreas(elem, isOutside) {
-  const top = addArea(elem, (isOutside ? 'top' : 'bottom'), [CSS.horizontalArea, CSS.top]);
-  const left = addArea(elem, (isOutside ? 'left' : 'right'), [CSS.verticalArea, CSS.left]);
-  const right = addArea(elem, (isOutside ? 'right' : 'left'), [CSS.verticalArea, CSS.right]);
-  const bottom = addArea(elem, (isOutside ? 'bottom' : 'top'), [CSS.horizontalArea, CSS.bottom]);
-  if (!isOutside) {
+export function addDetectionAreas(elem, isInside) {
+  const top = addArea(elem, (isInside ? 'top' : 'bottom'), [CSS.horizontalArea, CSS.top]);
+  const left = addArea(elem, (isInside ? 'left' : 'right'), [CSS.verticalArea, CSS.left]);
+  const right = addArea(elem, (isInside ? 'right' : 'left'), [CSS.verticalArea, CSS.right]);
+  const bottom = addArea(elem, (isInside ? 'bottom' : 'top'), [CSS.horizontalArea, CSS.bottom]);
+  if (!isInside) {
     top.style.top = '-10px';
     left.style.left = '-10px';
     right.style.right = '-10px';
