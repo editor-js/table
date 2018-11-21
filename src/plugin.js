@@ -74,13 +74,19 @@ class Table {
       const tmp = [];
       const cols = row.cells;
       const width = cols.length;
+      let emptyCells = 0;
 
       for (let j = 0; j < width; j++) {
         const cell = cols[j];
-
+        const html = cell.querySelector('.' + CSS.input).innerHTML;
         tmp.push(cell.querySelector('.' + CSS.input).innerHTML);
+        if (html.trim() === '') {
+          emptyCells++;
+        }
       }
-      data.push(tmp);
+      if (emptyCells !== width) {
+        data.push(tmp);
+      }
     }
 
     return {
