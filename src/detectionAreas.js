@@ -17,10 +17,16 @@ const CSS = {
  * @param {boolean} isOutside - Determines which side of border to use, internal to the element or external
  */
 export function addDetectionAreas(elem, isOutside) {
-  addArea(elem, (isOutside ? 'top' : 'bottom'), [CSS.horizontalArea, CSS.top]);
-  addArea(elem, (isOutside ? 'left' : 'right'), [CSS.verticalArea, CSS.left]);
-  addArea(elem, (isOutside ? 'right' : 'left'), [CSS.verticalArea, CSS.right]);
-  addArea(elem, (isOutside ? 'bottom' : 'top'), [CSS.horizontalArea, CSS.bottom]);
+  const top = addArea(elem, (isOutside ? 'top' : 'bottom'), [CSS.horizontalArea, CSS.top]);
+  const left = addArea(elem, (isOutside ? 'left' : 'right'), [CSS.verticalArea, CSS.left]);
+  const right = addArea(elem, (isOutside ? 'right' : 'left'), [CSS.verticalArea, CSS.right]);
+  const bottom = addArea(elem, (isOutside ? 'bottom' : 'top'), [CSS.horizontalArea, CSS.bottom]);
+  if (!isOutside) {
+    top.style.top = '-10px';
+    left.style.left = '-10px';
+    right.style.right = '-12px';
+    bottom.style.bottom = '-10px';
+  }
 }
 
 /**
@@ -28,11 +34,13 @@ export function addDetectionAreas(elem, isOutside) {
  * @param {HTMLElement} elem - the element
  * @param {string} side - hind of border (left, top, bottom, right)
  * @param {string[]} styles - additional styles
+ * @return {HTMLElement} - Area
  */
 function addArea(elem, side, styles) {
   const area = createArea(side, styles);
 
   elem.appendChild(area);
+  return area;
 }
 
 /**
