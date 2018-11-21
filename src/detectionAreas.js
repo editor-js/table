@@ -24,7 +24,7 @@ export function addDetectionAreas(elem, isOutside) {
   if (!isOutside) {
     top.style.top = '-10px';
     left.style.left = '-10px';
-    right.style.right = '-12px';
+    right.style.right = '-10px';
     bottom.style.bottom = '-10px';
   }
 }
