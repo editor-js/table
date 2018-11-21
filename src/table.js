@@ -1,5 +1,5 @@
 import {create} from './documentUtils';
-import {addDetectionAreas} from './DetectionAreas';
+import {addDetectionAreas} from './detectionAreas';
 import './table.pcss';
 
 const CSS = {

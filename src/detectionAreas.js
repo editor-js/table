@@ -1,5 +1,5 @@
 import {create} from './documentUtils';
-import './DetectionAreas.pcss';
+import './detectionAreas.pcss';
 
 const CSS = {
   mainContainer: 'tc-det-areas',

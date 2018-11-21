@@ -1,6 +1,6 @@
 import './tableConstructor.pcss';
 import {create, getCoords} from './documentUtils';
-import {addDetectionAreas} from './DetectionAreas';
+import {addDetectionAreas} from './detectionAreas';
 import {HorizontalBorderToolBar, VerticalBorderToolBar} from './borderToolBar';
 import {Table} from './table';
 
