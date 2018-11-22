@@ -79,7 +79,7 @@ class Table {
       for (let j = 0; j < width; j++) {
         const cell = cols[j];
         const html = cell.querySelector('.' + CSS.input).innerHTML;
-        tmp.push(cell.querySelector('.' + CSS.input).innerHTML);
+        tmp.push(html);
         if (html.trim() === '') {
           emptyCells++;
         }
