@@ -71,17 +71,15 @@ class Table {
 
     for (let i = 0; i < height; i++) {
       const row = rows[i];
-      const tmp = [];
-      let cols = row.cells;
+      const cols = Array.from(row.cells);
       const width = cols.length;
+      const inputs = cols.map(cell => cell.querySelector('.' + CSS.input));
+      const isWorthless = inputs.every(input => !input.textContent.trim());
 
-      cols = Array.from(cols).map(cell => cell.querySelector('.' + CSS.input));
-      const isWorthless = cols.every(cell => !Boolean(cell.textContent.trim()));
-
-      if (!isWorthless) {
-        cols.map(cell => tmp.push(cell.innerHTML));
-        data.push(tmp);
+      if (isWorthless) {
+        continue;
       }
+      data.push(cols.map(cell => cell.innerHTML));
     }
 
     return {
