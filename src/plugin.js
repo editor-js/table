@@ -77,7 +77,6 @@ class Table {
 
       cols = Array.from(cols).map(cell => cell.querySelector('.' + CSS.input));
       const isWorthless = cols.every(cell => !Boolean(cell.textContent.trim()));
-      console.log(isWorthless);
 
       if (!isWorthless) {
         cols.map(cell => tmp.push(cell.innerHTML));
