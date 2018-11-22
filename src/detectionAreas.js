@@ -21,6 +21,8 @@ export function addDetectionAreas(elem, isInside) {
   const left = addArea(elem, (isInside ? 'left' : 'right'), [CSS.verticalArea, CSS.left]);
   const right = addArea(elem, (isInside ? 'right' : 'left'), [CSS.verticalArea, CSS.right]);
   const bottom = addArea(elem, (isInside ? 'bottom' : 'top'), [CSS.horizontalArea, CSS.bottom]);
+
+  /** Reset areas outside of the borders*/
   if (!isInside) {
     top.style.top = '-10px';
     left.style.left = '-10px';
