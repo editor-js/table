@@ -72,19 +72,15 @@ class Table {
     for (let i = 0; i < height; i++) {
       const row = rows[i];
       const tmp = [];
-      const cols = row.cells;
+      let cols = row.cells;
       const width = cols.length;
-      let emptyCells = 0;
 
-      for (let j = 0; j < width; j++) {
-        const cell = cols[j];
-        const html = cell.querySelector('.' + CSS.input).innerHTML;
-        tmp.push(html);
-        if (html.trim() === '') {
-          emptyCells++;
-        }
-      }
-      if (emptyCells !== width) {
+      cols = Array.from(cols).map(cell => cell.querySelector('.' + CSS.input));
+      const isWorthless = cols.every(cell => !Boolean(cell.textContent.trim()));
+      console.log(isWorthless);
+
+      if (!isWorthless) {
+        cols.map(cell => tmp.push(cell.innerHTML));
         data.push(tmp);
       }
     }
