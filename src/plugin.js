@@ -67,20 +67,17 @@ class Table {
     const table = toolsContent.querySelector('table');
     const data = [];
     const rows = table.rows;
-    const height = rows.length;
 
-    for (let i = 0; i < height; i++) {
+    for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      const tmp = [];
-      const cols = row.cells;
-      const width = cols.length;
+      const cols = Array.from(row.cells);
+      const inputs = cols.map(cell => cell.querySelector('.' + CSS.input));
+      const isWorthless = inputs.every(input => !input.textContent.trim());
 
-      for (let j = 0; j < width; j++) {
-        const cell = cols[j];
-
-        tmp.push(cell.querySelector('.' + CSS.input).innerHTML);
+      if (isWorthless) {
+        continue;
       }
-      data.push(tmp);
+      data.push(cols.map(cell => cell.innerHTML));
     }
 
     return {
