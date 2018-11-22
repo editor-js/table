@@ -1,6 +1,6 @@
 import './tableConstructor.pcss';
 import {create, getCoords} from './documentUtils';
-import {addDetectionAreas} from './detectionAreas';
+import {addDetectionOutsideAreas} from './detectionAreas';
 import {HorizontalBorderToolBar, VerticalBorderToolBar} from './borderToolBar';
 import {Table} from './table';
 
@@ -29,7 +29,7 @@ export class TableConstructor {
 
     /** creating container around table */
     this._container = create('div', [ CSS.editor ], null, [ this._table.htmlElement ]);
-    addDetectionAreas(this._container, false);
+    addDetectionOutsideAreas(this._container);
 
     /** creating ToolBars */
     this._verticalToolBar = new VerticalBorderToolBar();
