@@ -52,10 +52,10 @@ var editor = CodexEditor({
 
 ## Config Params
 
-| Field              | Type     | Description                 |
-| ------------------ | -------- | --------------------------- |
-| rows               | `number` | initial number of rows      |
-| cols               | `number` | initial number of columns   |
+| Field              | Type     | Description                              |
+| ------------------ | -------- | ---------------------------------------- |
+| rows               | `number` | initial number of rows. by default `2`   |
+| cols               | `number` | initial number of columns. by default `2`|
 
 ## Output data
 This Tool returns `data` with following format
