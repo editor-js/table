@@ -6,8 +6,8 @@ Table Block for the [CodeX Editor](https://ifmo.su/editor).
 
 ## Installation
 
-### Download to your project's source dir
-1. Upload folder `dist` from repository
+### Upload to your project's source dir
+1. Download folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
 
 ## Usage
