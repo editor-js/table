@@ -28,7 +28,7 @@ export class TableConstructor {
     this._fillTable(data, size);
 
     /** creating container around table */
-    this._container = create('div', [ CSS.editor ], null, [ this._table.htmlElement ]);
+    this._container = create('div', [CSS.editor], null, [this._table.htmlElement]);
     addDetectionOutsideAreas(this._container);
 
     /** creating ToolBars */
@@ -158,6 +158,22 @@ export class TableConstructor {
     this._container.addEventListener('mouseleave', () => {
       this._hideToolBar();
     });
+
+    this._container.addEventListener('mousedown', (event) => {
+      this._preventElementSelection(event);
+    });
+  }
+
+  /**
+   * Removes the possibility of selection is not a text node
+   * @param {MouseEvent} event
+   * @private
+   */
+  _preventElementSelection(event) {
+    if (event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    event.preventDefault();
   }
 
   /**
@@ -253,10 +269,10 @@ export class TableConstructor {
   }
 
   /**
-     * Check if the addition is initiated by the container and which side
-     * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
-     * @private
-     */
+   * Check if the addition is initiated by the container and which side
+   * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
+   * @private
+   */
   _getHoveredSideOfContainer() {
     if (this._hoveredCell === this._container) {
       return this._isBottomOrRight() ? 0 : -1;
@@ -265,10 +281,10 @@ export class TableConstructor {
   }
 
   /**
-     * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
-     * @returns {boolean}
-     * @private
-     */
+   * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
+   * @returns {boolean}
+   * @private
+   */
   _isBottomOrRight() {
     return this._hoveredCellSide === 'bottom' || this._hoveredCellSide === 'right';
   }
