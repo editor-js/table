@@ -1,5 +1,5 @@
 import {create} from './documentUtils';
-import {addDetectionAreas} from './DetectionAreas';
+import {addDetectionInsideAreas} from './detectionAreas';
 import './table.pcss';
 
 const CSS = {
@@ -118,7 +118,7 @@ export class Table {
     const content = this._createContenteditableArea(cell);
 
     cell.appendChild(content);
-    addDetectionAreas(cell, true);
+    addDetectionInsideAreas(cell);
 
     cell.addEventListener('click', () => {
       content.focus();
