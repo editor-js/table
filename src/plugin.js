@@ -72,7 +72,7 @@ class Table {
       const row = rows[i];
       const cols = Array.from(row.cells);
       const inputs = cols.map(cell => cell.querySelector('.' + CSS.input));
-      const isWorthless = inputs.every(input => !input.textContent.trim());
+      const isWorthless = inputs.every(this._isEmpty);
 
       if (isWorthless) {
         continue;
@@ -83,6 +83,16 @@ class Table {
     return {
       content: data
     };
+  }
+
+  /**
+   * Check input field is empty
+   * @param {HTMLElement} input - input field
+   * @return {boolean}
+   * @private
+   */
+  _isEmpty(input) {
+    return !input.textContent.trim();
   }
 }
 
