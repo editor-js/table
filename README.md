@@ -2,7 +2,7 @@
 
 # Table tool
 Table Block for the [CodeX Editor](https://ifmo.su/editor).
-![](https://capella.pics/d722e344-df91-40d1-8da6-4d57b42eecad.jpg)
+![](https://capella.pics/870d30f0-ef73-423e-b56c-bb4f98e36e73.jpg)
 
 ## Installation
 
@@ -68,7 +68,7 @@ This Tool returns `data` with following format
 {
     "type" : "table",
     "data" : {
-        "content" : [ ["item#1", "itrm#3"], ["item#2", "item#4"] ]
+        "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
     }
 }
 ```
