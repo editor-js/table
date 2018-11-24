@@ -133,7 +133,7 @@ export class Table {
       if (!event.target.classList.contains(CSS.inputField)) {
         return;
       }
-      this._selectedCell = event.target.closest(CSS.cell);
+      this._selectedCell = event.target.closest('.' + CSS.cell);
     }, true);
 
     this._table.addEventListener('blur', () => {

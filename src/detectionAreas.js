@@ -55,8 +55,18 @@ function addArea(elem, side, styles) {
  * @return {HTMLElement} - the area html element
  * @private
  */
-function createArea(side, style) {
+function createArea(side, style, isDelegated) {
   const area = create('div', style);
   area.side = side;
+  if (!isDelegated) {
+    area.addEventListener('mouseenter', (event) => {
+      area.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
+        'detail': {
+          'side': event.target.side
+        },
+        'bubbles': true
+      }));
+    });
+  }
   return area;
 }
