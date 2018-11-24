@@ -141,7 +141,7 @@ export class Table {
       this._pressedEnterInEditField(event);
     });
 
-    this._table.addEventListener('click', () => {
+    this._table.addEventListener('click', (event) => {
       this._clickedOnCell(event);
     });
 
@@ -150,6 +150,11 @@ export class Table {
     }, true);
   }
 
+  /**
+   * When you focus on an editable field, remembers the cell
+   * @param {FocusEvent} event
+   * @private
+   */
   _focusEditField(event) {
     if (!event.target.classList.contains(CSS.inputField)) {
       return;
@@ -157,13 +162,24 @@ export class Table {
     this._selectedCell = event.target.closest('.' + CSS.cell);
   }
 
+  /**
+   * When you blur on an editable field, remembers the cell
+   * @param {FocusEvent} event
+   * @private
+   */
   _blurEditField(event) {
+    console.log(event);
     if (!event.target.classList.contains(CSS.inputField)) {
       return;
     }
     this._selectedCell = null;
   }
 
+  /**
+   * When enter is pressed when editing a field
+   * @param {KeyboardEvent} event
+   * @private
+   */
   _pressedEnterInEditField(event) {
     if (!event.target.classList.contains(CSS.inputField)) {
       return;
@@ -173,6 +189,11 @@ export class Table {
     }
   }
 
+  /**
+   * When clicking on a cell
+   * @param {MouseEvent} event
+   * @private
+   */
   _clickedOnCell(event) {
     if (!event.target.classList.contains(CSS.cell)) {
       return;
@@ -181,6 +202,11 @@ export class Table {
     content.focus();
   }
 
+  /**
+   * When the mouse enters the detection area
+   * @param {MouseEvent} event
+   * @private
+   */
   _mouseEnterInDetectArea(event) {
     if (!(event.target.classList.contains(CSS.horizontalArea) || event.target.classList.contains(CSS.verticalArea))) {
       return;
