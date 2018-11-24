@@ -57,14 +57,6 @@ function addArea(elem, side, styles) {
  */
 function createArea(side, style) {
   const area = create('div', style);
-
-  area.addEventListener('mouseenter', () => {
-    area.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
-      'detail': {
-        'side': side
-      },
-      'bubbles': true
-    }));
-  });
+  area.side = side;
   return area;
 }

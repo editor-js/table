@@ -6,7 +6,9 @@ const CSS = {
   table: 'tc-table',
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
-  wrapper: 'tc-table__wrap'
+  wrapper: 'tc-table__wrap',
+  horizontalArea: 'tc-det-areas__hor-area',
+  verticalArea: 'tc-det-areas__ver-area',
 };
 
 /**
@@ -21,6 +23,8 @@ export class Table {
     this._numberOfRows = 0;
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector('table');
+
+    this._hangEvents();
   }
 
   /**
@@ -82,30 +86,16 @@ export class Table {
    * @private
    */
   _createTableWrapper() {
-    return create('div', [ CSS.wrapper ], null, [ create('table', [ CSS.table ]) ]);
+    return create('div', [CSS.wrapper], null, [create('table', [CSS.table])]);
   }
 
   /**
    * Create editable area of cell
-   * @param {HTMLElement} cell - cell for which area is created
    * @return {HTMLElement} - the area
    * @private
    */
-  _createContenteditableArea(cell) {
-    const div = create('div', [ CSS.inputField ], {contenteditable: 'true'});
-
-    div.addEventListener('keydown', (event) => {
-      if (event.keyCode === 13 && !event.shiftKey) {
-        event.preventDefault();
-      }
-    });
-    div.addEventListener('focus', () => {
-      this._selectedCell = cell;
-    });
-    div.addEventListener('blur', () => {
-      this._selectedCell = null;
-    });
-    return div;
+  _createContenteditableArea() {
+    return create('div', [CSS.inputField], {contenteditable: 'true'});
   }
 
   /**
@@ -115,14 +105,10 @@ export class Table {
    */
   _fillCell(cell) {
     cell.classList.add(CSS.cell);
-    const content = this._createContenteditableArea(cell);
+    const content = this._createContenteditableArea();
 
     cell.appendChild(content);
     addDetectionInsideAreas(cell);
-
-    cell.addEventListener('click', () => {
-      content.focus();
-    });
   }
 
   /**
@@ -136,5 +122,54 @@ export class Table {
 
       this._fillCell(cell);
     }
+  }
+
+  /**
+   * hang necessary events
+   * @private
+   */
+  _hangEvents() {
+    this._table.addEventListener('focus', (event) => {
+      if (!event.target.classList.contains(CSS.inputField)) {
+        return;
+      }
+      this._selectedCell = event.target.closest(CSS.cell);
+    }, true);
+
+    this._table.addEventListener('blur', () => {
+      if (!event.target.classList.contains(CSS.inputField)) {
+        return;
+      }
+      this._selectedCell = null;
+    }, true);
+
+    this._table.addEventListener('keydown', (event) => {
+      if (!event.target.classList.contains(CSS.inputField)) {
+        return;
+      }
+      if (event.keyCode === 13 && !event.shiftKey) {
+        event.preventDefault();
+      }
+    });
+
+    this._table.addEventListener('click', () => {
+      if (!event.target.classList.contains(CSS.cell)) {
+        return;
+      }
+      const content = event.target.querySelector('.' + CSS.inputField);
+      content.focus();
+    });
+
+    this._table.addEventListener('mouseenter', (event) => {
+      if (!(event.target.classList.contains(CSS.horizontalArea) || event.target.classList.contains(CSS.verticalArea))) {
+        return;
+      }
+      event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
+        'detail': {
+          'side': event.target.side
+        },
+        'bubbles': true
+      }));
+    }, true);
   }
 }
