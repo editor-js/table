@@ -38,6 +38,15 @@ class Table {
   }
 
   /**
+   * Empty Table is not empty Block
+   * @public
+   * @returns {boolean}
+   */
+  static get contentless() {
+    return true;
+  }
+
+  /**
    * Render plugin`s main Element and fill it with saved data
    * @param {TableData} data — previously saved data
    * @param {object} config - user config for Tool
