@@ -1,6 +1,6 @@
 import {create} from './documentUtils';
 import {addDetectionInsideAreas} from './detectionAreas';
-import './table.pcss';
+import './styles/table.pcss';
 
 const CSS = {
   table: 'tc-table',
