@@ -52,6 +52,7 @@ function addArea(elem, side, styles) {
  * Creates area that detects mouse enter
  * @param {string} side - where area is (top, bottom, left, right)
  * @param {string[]} style - additional styles
+ * @param {boolean} isDelegated - true if the event is delegated by an parent
  * @return {HTMLElement} - the area html element
  * @private
  */

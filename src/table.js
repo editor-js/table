@@ -130,46 +130,66 @@ export class Table {
    */
   _hangEvents() {
     this._table.addEventListener('focus', (event) => {
-      if (!event.target.classList.contains(CSS.inputField)) {
-        return;
-      }
-      this._selectedCell = event.target.closest('.' + CSS.cell);
+      this._focusEditField(event);
     }, true);
 
-    this._table.addEventListener('blur', () => {
-      if (!event.target.classList.contains(CSS.inputField)) {
-        return;
-      }
-      this._selectedCell = null;
+    this._table.addEventListener('blur', (event) => {
+      this._blurEditField(event);
     }, true);
 
     this._table.addEventListener('keydown', (event) => {
-      if (!event.target.classList.contains(CSS.inputField)) {
-        return;
-      }
-      if (event.keyCode === 13 && !event.shiftKey) {
-        event.preventDefault();
-      }
+      this._pressedEnterInEditField(event);
     });
 
     this._table.addEventListener('click', () => {
-      if (!event.target.classList.contains(CSS.cell)) {
-        return;
-      }
-      const content = event.target.querySelector('.' + CSS.inputField);
-      content.focus();
+      this._clickedOnCell(event);
     });
 
     this._table.addEventListener('mouseenter', (event) => {
-      if (!(event.target.classList.contains(CSS.horizontalArea) || event.target.classList.contains(CSS.verticalArea))) {
-        return;
-      }
-      event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
-        'detail': {
-          'side': event.target.side
-        },
-        'bubbles': true
-      }));
+      this._mouseEnterInDetectArea(event);
     }, true);
+  }
+
+  _focusEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    this._selectedCell = event.target.closest('.' + CSS.cell);
+  }
+
+  _blurEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    this._selectedCell = null;
+  }
+
+  _pressedEnterInEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    if (event.keyCode === 13 && !event.shiftKey) {
+      event.preventDefault();
+    }
+  }
+
+  _clickedOnCell(event) {
+    if (!event.target.classList.contains(CSS.cell)) {
+      return;
+    }
+    const content = event.target.querySelector('.' + CSS.inputField);
+    content.focus();
+  }
+
+  _mouseEnterInDetectArea(event) {
+    if (!(event.target.classList.contains(CSS.horizontalArea) || event.target.classList.contains(CSS.verticalArea))) {
+      return;
+    }
+    event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
+      'detail': {
+        'side': event.target.side
+      },
+      'bubbles': true
+    }));
   }
 }
