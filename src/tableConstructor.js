@@ -160,6 +160,22 @@ export class TableConstructor {
     this._container.addEventListener('mouseenter', (event) => {
       this._mouseEnterInDetectArea(event);
     });
+
+    this._container.addEventListener('mousedown', (event) => {
+      this._preventElementSelection(event);
+    });
+  }
+
+  /**
+   * Removes the possibility of selection is not a text node
+   * @param {MouseEvent} event
+   * @private
+   */
+  _preventElementSelection(event) {
+    if (event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    event.preventDefault();
   }
 
   /**
