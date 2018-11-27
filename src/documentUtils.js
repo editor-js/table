@@ -50,10 +50,10 @@ export function getCoords(elem) {
   const rect = elem.getBoundingClientRect();
 
   return {
-    y1: rect.top + window.pageYOffset,
-    x1: rect.left + window.pageXOffset,
-    x2: rect.right + window.pageXOffset,
-    y2: rect.bottom + window.pageYOffset
+    y1: Math.floor(rect.top + window.pageYOffset),
+    x1: Math.floor(rect.left + window.pageXOffset),
+    x2: Math.floor(rect.right + window.pageXOffset),
+    y2: Math.floor(rect.bottom + window.pageYOffset)
   };
 }
 

@@ -175,7 +175,7 @@ export class TableConstructor {
     this._hoveredCell = event.target.closest('TD');
 
     if (this._hoveredCell === null) {
-      const paddingContainer = 10;
+      const paddingContainer = 11;
       this._hoveredCell = this._container;
       areaCoords.x1 += paddingContainer;
       areaCoords.y1 += paddingContainer;
