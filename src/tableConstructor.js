@@ -1,4 +1,4 @@
-import './tableConstructor.pcss';
+import './styles/table-constructor.pcss';
 import {create, getCoords, getSideByCoords} from './documentUtils';
 import {HorizontalBorderToolBar, VerticalBorderToolBar} from './borderToolBar';
 import {Table} from './table';

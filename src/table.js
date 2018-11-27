@@ -1,5 +1,5 @@
 import {create, getCoords, getSideByCoords} from './documentUtils';
-import './table.pcss';
+import './styles/table.pcss';
 
 const CSS = {
   table: 'tc-table',
