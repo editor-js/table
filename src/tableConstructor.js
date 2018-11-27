@@ -18,8 +18,9 @@ export class TableConstructor {
    * Creates
    * @param {TableData} data - previously saved data for insert in table
    * @param {object} config - configuration of table
+   * @param {object} api - CodeX Editor API
    */
-  constructor(data, config) {
+  constructor(data, config, api) {
     /** creating table */
     this._table = new Table();
     const size = this._resizeTable(data, config);
@@ -27,7 +28,7 @@ export class TableConstructor {
     this._fillTable(data, size);
 
     /** creating container around table */
-    this._container = create('div', [CSS.editor], null, [this._table.htmlElement]);
+    this._container = create('div', [CSS.editor, api.styles.block], null, [this._table.htmlElement]);
 
     /** creating ToolBars */
     this._verticalToolBar = new VerticalBorderToolBar();
