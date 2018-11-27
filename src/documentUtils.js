@@ -56,3 +56,29 @@ export function getCoords(elem) {
     y2: rect.bottom + window.pageYOffset
   };
 }
+
+/**
+ * Recognizes the side of the containe where (x,y)  is closer
+ * @param {{x1: number, y1: number, x2: number, y2: number}} coords - coords of container
+ * @param x - x coord
+ * @param y - y coord
+ * @return {string}
+ */
+export function getSideByCoords(coords, x, y) {
+  let side;
+
+  if (x - coords.x1 >= -1 && x - coords.x1 <= 11) {
+    side = 'left';
+  }
+  if (coords.x2 - x >= -1 && coords.x2 - x <= 11) {
+    side = 'right';
+  }
+  if (y - coords.y1 >= -1 && y - coords.y1 <= 11) {
+    side = 'top';
+  }
+  if (coords.y2 - y >= -1 && coords.y2 - y <= 11) {
+    side = 'bottom';
+  }
+
+  return side;
+}

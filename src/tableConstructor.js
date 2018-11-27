@@ -1,6 +1,5 @@
 import './tableConstructor.pcss';
-import {create, getCoords} from './documentUtils';
-import {addDetectionOutsideAreas} from './detectionAreas';
+import {create, getCoords, getSideByCoords} from './documentUtils';
 import {HorizontalBorderToolBar, VerticalBorderToolBar} from './borderToolBar';
 import {Table} from './table';
 
@@ -28,8 +27,7 @@ export class TableConstructor {
     this._fillTable(data, size);
 
     /** creating container around table */
-    this._container = create('div', [ CSS.editor ], null, [ this._table.htmlElement ]);
-    addDetectionOutsideAreas(this._container);
+    this._container = create('div', [CSS.editor], null, [this._table.htmlElement]);
 
     /** creating ToolBars */
     this._verticalToolBar = new VerticalBorderToolBar();
@@ -158,6 +156,10 @@ export class TableConstructor {
     this._container.addEventListener('mouseleave', () => {
       this._hideToolBar();
     });
+
+    this._container.addEventListener('mouseenter', (event) => {
+      this._mouseEnterInDetectArea(event);
+    });
   }
 
   /**
@@ -171,8 +173,14 @@ export class TableConstructor {
     const containerCoords = getCoords(this._table.htmlElement);
 
     this._hoveredCell = event.target.closest('TD');
+
     if (this._hoveredCell === null) {
+      const paddingContainer = 10;
       this._hoveredCell = this._container;
+      areaCoords.x1 += paddingContainer;
+      areaCoords.y1 += paddingContainer;
+      areaCoords.x2 -= paddingContainer;
+      areaCoords.y2 -= paddingContainer;
     }
 
     if (this._hoveredCellSide === 'top') {
@@ -253,10 +261,10 @@ export class TableConstructor {
   }
 
   /**
-     * Check if the addition is initiated by the container and which side
-     * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
-     * @private
-     */
+   * Check if the addition is initiated by the container and which side
+   * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
+   * @private
+   */
   _getHoveredSideOfContainer() {
     if (this._hoveredCell === this._container) {
       return this._isBottomOrRight() ? 0 : -1;
@@ -265,10 +273,10 @@ export class TableConstructor {
   }
 
   /**
-     * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
-     * @returns {boolean}
-     * @private
-     */
+   * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
+   * @returns {boolean}
+   * @private
+   */
   _isBottomOrRight() {
     return this._hoveredCellSide === 'bottom' || this._hoveredCellSide === 'right';
   }
@@ -324,5 +332,22 @@ export class TableConstructor {
     const newstr = this._table.addRow(index);
 
     newstr.cells[0].click();
+  }
+
+  /**
+   * When the mouse enters the detection area
+   * @param {MouseEvent} event
+   * @private
+   */
+  _mouseEnterInDetectArea(event) {
+    const coords = getCoords(this._container);
+    let side = getSideByCoords(coords, event.pageX, event.pageY);
+
+    event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
+      'detail': {
+        'side': side
+      },
+      'bubbles': true
+    }));
   }
 }

@@ -1,5 +1,4 @@
-import {create} from './documentUtils';
-import {addDetectionInsideAreas} from './detectionAreas';
+import {create, getCoords, getSideByCoords} from './documentUtils';
 import './table.pcss';
 
 const CSS = {
@@ -7,8 +6,7 @@ const CSS = {
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
   wrapper: 'tc-table__wrap',
-  horizontalArea: 'tc-det-areas__hor-area',
-  verticalArea: 'tc-det-areas__ver-area',
+  area: 'tc-table__area',
 };
 
 /**
@@ -107,8 +105,7 @@ export class Table {
     cell.classList.add(CSS.cell);
     const content = this._createContenteditableArea();
 
-    cell.appendChild(content);
-    addDetectionInsideAreas(cell);
+    cell.appendChild(create('div', [CSS.area], null, [content]));
   }
 
   /**
@@ -145,7 +142,7 @@ export class Table {
       this._clickedOnCell(event);
     });
 
-    this._table.addEventListener('mouseenter', (event) => {
+    this._table.addEventListener('mouseover', (event) => {
       this._mouseEnterInDetectArea(event);
     }, true);
   }
@@ -168,7 +165,6 @@ export class Table {
    * @private
    */
   _blurEditField(event) {
-    console.log(event);
     if (!event.target.classList.contains(CSS.inputField)) {
       return;
     }
@@ -208,12 +204,16 @@ export class Table {
    * @private
    */
   _mouseEnterInDetectArea(event) {
-    if (!(event.target.classList.contains(CSS.horizontalArea) || event.target.classList.contains(CSS.verticalArea))) {
+    if (!event.target.classList.contains(CSS.area)) {
       return;
     }
+
+    const coordsCell = getCoords(event.target.closest('TD'));
+    const side = getSideByCoords(coordsCell, event.pageX, event.pageY);
+
     event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
       'detail': {
-        'side': event.target.side
+        'side': side
       },
       'bubbles': true
     }));
