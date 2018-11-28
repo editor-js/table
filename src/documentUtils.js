@@ -66,17 +66,20 @@ export function getCoords(elem) {
  */
 export function getSideByCoords(coords, x, y) {
   let side;
+  const sizeArea = 10;
 
-  if (x - coords.x1 >= -1 && x - coords.x1 <= 11) {
+  // a point is close to the boundary if the distance between them is less than the allowed distance.
+  // +1px on each side due to fractional pixels
+  if (x - coords.x1 >= -1 && x - coords.x1 <= sizeArea + 1) {
     side = 'left';
   }
-  if (coords.x2 - x >= -1 && coords.x2 - x <= 11) {
+  if (coords.x2 - x >= -1 && coords.x2 - x <= sizeArea + 1) {
     side = 'right';
   }
-  if (y - coords.y1 >= -1 && y - coords.y1 <= 11) {
+  if (y - coords.y1 >= -1 && y - coords.y1 <= sizeArea + 1) {
     side = 'top';
   }
-  if (coords.y2 - y >= -1 && coords.y2 - y <= 11) {
+  if (coords.y2 - y >= -1 && coords.y2 - y <= sizeArea + 1) {
     side = 'bottom';
   }
 
