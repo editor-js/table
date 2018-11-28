@@ -100,17 +100,26 @@ class BorderToolBar {
     const bar = create('div', [CSS.hidden], null, children);
 
     bar.addEventListener('mouseleave', (event) => {
-        this.hide();
-        const area = document.elementFromPoint(event.pageX, event.pageY);
-
-        if (area !== null && area.classList.contains(CSS.area)) {
-          const e = new MouseEvent('mouseover', {clientX: event.pageX, clientY: event.pageY});
-          area.dispatchEvent(e);
-        }
+        this._recalcMousePos(event);
       }
     );
 
     return bar;
+  }
+
+  /**
+   * Recalc mouse position when the mouse left toolbar
+   * @param {MouseEvent} event
+   * @private
+   */
+  _recalcMousePos(event) {
+    this.hide();
+    const area = document.elementFromPoint(event.pageX, event.pageY);
+
+    if (area !== null && area.classList.contains(CSS.area)) {
+      const e = new MouseEvent('mouseover', {clientX: event.pageX, clientY: event.pageY});
+      area.dispatchEvent(e);
+    }
   }
 }
 
