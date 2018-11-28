@@ -58,7 +58,7 @@ export function getCoords(elem) {
 }
 
 /**
- * Recognizes the side of the containe where (x,y)  is closer
+ * Recognizes which side of the container  is closer to (x,y)
  * @param {{x1: number, y1: number, x2: number, y2: number}} coords - coords of container
  * @param x - x coord
  * @param y - y coord
