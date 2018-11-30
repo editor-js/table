@@ -12,15 +12,6 @@ const CSS = {
  */
 class Table {
   /**
-   * Should this tools be displayed at the Editor's Toolbox
-   * @returns {boolean}
-   * @public
-   */
-  static get displayInToolbox() {
-    return true;
-  }
-
-  /**
    * Allow to press Enter inside the CodeTool textarea
    * @returns {boolean}
    * @public
@@ -30,11 +21,17 @@ class Table {
   }
 
   /**
-   * Get Tool icon's SVG
-   * @return {string}
+   * Get Tool toolbox settings
+   * icon - Tool icon's SVG
+   * title - title to show in toolbox
+   *
+   * @return {{icon: string, title: string}}
    */
-  static get toolboxIcon() {
-    return svgIcon;
+  static get toolbox() {
+    return {
+      icon: svgIcon,
+      title: 'Table'
+    };
   }
 
   /**
