@@ -1,4 +1,4 @@
-import './borderToolBar.pcss';
+import './styles/border-toolbar.pcss';
 import svgPlusButton from './img/plus.svg';
 import {create} from './documentUtils';
 
@@ -11,7 +11,8 @@ const CSS = {
   verticalHighlightingLine: 'tc-toolbar__shine-line--ver',
   plusButton: 'tc-toolbar__plus',
   horizontalPlusButton: 'tc-toolbar__plus--hor',
-  verticalPlusButton: 'tc-toolbar__plus--ver'
+  verticalPlusButton: 'tc-toolbar__plus--ver',
+  area: 'tc-table__area',
 };
 
 /**
@@ -62,7 +63,7 @@ class BorderToolBar {
    * @return {HTMLElement}
    */
   _generatePlusButton() {
-    const button = create('div', [ CSS.plusButton ]);
+    const button = create('div', [CSS.plusButton]);
 
     button.innerHTML = svgPlusButton;
     button.addEventListener('click', (event) => {
@@ -79,7 +80,7 @@ class BorderToolBar {
    * @private
    */
   _generateHighlightingLine() {
-    const line = create('div', [ CSS.highlightingLine ]);
+    const line = create('div', [CSS.highlightingLine]);
 
     line.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -96,7 +97,29 @@ class BorderToolBar {
    * @private
    */
   _generateToolBar(children) {
-    return create('div', [ CSS.hidden ], null, children);
+    const bar = create('div', [CSS.hidden], null, children);
+
+    bar.addEventListener('mouseleave', (event) => {
+        this._recalcMousePos(event);
+      }
+    );
+
+    return bar;
+  }
+
+  /**
+   * Recalc mouse position when the mouse left toolbar
+   * @param {MouseEvent} event
+   * @private
+   */
+  _recalcMousePos(event) {
+    this.hide();
+    const area = document.elementFromPoint(event.pageX, event.pageY);
+
+    if (area !== null && area.classList.contains(CSS.area)) {
+      const e = new MouseEvent('mouseover', {clientX: event.pageX, clientY: event.pageY});
+      area.dispatchEvent(e);
+    }
   }
 }
 

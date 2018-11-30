@@ -50,9 +50,38 @@ export function getCoords(elem) {
   const rect = elem.getBoundingClientRect();
 
   return {
-    y1: rect.top + window.pageYOffset,
-    x1: rect.left + window.pageXOffset,
-    x2: rect.right + window.pageXOffset,
-    y2: rect.bottom + window.pageYOffset
+    y1: Math.floor(rect.top + window.pageYOffset),
+    x1: Math.floor(rect.left + window.pageXOffset),
+    x2: Math.floor(rect.right + window.pageXOffset),
+    y2: Math.floor(rect.bottom + window.pageYOffset)
   };
+}
+
+/**
+ * Recognizes which side of the container  is closer to (x,y)
+ * @param {{x1: number, y1: number, x2: number, y2: number}} coords - coords of container
+ * @param x - x coord
+ * @param y - y coord
+ * @return {string}
+ */
+export function getSideByCoords(coords, x, y) {
+  let side;
+  const sizeArea = 10;
+
+  // a point is close to the boundary if the distance between them is less than the allowed distance.
+  // +1px on each side due to fractional pixels
+  if (x - coords.x1 >= -1 && x - coords.x1 <= sizeArea + 1) {
+    side = 'left';
+  }
+  if (coords.x2 - x >= -1 && coords.x2 - x <= sizeArea + 1) {
+    side = 'right';
+  }
+  if (y - coords.y1 >= -1 && y - coords.y1 <= sizeArea + 1) {
+    side = 'top';
+  }
+  if (coords.y2 - y >= -1 && coords.y2 - y <= sizeArea + 1) {
+    side = 'bottom';
+  }
+
+  return side;
 }
