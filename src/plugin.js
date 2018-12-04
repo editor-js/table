@@ -43,7 +43,7 @@ class Table {
   constructor({data, config, api}) {
     this.api = api;
 
-    this._tableConstructor = new TableConstructor(data, config);
+    this._tableConstructor = new TableConstructor(data, config, api);
   }
 
   /**

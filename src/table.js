@@ -1,12 +1,12 @@
-import {create} from './documentUtils';
-import {addDetectionInsideAreas} from './detectionAreas';
-import './table.pcss';
+import {create, getCoords, getSideByCoords} from './documentUtils';
+import './styles/table.pcss';
 
 const CSS = {
   table: 'tc-table',
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
-  wrapper: 'tc-table__wrap'
+  wrapper: 'tc-table__wrap',
+  area: 'tc-table__area',
 };
 
 /**
@@ -21,6 +21,8 @@ export class Table {
     this._numberOfRows = 0;
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector('table');
+
+    this._hangEvents();
   }
 
   /**
@@ -82,30 +84,16 @@ export class Table {
    * @private
    */
   _createTableWrapper() {
-    return create('div', [ CSS.wrapper ], null, [ create('table', [ CSS.table ]) ]);
+    return create('div', [CSS.wrapper], null, [create('table', [CSS.table])]);
   }
 
   /**
    * Create editable area of cell
-   * @param {HTMLElement} cell - cell for which area is created
    * @return {HTMLElement} - the area
    * @private
    */
-  _createContenteditableArea(cell) {
-    const div = create('div', [ CSS.inputField ], {contenteditable: 'true'});
-
-    div.addEventListener('keydown', (event) => {
-      if (event.keyCode === 13 && !event.shiftKey) {
-        event.preventDefault();
-      }
-    });
-    div.addEventListener('focus', () => {
-      this._selectedCell = cell;
-    });
-    div.addEventListener('blur', () => {
-      this._selectedCell = null;
-    });
-    return div;
+  _createContenteditableArea() {
+    return create('div', [CSS.inputField], {contenteditable: 'true'});
   }
 
   /**
@@ -115,14 +103,9 @@ export class Table {
    */
   _fillCell(cell) {
     cell.classList.add(CSS.cell);
-    const content = this._createContenteditableArea(cell);
+    const content = this._createContenteditableArea();
 
-    cell.appendChild(content);
-    addDetectionInsideAreas(cell);
-
-    cell.addEventListener('click', () => {
-      content.focus();
-    });
+    cell.appendChild(create('div', [CSS.area], null, [content]));
   }
 
   /**
@@ -136,5 +119,103 @@ export class Table {
 
       this._fillCell(cell);
     }
+  }
+
+  /**
+   * hang necessary events
+   * @private
+   */
+  _hangEvents() {
+    this._table.addEventListener('focus', (event) => {
+      this._focusEditField(event);
+    }, true);
+
+    this._table.addEventListener('blur', (event) => {
+      this._blurEditField(event);
+    }, true);
+
+    this._table.addEventListener('keydown', (event) => {
+      this._pressedEnterInEditField(event);
+    });
+
+    this._table.addEventListener('click', (event) => {
+      this._clickedOnCell(event);
+    });
+
+    this._table.addEventListener('mouseover', (event) => {
+      this._mouseEnterInDetectArea(event);
+    }, true);
+  }
+
+  /**
+   * When you focus on an editable field, remembers the cell
+   * @param {FocusEvent} event
+   * @private
+   */
+  _focusEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    this._selectedCell = event.target.closest('.' + CSS.cell);
+  }
+
+  /**
+   * When you blur on an editable field, remembers the cell
+   * @param {FocusEvent} event
+   * @private
+   */
+  _blurEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    this._selectedCell = null;
+  }
+
+  /**
+   * When enter is pressed when editing a field
+   * @param {KeyboardEvent} event
+   * @private
+   */
+  _pressedEnterInEditField(event) {
+    if (!event.target.classList.contains(CSS.inputField)) {
+      return;
+    }
+    if (event.keyCode === 13 && !event.shiftKey) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * When clicking on a cell
+   * @param {MouseEvent} event
+   * @private
+   */
+  _clickedOnCell(event) {
+    if (!event.target.classList.contains(CSS.cell)) {
+      return;
+    }
+    const content = event.target.querySelector('.' + CSS.inputField);
+    content.focus();
+  }
+
+  /**
+   * When the mouse enters the detection area
+   * @param {MouseEvent} event
+   * @private
+   */
+  _mouseEnterInDetectArea(event) {
+    if (!event.target.classList.contains(CSS.area)) {
+      return;
+    }
+
+    const coordsCell = getCoords(event.target.closest('TD'));
+    const side = getSideByCoords(coordsCell, event.pageX, event.pageY);
+
+    event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
+      'detail': {
+        'side': side
+      },
+      'bubbles': true
+    }));
   }
 }
