@@ -2,9 +2,24 @@
 
 # Table tool
 Table Block for the [CodeX Editor](https://ifmo.su/editor).
+
 ![](https://capella.pics/870d30f0-ef73-423e-b56c-bb4f98e36e73.jpg)
 
 ## Installation
+
+### Install via NPM
+
+Get the package
+
+```shell
+npm i --save-dev codex.editor.table
+```
+
+Include module at your application
+
+```javascript
+const Table = require('codex.editor.table');
+```
 
 ### Upload to your project's source dir
 1. Download folder `dist` from repository
