@@ -7,15 +7,19 @@ Table Block for the [CodeX Editor](https://ifmo.su/editor).
 
 ## Installation
 
-### Install via NPM
+### Install via NPM or Yarn
 
 Get the package
 
 ```shell
 npm i --save-dev codex.editor.table
 ```
+or
+```shell
+yarn add codex.editor.table --dev
+```
 
-Include module at your application
+Include module in your application
 
 ```javascript
 const Table = require('codex.editor.table');
