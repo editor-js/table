@@ -5,4 +5,3 @@ test.html
 .eslintrc
 postcss.config.js
 webpack.config.js
-.gitignore
