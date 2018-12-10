@@ -76,8 +76,9 @@ class BorderToolBar {
   }
 
   /**
-   * Generates line which сover border of _table
    * @private
+   *
+   * Generates line which сover border of _table
    */
   _generateHighlightingLine() {
     const line = create('div', [CSS.highlightingLine]);
@@ -92,9 +93,10 @@ class BorderToolBar {
   }
 
   /**
+   * @private
+   *
    * Generates the main component of the class
    * @param {Element[]} children - child elements of toolbar
-   * @private
    */
   _generateToolBar(children) {
     const bar = create('div', [CSS.hidden], null, children);
@@ -108,9 +110,10 @@ class BorderToolBar {
   }
 
   /**
+   * @private
+   *
    * Recalc mouse position when the mouse left toolbar
    * @param {MouseEvent} event
-   * @private
    */
   _recalcMousePos(event) {
     this.hide();

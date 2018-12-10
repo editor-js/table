@@ -57,10 +57,11 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    *  Fill table data passed to the constructor
    * @param {TableData} data - data for insert in table
    * @param {{rows: number, cols: number}} size - contains number of rows and cols
-   * @private
    */
   _fillTable(data, size) {
     if (data.content !== undefined) {
@@ -76,13 +77,14 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * resize to match config or transmitted data
    * @param {TableData} data - data for inserting to the table
    * @param {object} config - configuration of table
    * @param {number|string} config.rows - number of rows in configuration
    * @param {number|string} config.cols - number of cols in configuration
    * @return {{rows: number, cols: number}} - number of cols and rows
-   * @private
    */
   _resizeTable(data, config) {
     const isValidArray = Array.isArray(data.content);
@@ -113,10 +115,11 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * Show ToolBar
    * @param {BorderToolBar} toolBar - which toolbar to show
    * @param {number} coord - where show. x or y depending on the grade of the toolbar
-   * @private
    */
   _showToolBar(toolBar, coord) {
     this._hideToolBar();
@@ -125,8 +128,9 @@ export class TableConstructor {
   }
 
   /**
-   * Hide all of toolbars
    * @private
+   *
+   * Hide all of toolbars
    */
   _hideToolBar() {
     if (this._activatedToolBar !== null) {
@@ -135,8 +139,9 @@ export class TableConstructor {
   }
 
   /**
-   * hang necessary events
    * @private
+   *
+   * hang necessary events
    */
   _hangEvents() {
     this._container.addEventListener('mouseInActivatingArea', (event) => {
@@ -165,9 +170,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * detects a mouseenter on a special area
    * @param {MouseEvent} event
-   * @private
    */
   _mouseInActivatingAreaListener(event) {
     this._hoveredCellSide = event.detail.side;
@@ -200,19 +206,21 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * Checks elem is toolbar
    * @param {HTMLElement} elem - element
    * @return {boolean}
-   * @private
    */
   _isToolbar(elem) {
     return !!(elem.closest('.' + CSS.toolBarHor) || elem.closest('.' + CSS.toolBarVer));
   }
 
   /**
+   * @private
+   *
    * Hide toolbar, if mouse left area
    * @param {MouseEvent} event
-   * @private
    */
   _leaveDetectArea(event) {
     if (this._isToolbar(event.relatedTarget)) {
@@ -223,10 +231,11 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * Show toolbar when mouse in activation area
    * Showing
    * @param {MouseEvent} event
-   * @private
    */
   _toolbarCalling(event) {
     if (this._isToolbar(event.target)) {
@@ -239,9 +248,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * handling clicks on toolbars
    * @param {MouseEvent} event
-   * @private
    */
   _clickToolbar(event) {
     if (!this._isToolbar(event.target)) {
@@ -275,9 +285,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * detects button presses when editing a table's content
    * @param {KeyboardEvent} event
-   * @private
    */
   _containerKeydown(event) {
     if (event.keyCode === 13) {
@@ -286,11 +297,12 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * Leaves the PlusButton active under mouse
    * The timer gives time to press the button again, before it disappears.
    * While the button is being pressed, the timer will be reset
    * @param {number} coord - coords of mouse. x or y depending on the grade of the toolbar
-   * @private
    */
   _delayAddButtonForMultiClickingNearMouse(coord) {
     this._showToolBar(this._activatedToolBar, coord);
@@ -302,9 +314,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * Check if the addition is initiated by the container and which side
    * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
-   * @private
    */
   _getHoveredSideOfContainer() {
     if (this._hoveredCell === this._container) {
@@ -314,9 +327,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
    * @returns {boolean}
-   * @private
    */
   _isBottomOrRight() {
     return this._hoveredCellSide === 'bottom' || this._hoveredCellSide === 'right';
@@ -340,8 +354,9 @@ export class TableConstructor {
   }
 
   /**
-   * Adds column in table
    * @private
+   *
+   * Adds column in table
    */
   _addColumn() {
     let index = this._getHoveredSideOfContainer();
@@ -356,9 +371,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * if "cntrl + Eneter" is pressed then create new line under current and focus it
    * @param {KeyboardEvent} event
-   * @private
    */
   _containerEnterPressed(event) {
     if (!(this._table.selectedCell !== null && !event.shiftKey)) {
@@ -376,9 +392,10 @@ export class TableConstructor {
   }
 
   /**
+   * @private
+   *
    * When the mouse enters the detection area
    * @param {MouseEvent} event
-   * @private
    */
   _mouseEnterInDetectArea(event) {
     const coords = getCoords(this._container);
