@@ -79,27 +79,30 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * Creates table structure
    * @return {HTMLElement} tbody - where rows will be
-   * @private
    */
   _createTableWrapper() {
     return create('div', [CSS.wrapper], null, [create('table', [CSS.table])]);
   }
 
   /**
+   * @private
+   *
    * Create editable area of cell
    * @return {HTMLElement} - the area
-   * @private
    */
   _createContenteditableArea() {
     return create('div', [CSS.inputField], {contenteditable: 'true'});
   }
 
   /**
+   * @private
+   *
    * Fills the empty cell of the editable area
    * @param {HTMLElement} cell - empty cell
-   * @private
    */
   _fillCell(cell) {
     cell.classList.add(CSS.cell);
@@ -109,9 +112,10 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * Fills the empty row with cells  in the size of numberOfColumns
    * @param row = the empty row
-   * @private
    */
   _fillRow(row) {
     for (let i = 0; i < this._numberOfColumns; i++) {
@@ -122,8 +126,9 @@ export class Table {
   }
 
   /**
-   * hang necessary events
    * @private
+   *
+   * hang necessary events
    */
   _hangEvents() {
     this._table.addEventListener('focus', (event) => {
@@ -144,13 +149,15 @@ export class Table {
 
     this._table.addEventListener('mouseover', (event) => {
       this._mouseEnterInDetectArea(event);
+      event.stopPropagation();
     }, true);
   }
 
   /**
+   * @private
+   *
    * When you focus on an editable field, remembers the cell
    * @param {FocusEvent} event
-   * @private
    */
   _focusEditField(event) {
     if (!event.target.classList.contains(CSS.inputField)) {
@@ -160,9 +167,10 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * When you blur on an editable field, remembers the cell
    * @param {FocusEvent} event
-   * @private
    */
   _blurEditField(event) {
     if (!event.target.classList.contains(CSS.inputField)) {
@@ -172,9 +180,10 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * When enter is pressed when editing a field
    * @param {KeyboardEvent} event
-   * @private
    */
   _pressedEnterInEditField(event) {
     if (!event.target.classList.contains(CSS.inputField)) {
@@ -186,9 +195,10 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * When clicking on a cell
    * @param {MouseEvent} event
-   * @private
    */
   _clickedOnCell(event) {
     if (!event.target.classList.contains(CSS.cell)) {
@@ -199,9 +209,10 @@ export class Table {
   }
 
   /**
+   * @private
+   *
    * When the mouse enters the detection area
    * @param {MouseEvent} event
-   * @private
    */
   _mouseEnterInDetectArea(event) {
     if (!event.target.classList.contains(CSS.area)) {

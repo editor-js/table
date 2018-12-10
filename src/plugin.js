@@ -83,10 +83,11 @@ class Table {
   }
 
   /**
+   * @private
+   *
    * Check input field is empty
    * @param {HTMLElement} input - input field
    * @return {boolean}
-   * @private
    */
   _isEmpty(input) {
     return !input.textContent.trim();
