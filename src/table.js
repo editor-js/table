@@ -144,6 +144,7 @@ export class Table {
 
     this._table.addEventListener('mouseover', (event) => {
       this._mouseEnterInDetectArea(event);
+      event.stopPropagation();
     }, true);
   }
 

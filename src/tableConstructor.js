@@ -41,8 +41,9 @@ export class TableConstructor {
     this._activatedToolBar = null;
     this._hoveredCellSide = null;
 
-    /** Timer for delay plus button */
+    /** Timers */
     this._plusButDelay = null;
+    this._toolbarShowDelay = null;
 
     this._hangEvents();
   }
@@ -139,7 +140,7 @@ export class TableConstructor {
    */
   _hangEvents() {
     this._container.addEventListener('mouseInActivatingArea', (event) => {
-      this._mouseInActivatingAreaListener(event);
+      this._toolbarCalling(event);
     });
 
     this._container.addEventListener('click', (event) => {
@@ -154,11 +155,11 @@ export class TableConstructor {
       this._containerKeydown(event);
     });
 
-    this._container.addEventListener('mouseleave', () => {
-      this._hideToolBar();
+    this._container.addEventListener('mouseout', (event) => {
+      this._leaveDetectArea(event);
     });
 
-    this._container.addEventListener('mouseenter', (event) => {
+    this._container.addEventListener('mouseover', (event) => {
       this._mouseEnterInDetectArea(event);
     });
   }
@@ -199,12 +200,51 @@ export class TableConstructor {
   }
 
   /**
+   * Checks elem is toolbar
+   * @param {HTMLElement} elem - element
+   * @return {boolean}
+   * @private
+   */
+  _isToolbar(elem) {
+    return !!(elem.closest('.' + CSS.toolBarHor) || elem.closest('.' + CSS.toolBarVer));
+  }
+
+  /**
+   * Hide toolbar, if mouse left area
+   * @param {MouseEvent} event
+   * @private
+   */
+  _leaveDetectArea(event) {
+    if (this._isToolbar(event.relatedTarget)) {
+      return;
+    }
+    clearTimeout(this._toolbarShowDelay);
+    this._hideToolBar();
+  }
+
+  /**
+   * Show toolbar when mouse in activation area
+   * Showing
+   * @param {MouseEvent} event
+   * @private
+   */
+  _toolbarCalling(event) {
+    if (this._isToolbar(event.target)) {
+      return;
+    }
+    clearTimeout(this._toolbarShowDelay);
+    this._toolbarShowDelay = setTimeout(() => {
+      this._mouseInActivatingAreaListener(event);
+    }, 125);
+  }
+
+  /**
    * handling clicks on toolbars
    * @param {MouseEvent} event
    * @private
    */
   _clickToolbar(event) {
-    if (!(event.target.classList.contains(CSS.toolBarHor) || event.target.classList.contains(CSS.toolBarVer))) {
+    if (!this._isToolbar(event.target)) {
       return;
     }
     let typeCoord;
