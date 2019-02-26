@@ -18,7 +18,7 @@ export class TableConstructor {
    * Creates
    * @param {TableData} data - previously saved data for insert in table
    * @param {object} config - configuration of table
-   * @param {object} api - CodeX Editor API
+   * @param {object} api - Editor.js API
    */
   constructor(data, config, api) {
     /** creating table */
