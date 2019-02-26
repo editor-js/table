@@ -1,10 +1,10 @@
 {
-  "name": "codex.editor.table",
-  "description": "Table for CodeX.Editor",
+  "name": "@editorjs/table",
+  "description": "Table for Editor.js",
   "version": "1.1.2",
   "license": "MIT",
   "main": "./dist/bundle.js",
-  "repository": "https://github.com/codex-editor/table",
+  "repository": "https://github.com/editorjs/table",
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
@@ -12,7 +12,9 @@
   "keywords": [
     "codex",
     "codex-editor",
-    "table"
+    "table",
+    "editor.js",
+    "editorjs"
   ],
   "devDependencies": {
     "autoprefixer": "^9.3.1",

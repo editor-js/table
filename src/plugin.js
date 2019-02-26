@@ -38,7 +38,7 @@ class Table {
    * Render plugin`s main Element and fill it with saved data
    * @param {TableData} data — previously saved data
    * @param {object} config - user config for Tool
-   * @param {object} api - CodeX Editor API
+   * @param {object} api - Editor.js API
    */
   constructor({data, config, api}) {
     this.api = api;
