@@ -9,7 +9,7 @@
     "build:dev": "webpack --mode development --watch",
     "lint": "./node_modules/.bin/eslint"
   },
-  "repository": "https://github.com/editorjs/table",
+  "repository": "https://github.com/editor-js/table",
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
