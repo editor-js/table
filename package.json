@@ -1,10 +1,15 @@
 {
-  "name": "codex.editor.table",
-  "description": "Table for CodeX.Editor",
-  "version": "1.1.2",
+  "name": "@editorjs/table",
+  "description": "Table for Editor.js",
+  "version": "1.2.0",
   "license": "MIT",
   "main": "./dist/bundle.js",
-  "repository": "https://github.com/codex-editor/table",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "repository": "https://github.com/editor-js/table",
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
@@ -12,7 +17,9 @@
   "keywords": [
     "codex",
     "codex-editor",
-    "table"
+    "table",
+    "editor.js",
+    "editorjs"
   ],
   "devDependencies": {
     "autoprefixer": "^9.3.1",
@@ -25,13 +32,7 @@
     "postcss-nesting": "^7.0.0",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.0",
-    "webpack": "^4.21.0",
-    "webpack-cli": "^3.1.2"
-  },
-  "scripts": {
-    "build": "webpack --mode=production",
-    "build:dev": "webpack --mode=development",
-    "lint": "./node_modules/.bin/eslint"
-  },
-  "dependencies": {}
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  }
 }

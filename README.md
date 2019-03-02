@@ -1,7 +1,7 @@
-![](https://badgen.net/badge/CodeX%20Editor/v2.0/blue)
+![](https://badgen.net/badge/Editor.js/v2.0/blue)
 
 # Table tool
-Table Block for the [CodeX Editor](https://ifmo.su/editor).
+Table Block for the [Editor.js](https://editorjs.io).
 
 ![](https://capella.pics/870d30f0-ef73-423e-b56c-bb4f98e36e73.jpg)
 
@@ -12,17 +12,17 @@ Table Block for the [CodeX Editor](https://ifmo.su/editor).
 Get the package
 
 ```shell
-npm i --save-dev codex.editor.table
+npm i --save-dev @editorjs/table
 ```
 or
 ```shell
-yarn add codex.editor.table --dev
+yarn add @editorjs/table --dev
 ```
 
 Include module in your application
 
 ```javascript
-const Table = require('codex.editor.table');
+const Table = require('@editorjs/table');
 ```
 
 ### Upload to your project's source dir
@@ -30,10 +30,10 @@ const Table = require('codex.editor.table');
 2. Add `dist/bundle.js` file to your page.
 
 ## Usage
-Add a new Tool to the `tools` property of the CodeX Editor initial config.
+Add a new Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
   
   tools: {
@@ -50,7 +50,7 @@ var editor = CodexEditor({
 Or init Table Tool with additional settings
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
   
   tools: {

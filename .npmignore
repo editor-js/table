@@ -1,7 +1,8 @@
-src
-node_modules
-yarn.lock
-test.html
+.idea/
+assets/
+src/
 .eslintrc
 postcss.config.js
 webpack.config.js
+test.html
+yarn.lock
