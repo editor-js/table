@@ -1,7 +1,7 @@
 ![](https://badgen.net/badge/Editor.js/v2.0/blue)
 
 # Table tool
-Table Block for the [Editor.js](https://ifmo.su/editor).
+Table Block for the [Editor.js](https://editorjs.io).
 
 ![](https://capella.pics/870d30f0-ef73-423e-b56c-bb4f98e36e73.jpg)
 
