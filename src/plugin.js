@@ -74,7 +74,7 @@ class Table {
       if (isWorthless) {
         continue;
       }
-      data.push(cols.map(cell => cell.innerHTML));
+      data.push(inputs.map(input => input.innerHTML));
     }
 
     return {
