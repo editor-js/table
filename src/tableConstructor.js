@@ -98,8 +98,8 @@ export class TableConstructor {
     const configCols = !isNaN(parsedCols) && parsedCols > 0 ? parsedCols : undefined;
     const defaultRows = 2;
     const defaultCols = 2;
-    const rows = configRows || contentRows || defaultRows;
-    const cols = configCols || contentCols || defaultCols;
+    const rows = contentRows || configRows || defaultRows;
+    const cols = contentCols || configCols || defaultCols;
 
     for (let i = 0; i < rows; i++) {
       this._table.addRow();
