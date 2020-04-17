@@ -264,13 +264,29 @@ export class TableConstructor {
     }
     let typeCoord;
 
-    if (this._activatedToolBar === this._horizontalToolBar) {
-      this._addRow();
-      typeCoord = 'y';
-    } else {
-      this._addColumn();
-      typeCoord = 'x';
+
+    if(event.detail.button == 'plus'){
+      if (this._activatedToolBar === this._horizontalToolBar) {
+        this._addRow();
+        typeCoord = 'y';
+      } else {
+        this._addColumn();
+        typeCoord = 'x';
+      }
     }
+    if(event.detail.button == 'minus'){
+      if (this._activatedToolBar === this._horizontalToolBar) {
+        this._removeRow();
+        typeCoord = 'y';
+      } else {
+        this._removeColumn();
+        typeCoord = 'x';
+      }
+    }
+
+
+
+
     /** If event has transmitted data (coords of mouse) */
     const detailHasData = isNaN(event.detail) && event.detail !== null;
 
@@ -374,6 +390,42 @@ export class TableConstructor {
 
     this._table.addColumn(index);
   }
+
+    /**
+   * Removes row in table
+   * @private
+   */
+  _removeRow() {
+    const indicativeRow = this._hoveredCell.closest('TR');
+    let index = this._getHoveredSideOfContainer();
+
+    if (index === 1) {
+      index = indicativeRow.sectionRowIndex;
+      // if inserting after hovered cell
+      index = index + this._isBottomOrRight();
+    }
+
+    this._table.removeRow(index-1);
+  }
+
+  /**
+   * @private
+   *
+   * Removes column in table
+   */
+  _removeColumn() {
+    let index = this._getHoveredSideOfContainer();
+
+    if (index === 1) {
+      index = this._hoveredCell.cellIndex;
+      // if inserting after hovered cell
+      index = index + this._isBottomOrRight();
+    }
+
+    this._table.removeColumn(index-1);
+  }
+
+
 
   /**
    * @private
