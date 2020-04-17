@@ -16,7 +16,7 @@
             align-items: center;
         }
 
-        .block {
+        #editorjs {
             width: 800px;
             margin-top: 10px;
         }
@@ -26,15 +26,42 @@
 </head>
 <body>
 
-<div class="block"></div>
+<div id="editorjs"></div>
 
+<script src="//cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
 <script src="dist/bundle.js"></script>
 <script>
-    const table = new Table({data: {}, config: {}, api: {}});
-    const block = document.querySelector(".block");
-
-    block.appendChild(table.render());
-
+    const editor = new EditorJS({
+      autofocus: true,
+      data: {
+        time: 1593767457585,
+        blocks: [
+          {
+            type: 'table',
+            data: {
+              content: [
+                ['a', 'table'],
+                ['tool', 'test'],
+                ['press', 'tab'],
+              ]
+            }
+          }
+        ],
+        version: '2.18.0',
+      },
+      placeholder: 'Table tool test',
+      holder: 'editorjs',
+      tools: {
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 3,
+            cols: 3
+          }
+        }
+      }
+    })
 </script>
 
 </body>

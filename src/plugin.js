@@ -1,5 +1,21 @@
-const TableConstructor = require('./tableConstructor').TableConstructor;
-const svgIcon = require('./img/toolboxIcon.svg');
+const { TableConstructor } = require('./tableConstructor');
+const toolboxIcon = require('./img/toolboxIcon.svg');
+const insertColBefore = require('./img/insertColBeforeIcon.svg');
+const insertColAfter = require('./img/indertColAfterIcon.svg');
+const insertRowBefore = require('./img/insertRowBeforeIcon.svg');
+const insertRowAfter = require('./img/insertRowAfter.svg');
+const deleteRow = require('./img/deleteRowIcon.svg');
+const deleteCol = require('./img/deleteColIcon.svg');
+
+const Icons = {
+  Toolbox: toolboxIcon,
+  InsertColBefore: insertColBefore,
+  InsertColAfter: insertColAfter,
+  InsertRowBefore: insertRowBefore,
+  InsertRowAfter: insertRowAfter,
+  DeleteRow: deleteRow,
+  DeleteCol: deleteCol
+};
 
 const CSS = {
   input: 'tc-table__inp'
@@ -29,7 +45,7 @@ class Table {
    */
   static get toolbox() {
     return {
-      icon: svgIcon,
+      icon: Icons.Toolbox,
       title: 'Table'
     };
   }
@@ -40,10 +56,78 @@ class Table {
    * @param {object} config - user config for Tool
    * @param {object} api - Editor.js API
    */
-  constructor({data, config, api}) {
+  constructor({ data, config, api }) {
     this.api = api;
 
     this._tableConstructor = new TableConstructor(data, config, api);
+
+    this.actions = [
+      {
+        actionName: 'InsertColBefore',
+        icon: Icons.InsertColBefore
+      },
+      {
+        actionName: 'InsertColAfter',
+        icon: Icons.InsertColAfter
+      },
+      {
+        actionName: 'InsertRowBefore',
+        icon: Icons.InsertRowBefore
+      },
+      {
+        actionName: 'InsertRowAfter',
+        icon: Icons.InsertRowAfter
+      },
+      {
+        actionName: 'DeleteRow',
+        icon: Icons.DeleteRow
+      },
+      {
+        actionName: 'DeleteCol',
+        icon: Icons.DeleteCol
+      }
+    ];
+  }
+
+  /**
+   * perform selected action
+   * @param actionName {string} - action name
+   */
+  performAction(actionName) {
+    switch (actionName) {
+      case 'InsertColBefore':
+        return this._tableConstructor.table.insertColumnBefore();
+      case 'InsertColAfter':
+        return this._tableConstructor.table.insertColumnAfter();
+      case 'InsertRowBefore':
+        return this._tableConstructor.table.insertRowBefore();
+      case 'InsertRowAfter':
+        return this._tableConstructor.table.insertRowAfter();
+      case 'DeleteRow':
+        return this._tableConstructor.table.deleteRow();
+      case 'DeleteCol':
+        return this._tableConstructor.table.deleteColumn();
+    }
+  }
+
+  /**
+   * render actions toolbar
+   * @returns {HTMLDivElement}
+   */
+  renderSettings() {
+    const wrapper = document.createElement('div');
+
+    this.actions.forEach(({ actionName, icon }) => {
+      const button = document.createElement('div');
+
+      button.classList.add('ce-settings__button');
+      button.innerHTML = icon;
+      button.title = actionName;
+      button.addEventListener('click', this.performAction.bind(this, actionName));
+      wrapper.appendChild(button);
+    });
+
+    return wrapper;
   }
 
   /**
