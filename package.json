@@ -1,13 +1,13 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "license": "MIT",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "eslint -c .eslintrc src/*.js"
   },
   "repository": "https://github.com/editor-js/table",
   "author": {
