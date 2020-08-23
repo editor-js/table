@@ -73,9 +73,10 @@ class Table {
   /**
    * Extract Tool's data from the view
    *
+   * @param {HTMLElement} toolsContent - Tool HTML element
+   *
    * @returns {TableData} - saved data
    * @public
-   * @param toolsContent
    */
   save(toolsContent) {
     const table = toolsContent.querySelector('table');
