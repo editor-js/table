@@ -1,4 +1,4 @@
-import {create, getCoords, getSideByCoords} from './documentUtils';
+import { create, getCoords, getSideByCoords } from './documentUtils';
 import './styles/table.pcss';
 
 const CSS = {
@@ -15,18 +15,24 @@ const CSS = {
 export class Table {
   /**
    * Creates
+   *
+   * @param {boolean} readOnly - read-only mode flag
    */
-  constructor() {
+  constructor(readOnly) {
+    this.readOnly = readOnly;
     this._numberOfColumns = 0;
     this._numberOfRows = 0;
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector('table');
 
-    this._hangEvents();
+    if (!this.readOnly) {
+      this._hangEvents();
+    }
   }
 
   /**
    * Add column in table on index place
+   *
    * @param {number} index - number in the array of columns, where new column to insert,-1 if insert at the end
    */
   addColumn(index = -1) {
@@ -43,20 +49,23 @@ export class Table {
 
   /**
    * Add row in table on index place
+   *
    * @param {number} index - number in the array of columns, where new column to insert,-1 if insert at the end
-   * @return {HTMLElement} row
+   * @returns {HTMLElement} row
    */
   addRow(index = -1) {
     this._numberOfRows++;
     const row = this._table.insertRow(index);
 
     this._fillRow(row);
+
     return row;
   };
 
   /**
    * get html element of table
-   * @return {HTMLElement}
+   *
+   * @returns {HTMLElement}
    */
   get htmlElement() {
     return this._element;
@@ -64,7 +73,8 @@ export class Table {
 
   /**
    * get real table tag
-   * @return {HTMLElement}
+   *
+   * @returns {HTMLElement}
    */
   get body() {
     return this._table;
@@ -72,7 +82,8 @@ export class Table {
 
   /**
    * returns selected/editable cell
-   * @return {HTMLElement}
+   *
+   * @returns {HTMLElement}
    */
   get selectedCell() {
     return this._selectedCell;
@@ -80,41 +91,33 @@ export class Table {
 
   /**
    * @private
-   *
-   * Creates table structure
-   * @return {HTMLElement} tbody - where rows will be
+   * @returns {HTMLElement} tbody - where rows will be
    */
   _createTableWrapper() {
-    return create('div', [CSS.wrapper], null, [create('table', [CSS.table])]);
+    return create('div', [ CSS.wrapper ], null, [ create('table', [ CSS.table ]) ]);
   }
 
   /**
    * @private
-   *
-   * Create editable area of cell
-   * @return {HTMLElement} - the area
+   * @returns {HTMLElement} - the area
    */
   _createContenteditableArea() {
-    return create('div', [CSS.inputField], {contenteditable: 'true'});
+    return create('div', [ CSS.inputField ], { contenteditable: !this.readOnly });
   }
 
   /**
    * @private
-   *
-   * Fills the empty cell of the editable area
    * @param {HTMLElement} cell - empty cell
    */
   _fillCell(cell) {
     cell.classList.add(CSS.cell);
     const content = this._createContenteditableArea();
 
-    cell.appendChild(create('div', [CSS.area], null, [content]));
+    cell.appendChild(create('div', [ CSS.area ], null, [ content ]));
   }
 
   /**
    * @private
-   *
-   * Fills the empty row with cells  in the size of numberOfColumns
    * @param row = the empty row
    */
   _fillRow(row) {
@@ -127,8 +130,6 @@ export class Table {
 
   /**
    * @private
-   *
-   * hang necessary events
    */
   _hangEvents() {
     this._table.addEventListener('focus', (event) => {
@@ -155,8 +156,6 @@ export class Table {
 
   /**
    * @private
-   *
-   * When you focus on an editable field, remembers the cell
    * @param {FocusEvent} event
    */
   _focusEditField(event) {
@@ -168,8 +167,6 @@ export class Table {
 
   /**
    * @private
-   *
-   * When you blur on an editable field, remembers the cell
    * @param {FocusEvent} event
    */
   _blurEditField(event) {
@@ -181,8 +178,6 @@ export class Table {
 
   /**
    * @private
-   *
-   * When enter is pressed when editing a field
    * @param {KeyboardEvent} event
    */
   _pressedEnterInEditField(event) {
@@ -196,8 +191,6 @@ export class Table {
 
   /**
    * @private
-   *
-   * When clicking on a cell
    * @param {MouseEvent} event
    */
   _clickedOnCell(event) {
@@ -205,13 +198,12 @@ export class Table {
       return;
     }
     const content = event.target.querySelector('.' + CSS.inputField);
+
     content.focus();
   }
 
   /**
    * @private
-   *
-   * When the mouse enters the detection area
    * @param {MouseEvent} event
    */
   _mouseEnterInDetectArea(event) {
@@ -223,10 +215,10 @@ export class Table {
     const side = getSideByCoords(coordsCell, event.pageX, event.pageY);
 
     event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
-      'detail': {
-        'side': side
+      detail: {
+        side: side,
       },
-      'bubbles': true
+      bubbles: true,
     }));
   }
 }
