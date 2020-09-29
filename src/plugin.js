@@ -76,7 +76,6 @@ class Table {
    * @param {HTMLElement} toolsContent - Tool HTML element
    *
    * @returns {TableData} - saved data
-   * @public
    */
   save(toolsContent) {
     const table = toolsContent.querySelector('table');
