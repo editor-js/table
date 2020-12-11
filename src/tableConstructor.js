@@ -26,7 +26,7 @@ export class TableConstructor {
 
     /** creating table */
     this._table = new Table(readOnly);
-    const size = this._resizeTable(data, config);
+    const size = this._initTable(data, config);
 
     this._fillTable(data, size);
 
@@ -91,7 +91,7 @@ export class TableConstructor {
    * @param {number|string} config.cols - number of cols in configuration
    * @return {{rows: number, cols: number}} - number of cols and rows
    */
-  _resizeTable(data, config) {
+  _initTable(data, config) {
     const isValidArray = Array.isArray(data.content);
     const isNotEmptyArray = isValidArray ? data.content.length : false;
     const contentRows = isValidArray ? data.content.length : undefined;
@@ -107,10 +107,10 @@ export class TableConstructor {
     const cols = contentCols || configCols || defaultCols;
 
     for (let i = 0; i < rows; i++) {
-      this._table.addRow();
+      this._table.addRow(i);
     }
     for (let i = 0; i < cols; i++) {
-      this._table.addColumn();
+      this._table.addColumn(i);
     }
 
     return {
@@ -120,26 +120,30 @@ export class TableConstructor {
   }
 
   /**
-   * @private
-   *
    * Show ToolBar
+   *
+   * @private
    * @param {BorderToolBar} toolBar - which toolbar to show
    * @param {number} coord - where show. x or y depending on the grade of the toolbar
+   * @param {boolean} withDelete - flag to active/deactivate delete button
    */
-  _showToolBar(toolBar, coord) {
+  _showToolBar(toolBar, coord, withDelete) {
     this._hideToolBar();
+
     this._activatedToolBar = toolBar;
-    toolBar.showIn(coord);
+
+    toolBar.showIn(coord, withDelete);
   }
 
   /**
-   * @private
-   *
    * Hide all of toolbars
+   *
+   * @private
    */
   _hideToolBar() {
     if (this._activatedToolBar !== null) {
       this._activatedToolBar.hide();
+      this._table._clearState();
     }
   }
 
@@ -197,16 +201,20 @@ export class TableConstructor {
     }
 
     if (this._hoveredCellSide === 'top') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2);
+      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.activeRowIsFirst() === false);
+      this._table.activateTopRowForToolbar();
     }
     if (this._hoveredCellSide === 'bottom') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1);
+      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.activeRowIsLast() === false);
+      this._table.activateBottomRowForToolbar();
     }
     if (this._hoveredCellSide === 'left') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2);
+      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.activeCellIsFirst() === false);
+      this._table.activateLeftColumnForToolbar();
     }
     if (this._hoveredCellSide === 'right') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1);
+      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.activeCellIsLast() === false);
+      this._table.activateRightColumnForToolbar();
     }
   }
 
@@ -214,7 +222,7 @@ export class TableConstructor {
    * @private
    *
    * Checks elem is toolbar
-   * @param {HTMLElement} elem - element
+   * @param {HTMLElement|} elem - element
    * @return {boolean}
    */
   _isToolbar(elem) {
@@ -228,7 +236,7 @@ export class TableConstructor {
    * @param {MouseEvent} event
    */
   _leaveDetectArea(event) {
-    if (this._isToolbar(event.relatedTarget)) {
+    if (event.relatedTarget && this._isToolbar(event.relatedTarget)) {
       return;
     }
     clearTimeout(this._toolbarShowDelay);
@@ -264,8 +272,15 @@ export class TableConstructor {
     }
     let typeCoord;
 
-
-    if(event.detail.button == 'plus'){
+    if (event.detail && event.detail.button === 'minus') {
+      if (this._activatedToolBar === this._horizontalToolBar) {
+        this._removeRow();
+        typeCoord = 'y';
+      } else {
+        this._removeColumn();
+        typeCoord = 'x';
+      }
+    } else { // Default: Plus-Button - in this case user clicked the button OR the line
       if (this._activatedToolBar === this._horizontalToolBar) {
         this._addRow();
         typeCoord = 'y';
@@ -274,18 +289,6 @@ export class TableConstructor {
         typeCoord = 'x';
       }
     }
-    if(event.detail.button == 'minus'){
-      if (this._activatedToolBar === this._horizontalToolBar) {
-        this._removeRow();
-        typeCoord = 'y';
-      } else {
-        this._removeColumn();
-        typeCoord = 'x';
-      }
-    }
-
-
-
 
     /** If event has transmitted data (coords of mouse) */
     const detailHasData = isNaN(event.detail) && event.detail !== null;
@@ -299,7 +302,7 @@ export class TableConstructor {
       } else {
         coord = event.detail.y - containerCoords.y1;
       }
-      this._delayAddButtonForMultiClickingNearMouse(coord);
+      this._delayAddButtonForMultiClickingNearMouse(coord, event.target);
     } else {
       this._hideToolBar();
     }
@@ -335,117 +338,87 @@ export class TableConstructor {
   }
 
   /**
-   * @private
-   *
-   * Check if the addition is initiated by the container and which side
-   * @returns {number} - -1 for left or top; 0 for bottom or right; 1 if not container
-   */
-  _getHoveredSideOfContainer() {
-    if (this._hoveredCell === this._container) {
-      return this._isBottomOrRight() ? 0 : -1;
-    }
-    return 1;
-  }
-
-  /**
-   * @private
-   *
-   * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
-   * @returns {boolean}
-   */
-  _isBottomOrRight() {
-    return this._hoveredCellSide === 'bottom' || this._hoveredCellSide === 'right';
-  }
-
-  /**
    * Adds row in table
+   *
    * @private
    */
   _addRow() {
-    const indicativeRow = this._hoveredCell.closest('TR');
-    let index = this._getHoveredSideOfContainer();
+    const rowIndex = this._table.activeRow();
 
-    if (index === 1) {
-      index = indicativeRow.sectionRowIndex;
-      // if inserting after hovered cell
-      index = index + this._isBottomOrRight();
+    if (this._hoveredCellSide === 'bottom') {
+      this._table.addRowBelow(rowIndex);
+
+      return;
     }
 
-    this._table.addRow(index);
+    this._table.addRowAbove(rowIndex);
   }
 
   /**
-   * @private
-   *
-   * Adds column in table
-   */
-  _addColumn() {
-    let index = this._getHoveredSideOfContainer();
-
-    if (index === 1) {
-      index = this._hoveredCell.cellIndex;
-      // if inserting after hovered cell
-      index = index + this._isBottomOrRight();
-    }
-
-    this._table.addColumn(index);
-  }
-
-    /**
    * Removes row in table
+   *
    * @private
    */
   _removeRow() {
-    const indicativeRow = this._hoveredCell.closest('TR');
-    let index = this._getHoveredSideOfContainer();
+    const rowIndex = this._table.activeRow();
 
-    if (index === 1) {
-      index = indicativeRow.sectionRowIndex;
-      // if inserting after hovered cell
-      index = index + this._isBottomOrRight();
+    if (this._hoveredCellSide === 'bottom') {
+      this._table.removeRowBelow(rowIndex);
+
+      return;
     }
 
-    this._table.removeRow(index-1);
+    this._table.removeRowAbove(rowIndex);
   }
 
   /**
-   * @private
+   * Adds column in table
    *
+   * @private
+   */
+  _addColumn() {
+    const cellIndex = this._table.activeCell();
+
+    if (this._hoveredCellSide === 'left') {
+      this._table.addColumnLeft(cellIndex);
+
+      return;
+    }
+
+    this._table.addColumnRight(cellIndex);
+  }
+
+  /**
    * Removes column in table
+   *
+   * @private
    */
   _removeColumn() {
-    let index = this._getHoveredSideOfContainer();
+    const cellIndex = this._table.activeCell();
 
-    if (index === 1) {
-      index = this._hoveredCell.cellIndex;
-      // if inserting after hovered cell
-      index = index + this._isBottomOrRight();
+    if (this._hoveredCellSide === 'left') {
+      this._table.removeColumnLeft(cellIndex);
+
+      return;
     }
 
-    this._table.removeColumn(index-1);
+    this._table.removeColumnRight(cellIndex);
   }
 
-
-
   /**
-   * @private
-   *
    * if "cntrl + Eneter" is pressed then create new line under current and focus it
+   *
+   * @private
    * @param {KeyboardEvent} event
    */
   _containerEnterPressed(event) {
     if (!(this._table.selectedCell !== null && !event.shiftKey)) {
       return;
     }
-    const indicativeRow = this._table.selectedCell.closest('TR');
-    let index = this._getHoveredSideOfContainer();
 
-    if (index === 1) {
-      index = indicativeRow.sectionRowIndex + 1;
-    }
-    const newstr = this._table.addRow(index);
+    const newRow = this._table.addRowBelow(this._table.activeRow());
 
-    newstr.cells[0].click();
+    newRow.cells[0].click();
   }
 
   /**
@@ -456,7 +429,7 @@ export class TableConstructor {
    */
   _mouseEnterInDetectArea(event) {
     const coords = getCoords(this._container);
-    let side = getSideByCoords(coords, event.pageX, event.pageY);
+    const side = getSideByCoords(coords, event.pageX, event.pageY);
 
     event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
       'detail': {
