@@ -47,8 +47,8 @@ export class Table {
    *
    * @returns {boolean}
    */
-  activeCellIsFirst() {
-    return parseInt(this._table.dataset.activeCell || 0) === 0;
+  isFirstCellActive() {
+    return this.activeCell() === 0;
   }
 
   /**
@@ -56,8 +56,8 @@ export class Table {
    *
    * @returns {boolean}
    */
-  activeCellIsLast() {
-    return this._numberOfColumns === parseInt(this._table.dataset.activeCell || 0) + 1;
+  isLastCellActive() {
+    return this.activeCell() + 1 === this._numberOfColumns;
   }
 
   /**
@@ -117,8 +117,8 @@ export class Table {
    *
    * @returns {boolean}
    */
-  activeRowIsFirst() {
-    return parseInt(this._table.dataset.activeRow || 0) === 0;
+  isFirstRowActive() {
+    return this.activeRow() === 0;
   }
 
   /**
@@ -126,8 +126,8 @@ export class Table {
    *
    * @returns {boolean}
    */
-  activeRowIsLast() {
-    return this._table.rows.length === parseInt(this._table.dataset.activeRow || 0) + 1;
+  isLastRowActive() {
+    return this.activeRow() + 1 === this._table.rows.length;
   }
 
   /**

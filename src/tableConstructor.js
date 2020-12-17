@@ -201,19 +201,19 @@ export class TableConstructor {
     }
 
     if (this._hoveredCellSide === 'top') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.activeRowIsFirst() === false);
+      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.isFirstRowActive() === false);
       this._table.activateTopRowForToolbar();
     }
     if (this._hoveredCellSide === 'bottom') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.activeRowIsLast() === false);
+      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.isLastRowActive() === false);
       this._table.activateBottomRowForToolbar();
     }
     if (this._hoveredCellSide === 'left') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.activeCellIsFirst() === false);
+      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.isFirstCellActive() === false);
       this._table.activateLeftColumnForToolbar();
     }
     if (this._hoveredCellSide === 'right') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.activeCellIsLast() === false);
+      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.isLastCellActive() === false);
       this._table.activateRightColumnForToolbar();
     }
   }
