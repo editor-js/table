@@ -203,27 +203,51 @@ export class TableConstructor {
 
     if (this._hoveredCellSide === 'top') {
       this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.rowCount() > 1);
-      this._table.isFirstRowActive()
-        ? this._table.activateCurrentRow()
-        : this._table.activateTopRowForToolbar();
+
+      if (this._table.hasActiveRow()) {
+        this._table.isFirstRowActive()
+          ? this._table.activateCurrentRow()
+          : this._table.activateTopRowForToolbar();
+      } else {
+        this._table.activateFirstRow();
+      }
     }
     if (this._hoveredCellSide === 'bottom') {
       this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.rowCount() > 1);
-      this._table.isLastRowActive()
-        ? this._table.activateCurrentRow()
-        : this._table.activateBottomRowForToolbar();
+
+      // this will activate the last row if we initially entered from left and never entered the table before
+      if (this._table.hasActiveRow()) {
+        this._table.isLastRowActive()
+          ? this._table.activateCurrentRow()
+          : this._table.activateBottomRowForToolbar();
+      } else {
+        this._table.activateLastRow();
+      }
     }
     if (this._hoveredCellSide === 'left') {
       this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.cellCount() > 1);
-      this._table.isFirstCellActive()
-        ? this._table.activateCurrentColumn()
-        : this._table.activateLeftColumnForToolbar();
+
+      // this will activate the first column if we initially entered from left and never entered the table before
+      if (this._table.hasActiveCell()) {
+        this._table.isFirstCellActive()
+          ? this._table.activateCurrentColumn()
+          : this._table.activateLeftColumnForToolbar();
+      } else {
+        this._table.activateFirstColumn();
+      }
     }
     if (this._hoveredCellSide === 'right') {
       this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.cellCount() > 1);
-      this._table.isLastCellActive()
-        ? this._table.activateCurrentColumn()
-        : this._table.activateRightColumnForToolbar();
+
+      // this will activate the last column if we initially entered from left and never entered the table before
+      if (this._table.hasActiveCell()) {
+        this._table.isLastCellActive()
+          ? this._table.activateCurrentColumn()
+          : this._table.activateRightColumnForToolbar();
+
+      } else {
+        this._table.activateLastColumn();
+      }
     }
   }
 
@@ -352,15 +376,24 @@ export class TableConstructor {
    * @private
    */
   _addRow() {
-    const rowIndex = this._table.activeRow();
-
     if (this._hoveredCellSide === 'bottom') {
-      this._table.addRowBelow(rowIndex);
+      if (this._table.hasActiveRow()) {
+        this._table.addRowBelow(this._table.activeRow());
+
+        return;
+      }
+
+      this._table.addRowAtEnd();
+      return;
+    }
+
+    if (this._table.hasActiveRow()) {
+      this._table.addRowAbove(this._table.activeRow());
 
       return;
     }
 
-    this._table.addRowAbove(rowIndex);
+    this._table.addRowAtBeginning();
   }
 
   /**
@@ -372,16 +405,24 @@ export class TableConstructor {
     const rowIndex = this._table.activeRow();
 
     if (this._hoveredCellSide === 'bottom') {
-      this._table.isLastRowActive()
-        ? this._table.removeRow(rowIndex)
-        : this._table.removeRowBelow(rowIndex);
+      if (this._table.hasActiveRow()) {
+        this._table.isLastRowActive()
+          ? this._table.removeRow(rowIndex)
+          : this._table.removeRowBelow(rowIndex);
+      } else {
+        this._table.removeLastRow();
+      }
 
       return;
     }
 
-    this._table.isFirstRowActive()
-      ? this._table.removeRow(rowIndex)
-      : this._table.removeRowAbove(rowIndex);
+    if (this._table.hasActiveRow()) {
+      this._table.isFirstRowActive()
+        ? this._table.removeRow(rowIndex)
+        : this._table.removeRowAbove(rowIndex);
+    } else {
+      this._table.removeFirstRow();
+    }
   }
 
   /**
@@ -390,15 +431,25 @@ export class TableConstructor {
    * @private
    */
   _addColumn() {
-    const cellIndex = this._table.activeCell();
-
     if (this._hoveredCellSide === 'left') {
-      this._table.addColumnLeft(cellIndex);
+      if (this._table.hasActiveCell()) {
+        this._table.addColumnLeft(this._table.activeCell());
+
+        return;
+      }
+
+      this._table.addColumnAtBeginning();
 
       return;
     }
 
-    this._table.addColumnRight(cellIndex);
+    if (this._table.hasActiveCell()) {
+      this._table.addColumnRight(this._table.activeCell());
+
+      return;
+    }
+
+    this._table.addColumnAtEnd();
   }
 
   /**
@@ -410,16 +461,24 @@ export class TableConstructor {
     const cellIndex = this._table.activeCell();
 
     if (this._hoveredCellSide === 'left') {
-      this._table.isFirstCellActive()
-        ? this._table.removeColumn(cellIndex)
-        : this._table.removeColumnLeft(cellIndex);
+      if (this._table.hasActiveCell()) {
+        this._table.isFirstCellActive()
+          ? this._table.removeColumn(cellIndex)
+          : this._table.removeColumnLeft(cellIndex);
+      } else {
+        this._table.removeFirstColumn();
+      }
 
       return;
     }
 
-    this._table.isLastCellActive()
-      ? this._table.removeColumn(cellIndex)
-      : this._table.removeColumnRight(cellIndex);
+    if (this._table.hasActiveCell()) {
+      this._table.isLastCellActive()
+        ? this._table.removeColumn(cellIndex)
+        : this._table.removeColumnRight(cellIndex);
+    } else {
+      this._table.removeLastColumn();
+    }
   }
 
   /**

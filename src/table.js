@@ -50,6 +50,15 @@ export class Table {
   /**
    * Returns the last active cell
    *
+   * @returns {boolean}
+   */
+  hasActiveCell() {
+    return !!this._table.dataset.activeCell;
+  }
+
+  /**
+   * Returns the last active cell
+   *
    * @returns {string|number}
    */
   activeCell() {
@@ -101,6 +110,14 @@ export class Table {
     }
   }
 
+  activateFirstRow() {
+    this._setRowState(0, CSS.rowDeletable);
+  }
+
+  activateLastRow() {
+    this._setRowState(this._table.rows.length - 1, CSS.rowDeletable);
+  }
+
   activateCurrentRow() {
     this._setRowState(this.activeRow(), CSS.rowDeletable);
   }
@@ -111,6 +128,14 @@ export class Table {
 
   activateBottomRowForToolbar() {
     this._setRowState(this.activeRow() + 1, CSS.rowDeletable);
+  }
+
+  activateFirstColumn() {
+    this._setColumnState(0, CSS.cellDeletable);
+  }
+
+  activateLastColumn() {
+    this._setColumnState(this._numberOfColumns - 1, CSS.cellDeletable);
   }
 
   activateCurrentColumn() {
@@ -132,6 +157,15 @@ export class Table {
    */
   rowCount() {
     return this._table.rows.length;
+  }
+
+  /**
+   * Returns the last active cell
+   *
+   * @returns {boolean}
+   */
+  hasActiveRow() {
+    return !!this._table.dataset.activeRow;
   }
 
   /**
@@ -178,6 +212,14 @@ export class Table {
     this._numberOfColumns++;
   };
 
+  addColumnAtBeginning() {
+    this.addColumn(0);
+  }
+
+  addColumnAtEnd() {
+    this.addColumn(this._numberOfColumns);
+  }
+
   /**
    * Add column to the left of the active td-index
    *
@@ -218,6 +260,14 @@ export class Table {
 
     this._numberOfColumns--;
   };
+
+  removeFirstColumn() {
+    this.removeColumn(0);
+  }
+
+  removeLastColumn() {
+    this.removeColumn(this._numberOfColumns - 1);
+  }
 
   /**
    * Remove column in table on index place
@@ -260,6 +310,14 @@ export class Table {
     return row;
   };
 
+  addRowAtBeginning() {
+    this.addRow(0);
+  }
+
+  addRowAtEnd() {
+    this.addRow(this._table.rows.length);
+  }
+
   /**
    * Adds a new row above the rowIndex
    *
@@ -294,12 +352,26 @@ export class Table {
    * @param {number} rowIndex - number in the array of columns, where new column to insert,-1 if insert at the end
    */
   removeRow(rowIndex = 0) {
-    if (this._table.rows.length === 1) { // avoid deletion of last row
+    if (this._table.rows.length <= 1) { // avoid deletion of last row
       return;
     }
 
     this._table.deleteRow(rowIndex);
   };
+
+  /**
+   * Removes the last row in the table
+   */
+  removeFirstRow() {
+    this.removeRow(0);
+  }
+
+  /**
+   * Removes the last row in the table
+   */
+  removeLastRow() {
+    this.removeRow(this._table.rows.length - 1);
+  }
 
   /**
    * Remove row above the given index
