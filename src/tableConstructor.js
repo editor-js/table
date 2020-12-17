@@ -201,20 +201,28 @@ export class TableConstructor {
     }
 
     if (this._hoveredCellSide === 'top') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.isFirstRowActive() === false);
-      this._table.activateTopRowForToolbar();
+      this._showToolBar(this._horizontalToolBar, areaCoords.y1 - containerCoords.y1 - 2, this._table.rowCount() > 1);
+      this._table.isFirstRowActive()
+        ? this._table.activateCurrentRow()
+        : this._table.activateTopRowForToolbar();
     }
     if (this._hoveredCellSide === 'bottom') {
-      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.isLastRowActive() === false);
-      this._table.activateBottomRowForToolbar();
+      this._showToolBar(this._horizontalToolBar, areaCoords.y2 - containerCoords.y1 - 1, this._table.rowCount() > 1);
+      this._table.isLastRowActive()
+        ? this._table.activateCurrentRow()
+        : this._table.activateBottomRowForToolbar();
     }
     if (this._hoveredCellSide === 'left') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.isFirstCellActive() === false);
-      this._table.activateLeftColumnForToolbar();
+      this._showToolBar(this._verticalToolBar, areaCoords.x1 - containerCoords.x1 - 2, this._table.cellCount() > 1);
+      this._table.isFirstCellActive()
+        ? this._table.activateCurrentColumn()
+        : this._table.activateLeftColumnForToolbar();
     }
     if (this._hoveredCellSide === 'right') {
-      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.isLastCellActive() === false);
-      this._table.activateRightColumnForToolbar();
+      this._showToolBar(this._verticalToolBar, areaCoords.x2 - containerCoords.x1 - 1, this._table.cellCount() > 1);
+      this._table.isLastCellActive()
+        ? this._table.activateCurrentColumn()
+        : this._table.activateRightColumnForToolbar();
     }
   }
 
@@ -363,12 +371,16 @@ export class TableConstructor {
     const rowIndex = this._table.activeRow();
 
     if (this._hoveredCellSide === 'bottom') {
-      this._table.removeRowBelow(rowIndex);
+      this._table.isLastRowActive()
+        ? this._table.removeRow(rowIndex)
+        : this._table.removeRowBelow(rowIndex);
 
       return;
     }
 
-    this._table.removeRowAbove(rowIndex);
+    this._table.isFirstRowActive()
+      ? this._table.removeRow(rowIndex)
+      : this._table.removeRowAbove(rowIndex);
   }
 
   /**
@@ -397,12 +409,16 @@ export class TableConstructor {
     const cellIndex = this._table.activeCell();
 
     if (this._hoveredCellSide === 'left') {
-      this._table.removeColumnLeft(cellIndex);
+      this._table.isFirstCellActive()
+        ? this._table.removeColumn(cellIndex)
+        : this._table.removeColumnLeft(cellIndex);
 
       return;
     }
 
-    this._table.removeColumnRight(cellIndex);
+    this._table.isLastCellActive()
+      ? this._table.removeColumn(cellIndex)
+      : this._table.removeColumnRight(cellIndex);
   }
 
   /**

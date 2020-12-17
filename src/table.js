@@ -34,6 +34,15 @@ export class Table {
   }
 
   /**
+   * Returns the number of current columns
+   *
+   * @returns {number}
+   */
+  cellCount() {
+    return this._numberOfColumns;
+  }
+
+  /**
    * Returns the last active cell
    *
    * @returns {string|number}
@@ -87,6 +96,10 @@ export class Table {
     }
   }
 
+  activateCurrentRow() {
+    this._setRowState(this.activeRow(), CSS.rowDeletable);
+  }
+
   activateTopRowForToolbar() {
     this._setRowState(this.activeRow() - 1, CSS.rowDeletable);
   }
@@ -95,12 +108,25 @@ export class Table {
     this._setRowState(this.activeRow() + 1, CSS.rowDeletable);
   }
 
+  activateCurrentColumn() {
+    this._setColumnState(this.activeCell(), CSS.cellDeletable);
+  }
+
   activateLeftColumnForToolbar() {
     this._setColumnState(this.activeCell() - 1, CSS.cellDeletable);
   }
 
   activateRightColumnForToolbar() {
     this._setColumnState(this.activeCell() + 1, CSS.cellDeletable);
+  }
+
+  /**
+   * Returns the number of current rows
+   *
+   * @returns {number}
+   */
+  rowCount() {
+    return this._table.rows.length;
   }
 
   /**
