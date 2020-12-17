@@ -40,7 +40,6 @@ export class TableConstructor {
     this._table.htmlElement.appendChild(this._verticalToolBar.htmlElement);
 
     /** Activated elements */
-    this._hoveredCell = null;
     this._activatedToolBar = null;
     this._hoveredCellSide = null;
 
@@ -189,11 +188,13 @@ export class TableConstructor {
     const areaCoords = getCoords(event.target);
     const containerCoords = getCoords(this._table.htmlElement);
 
-    this._hoveredCell = event.target.closest('TD');
+    let addPadding = true;
+    if (event.target instanceof HTMLElement && event.target.classList.contains(this._table.CSS.wrapper)) {
+      addPadding = false;
+    }
 
-    if (this._hoveredCell === null) {
+    if (event.target.closest('TD') === null && addPadding) {
       const paddingContainer = 11;
-      this._hoveredCell = this._container;
       areaCoords.x1 += paddingContainer;
       areaCoords.y1 += paddingContainer;
       areaCoords.x2 -= paddingContainer;

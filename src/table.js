@@ -17,6 +17,11 @@ const CSS = {
  * Generates and manages _table contents.
  */
 export class Table {
+
+  get CSS () {
+    return CSS;
+  }
+
   /**
    * Creates
    *
