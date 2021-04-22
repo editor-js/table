@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test of Table</title>
+    <title>Test of a New Beautiful Table</title>
 
     <style>
 
@@ -30,7 +30,9 @@
 
 <script src="dist/bundle.js"></script>
 <script>
-    const table = new Table({data: {}, config: {}, api: {}});
+    const table = new Table({data: {}, config: {}, api: {
+        styles: {},
+    }});
     const block = document.querySelector(".block");
 
     block.appendChild(table.render());

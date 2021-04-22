@@ -85,3 +85,23 @@ export function getSideByCoords(coords, x, y) {
 
   return side;
 }
+
+/**
+ * Insert element after the referenced
+ * 
+ * @param {*} newNode 
+ * @param {*} referenceNode 
+ */
+export function insertAfter(newNode, referenceNode) {
+  return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+/**
+ * Insert element after the referenced
+ * 
+ * @param {*} newNode 
+ * @param {*} referenceNode 
+ */
+ export function insertBefore(newNode, referenceNode) {
+  return referenceNode.parentNode.insertBefore(newNode, referenceNode);
+}

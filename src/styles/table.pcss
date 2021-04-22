@@ -3,22 +3,18 @@
 .tc-table {
   width: 100%;
   height: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
+  display: grid;
+  border-top: 1px solid #6d6d6d;
 
   &__wrap {
-    border: 1px solid #DBDBE2;
-    border-radius: 3px;
+    /*border: 1px solid #DBDBE2;*/
+    border-left: 0px;
     position: relative;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-  }
-
-  &__cell {
-    border: 1px solid #DBDBE2;
-    padding: 0;
-    vertical-align: top;
+    display: grid;
+    grid-template-columns: calc(100% - 3em) 3em;
   }
 
   &__area {
@@ -33,20 +29,37 @@
     height: 100%;
     overflow: hidden;
   }
+}
 
-  tbody tr:first-child td {
-    border-top: none;
-  }
+.tc-add-column {
+  display: flex;
+  justify-content: center;
+  padding-top: 1em;
+  border-top: 1px solid #000;
+}
 
-  tbody tr:last-child td {
-    border-bottom: none;
-  }
+.tc-add-row {
+  height: 3em;
+  display: flex;
+  align-items: center;
+  padding-left: 1em;
+}
 
-  tbody tr td:last-child {
-    border-right: none;
-  }
+.tc-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+}
 
-  tbody tr td:first-child {
-    border-left: none;
+.tc-column {
+  height: 2rem;
+  border-right: 1px solid #6d6d6d;
+  border-bottom: 1px solid #6d6d6d;
+  clear: both;
+  padding: 0.5rem;
+  overflow: hidden;
+  outline: none;
+
+  &--pre {
+    border-right: 0;
   }
 }

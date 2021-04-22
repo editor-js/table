@@ -1,8 +1,14 @@
-import { create, getCoords, getSideByCoords } from './documentUtils';
+import { create, getCoords, getSideByCoords, insertAfter, insertBefore } from './documentUtils';
 import './styles/table.pcss';
 
 const CSS = {
   table: 'tc-table',
+  row: 'tc-row',
+  column: 'tc-column',
+  preColumn: 'tc-column--pre',
+  addRow: 'tc-add-row',
+  addColumn: 'tc-add-column',
+  addColumnCell: 'tc-add-column--cell',
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
   wrapper: 'tc-table__wrap',
@@ -23,7 +29,9 @@ export class Table {
     this._numberOfColumns = 0;
     this._numberOfRows = 0;
     this._element = this._createTableWrapper();
-    this._table = this._element.querySelector('table');
+    this._table = this._element.querySelector(`.${CSS.table}`);
+
+    this._fillAddButtons();
 
     if (!this.readOnly) {
       this._hangEvents();
@@ -32,16 +40,22 @@ export class Table {
 
   /**
    * Add column in table on index place
+   * Add cells in each row
    *
-   * @param {number} index - number in the array of columns, where new column to insert,-1 if insert at the end
+   * @param {number} index - number in the array of columns, where new column to insert, -1 if insert at the end
    */
   addColumn(index = -1) {
     this._numberOfColumns++;
-    /** Add cell in each row */
-    const rows = this._table.rows;
+   
+    for (let i = 1; i <= this._numberOfRows; i++) {
+      let cell;
+      const newCell = create('div', [ CSS.column ],  { contenteditable: !this.readOnly });
 
-    for (let i = 0; i < rows.length; i++) {
-      const cell = rows[i].insertCell(index);
+      if (index > 0) {
+        cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+      } else {
+        cell = this._table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
+      }
 
       this._fillCell(cell);
     }
@@ -50,17 +64,31 @@ export class Table {
   /**
    * Add row in table on index place
    *
-   * @param {number} index - number in the array of columns, where new column to insert,-1 if insert at the end
+   * @param {number} index - number in the array of rows, where new column to insert,-1 if insert at the end
    * @returns {HTMLElement} row
    */
   addRow(index = -1) {
     this._numberOfRows++;
-    const row = this._table.insertRow(index);
+    let row;
+    
+    if (index > 0) {
+      row = insertAfter(create('div', [ CSS.row ]), this._table.querySelector(`.${CSS.row}:nth-child(${index})`));
+    } else {
+      row = this._table.appendChild(create('div', [ CSS.row ]));
+    }
 
     this._fillRow(row);
 
     return row;
   };
+
+  /**
+   * Add buttons to fast add row/column
+   */
+  _fillAddButtons() {
+    this._element.querySelector(`.${CSS.addColumn}`).textContent = '+';
+    this._element.querySelector(`.${CSS.addRow}`).textContent = '+';
+  }
 
   /**
    * get html element of table
@@ -94,15 +122,11 @@ export class Table {
    * @returns {HTMLElement} tbody - where rows will be
    */
   _createTableWrapper() {
-    return create('div', [ CSS.wrapper ], null, [ create('table', [ CSS.table ]) ]);
-  }
-
-  /**
-   * @private
-   * @returns {HTMLElement} - the area
-   */
-  _createContenteditableArea() {
-    return create('div', [ CSS.inputField ], { contenteditable: !this.readOnly });
+    return create('div', [ CSS.wrapper ], null, [ 
+      create('div', [ CSS.table ]),
+      create('div', [ CSS.addColumn ]),
+      create('div', [ CSS.addRow ]) 
+    ]);
   }
 
   /**
@@ -110,21 +134,20 @@ export class Table {
    * @param {HTMLElement} cell - empty cell
    */
   _fillCell(cell) {
-    cell.classList.add(CSS.cell);
-    const content = this._createContenteditableArea();
-
-    cell.appendChild(create('div', [ CSS.area ], null, [ content ]));
+    // cell.classList.add(CSS.cell);
   }
 
   /**
+   * Add pre-column cell to a row
+   * 
    * @private
-   * @param row = the empty row
+   * @param {HTMLElement} row
    */
   _fillRow(row) {
-    for (let i = 0; i < this._numberOfColumns; i++) {
-      const cell = row.insertCell();
+    for (let i = 1; i <= this._numberOfColumns; i++) {
+      const newCell = create('div', [ CSS.column ],  { contenteditable: !this.readOnly });
 
-      this._fillCell(cell);
+      row.appendChild(newCell);
     }
   }
 
@@ -194,12 +217,12 @@ export class Table {
    * @param {MouseEvent} event
    */
   _clickedOnCell(event) {
-    if (!event.target.classList.contains(CSS.cell)) {
+    /*if (!event.target.classList.contains(CSS.cell)) {
       return;
     }
     const content = event.target.querySelector('.' + CSS.inputField);
 
-    content.focus();
+    content.focus();*/
   }
 
   /**
