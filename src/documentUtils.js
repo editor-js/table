@@ -58,6 +58,43 @@ export function getCoords(elem) {
 }
 
 /**
+ * 
+ * @param {*} elem 
+ * @param {*} event 
+ * @returns mouse position relative to the element
+ */
+export function getRelativeCoords(elem, event) {
+  const rect = elem.getBoundingClientRect();
+  const { width, height, x, y } = rect;
+  const { clientX, clientY } = event;
+
+  return {
+    width,
+    height,
+    x: clientX - x,
+    y: clientY - y
+  }
+}
+
+/**
+ * @param {HTMLElement} table - table element
+ * @param {Event} event - mousemove event
+ * @param {number} numberOfColumns - number of columns in the table
+ * @param {number} numberOfRows - number of rows in the table
+ * @returns hovered cell coordinates as an integer row` and column
+ */
+export function hoveredCell(table, event, numberOfColumns, numberOfRows) {
+  const { width, height, x, y } = getRelativeCoords(table, event);
+  const hoveredRow =  Math.floor(y / (height / numberOfRows)) + 1;
+  const hoveredColumn = Math.floor(x / (width / numberOfColumns)) + 1;
+
+  return {
+    row: hoveredRow,
+    column: hoveredColumn
+  }
+}
+
+/**
  * Recognizes which side of the container  is closer to (x,y)
  * @param {{x1: number, y1: number, x2: number, y2: number}} coords - coords of container
  * @param x - x coord

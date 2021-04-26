@@ -1,5 +1,8 @@
-import { create, getCoords, getSideByCoords, insertAfter, insertBefore } from './documentUtils';
+import { create, getCoords, getSideByCoords, insertAfter, insertBefore, hoveredCell } from './documentUtils';
 import './styles/table.pcss';
+import './styles/toolbox.pcss';
+import svgPlusButton from './img/plus.svg';
+import {Toolbox} from './toolbox';
 
 const CSS = {
   table: 'tc-table',
@@ -12,7 +15,7 @@ const CSS = {
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
   wrapper: 'tc-table__wrap',
-  area: 'tc-table__area',
+  area: 'tc-table__area'
 };
 
 /**
@@ -28,6 +31,7 @@ export class Table {
     this.readOnly = readOnly;
     this._numberOfColumns = 0;
     this._numberOfRows = 0;
+    this._toolbox = new Toolbox();
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector(`.${CSS.table}`);
 
@@ -86,8 +90,8 @@ export class Table {
    * Add buttons to fast add row/column
    */
   _fillAddButtons() {
-    this._element.querySelector(`.${CSS.addColumn}`).textContent = '+';
-    this._element.querySelector(`.${CSS.addRow}`).textContent = '+';
+    this._element.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
+    this._element.querySelector(`.${CSS.addRow}`).innerHTML = svgPlusButton;
   }
 
   /**
@@ -122,7 +126,9 @@ export class Table {
    * @returns {HTMLElement} tbody - where rows will be
    */
   _createTableWrapper() {
-    return create('div', [ CSS.wrapper ], null, [ 
+    return create('div', [ CSS.wrapper ], null, [
+      this._toolbox.toolboxRow,
+      this._toolbox.toolboxColumn,
       create('div', [ CSS.table ]),
       create('div', [ CSS.addColumn ]),
       create('div', [ CSS.addRow ]) 
@@ -155,74 +161,38 @@ export class Table {
    * @private
    */
   _hangEvents() {
-    this._table.addEventListener('focus', (event) => {
-      this._focusEditField(event);
-    }, true);
+    // this._table.addEventListener('focus', (event) => {
+    //   this._focusEditField(event);
+    // }, true);
 
-    this._table.addEventListener('blur', (event) => {
-      this._blurEditField(event);
-    }, true);
+    // this._table.addEventListener('blur', (event) => {
+    //   this._blurEditField(event);
+    // }, true);
 
-    this._table.addEventListener('keydown', (event) => {
-      this._pressedEnterInEditField(event);
+    // this._table.addEventListener('keydown', (event) => {
+    //   this._pressedEnterInEditField(event);
+    // });
+
+    this._toolbox.toolboxRow.addEventListener('click', (event) => {
+      console.log(event);
     });
 
-    this._table.addEventListener('click', (event) => {
-      this._clickedOnCell(event);
-    });
+    this._table.addEventListener('mousemove', (event) => {
+      const { row, column } = hoveredCell(this._table, event, this._numberOfColumns, this._numberOfRows);
 
-    this._table.addEventListener('mouseover', (event) => {
-      this._mouseEnterInDetectArea(event);
-      event.stopPropagation();
+      this._updateToolboxesPosition(row, column);
+    }, true);
+
+    this._element.addEventListener('mouseout', (event) => {
+      const row = 0, column = 0;
+
+      this._updateToolboxesPosition(row, column);
     }, true);
   }
 
-  /**
-   * @private
-   * @param {FocusEvent} event
-   */
-  _focusEditField(event) {
-    if (!event.target.classList.contains(CSS.inputField)) {
-      return;
-    }
-    this._selectedCell = event.target.closest('.' + CSS.cell);
-  }
-
-  /**
-   * @private
-   * @param {FocusEvent} event
-   */
-  _blurEditField(event) {
-    if (!event.target.classList.contains(CSS.inputField)) {
-      return;
-    }
-    this._selectedCell = null;
-  }
-
-  /**
-   * @private
-   * @param {KeyboardEvent} event
-   */
-  _pressedEnterInEditField(event) {
-    if (!event.target.classList.contains(CSS.inputField)) {
-      return;
-    }
-    if (event.keyCode === 13 && !event.shiftKey) {
-      event.preventDefault();
-    }
-  }
-
-  /**
-   * @private
-   * @param {MouseEvent} event
-   */
-  _clickedOnCell(event) {
-    /*if (!event.target.classList.contains(CSS.cell)) {
-      return;
-    }
-    const content = event.target.querySelector('.' + CSS.inputField);
-
-    content.focus();*/
+  _updateToolboxesPosition(row, column) {
+    this._toolbox.updateToolboxColumnPosition(this._numberOfColumns, column);
+    this._toolbox.updateToolboxRowPosition(this._numberOfRows, row);
   }
 
   /**

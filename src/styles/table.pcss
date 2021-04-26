@@ -1,10 +1,11 @@
 /* tc- project's prefix*/
 
 .tc-table {
+  position: relative;
   width: 100%;
   height: 100%;
   display: grid;
-  border-top: 1px solid #6d6d6d;
+  border-top: 1px solid #e8e8eb;
 
   &__wrap {
     /*border: 1px solid #DBDBE2;*/
@@ -14,35 +15,40 @@
     width: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: calc(100% - 3em) 3em;
+    grid-template-columns: calc(100% - 2.6em) 2.6em;
   }
 
-  &__area {
-    padding: 10px;
+  &:after {
+    position: absolute;
+    content: "";
+    width: 2.6em;
     height: 100%;
+    left: -2.6em;
+    top: 0;
   }
 
-  &__inp {
-    outline: none;
-    flex-grow: 100;
-    min-height: 1.5em;
-    height: 100%;
-    overflow: hidden;
+  &:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 2.6em;
+    top: -2.6em;
+    left: 0;
   }
 }
 
 .tc-add-column {
   display: flex;
   justify-content: center;
-  padding-top: 1em;
-  border-top: 1px solid #000;
+  padding-top: 0.8em;
+  border-top: 1px solid #e8e8eb;
 }
 
 .tc-add-row {
-  height: 3em;
+  height: 2.6em;
   display: flex;
   align-items: center;
-  padding-left: 1em;
+  padding-left: 0.3em;
 }
 
 .tc-row {
@@ -52,10 +58,10 @@
 
 .tc-column {
   height: 2rem;
-  border-right: 1px solid #6d6d6d;
-  border-bottom: 1px solid #6d6d6d;
+  border-right: 1px solid #e8e8eb;
+  border-bottom: 1px solid #e8e8eb;
   clear: both;
-  padding: 0.5rem;
+  padding: 0.3em;
   overflow: hidden;
   outline: none;
 

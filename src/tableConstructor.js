@@ -116,7 +116,6 @@ export class TableConstructor {
    */
   _hangEvents() {
     this._container.querySelector(`.${CSS.addColumn}`).addEventListener('click', (event) => {
-      console.log('SAS');
       this._table.addColumn();
     });
 
@@ -125,99 +124,5 @@ export class TableConstructor {
     });
   }
 
-  /**
-   * @private
-   *
-   * detects a mouseenter on a special area
-   * @param {MouseEvent} event
-   */
-  _mouseInActivatingAreaListener(event) {
 
-  }
-
-  /**
-   * @private
-   *
-   * Hide toolbar, if mouse left area
-   * @param {MouseEvent} event
-   */
-  _leaveDetectArea(event) {
-  }
-
-  /**
-   * @private
-   *
-   * Show toolbar when mouse in activation area
-   * Showing
-   * @param {MouseEvent} event
-   */
-  _toolbarCalling(event) {
-  }
-
-  /**
-   * @private
-   *
-   * handling clicks on toolbars
-   * @param {MouseEvent} event
-   */
-  _clickToolbar(event) {
-
-  }
-
-  /**
-   * @private
-   *
-   * detects button presses when editing a table's content
-   * @param {KeyboardEvent} event
-   */
-  _containerKeydown(event) {
-
-  }
-
-
-  /**
-   * @private
-   *
-   * check if hovered cell side is bottom or right. (lefter in array of cells or rows than hovered cell)
-   * @returns {boolean}
-   */
-  _isBottomOrRight() {
-  }
-
-  /**
-   * Adds row in table
-   * @private
-   */
-  _addRow() {
-
-  }
-
-  /**
-   * @private
-   *
-   * Adds column in table
-   */
-  _addColumn() {
-
-  }
-
-  /**
-   * @private
-   *
-   * if "cntrl + Eneter" is pressed then create new line under current and focus it
-   * @param {KeyboardEvent} event
-   */
-  _containerEnterPressed(event) {
-
-  }
-
-  /**
-   * @private
-   *
-   * When the mouse enters the detection area
-   * @param {MouseEvent} event
-   */
-  _mouseEnterInDetectArea(event) {
-
-  }
 }
