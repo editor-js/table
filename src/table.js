@@ -1,6 +1,7 @@
 import { create, getCoords, getSideByCoords, insertAfter, insertBefore, hoveredCell } from './documentUtils';
 import './styles/table.pcss';
 import './styles/toolbox.pcss';
+import './styles/utils.pcss';
 import svgPlusButton from './img/plus.svg';
 import {Toolbox} from './toolbox';
 
@@ -15,7 +16,9 @@ const CSS = {
   inputField: 'tc-table__inp',
   cell: 'tc-table__cell',
   wrapper: 'tc-table__wrap',
-  area: 'tc-table__area'
+  area: 'tc-table__area',
+  toolboxAddColumnRight: 'tc-toolbox-add-column-right',
+  toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
 };
 
 /**
@@ -34,6 +37,8 @@ export class Table {
     this._toolbox = new Toolbox();
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector(`.${CSS.table}`);
+    this._hoveredRow = 0;
+    this._hoveredColumn = 0;
 
     this._fillAddButtons();
 
@@ -57,6 +62,7 @@ export class Table {
 
       if (index > 0) {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+        insertBefore(newCell, cell);
       } else {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
       }
@@ -161,33 +167,50 @@ export class Table {
    * @private
    */
   _hangEvents() {
-    // this._table.addEventListener('focus', (event) => {
-    //   this._focusEditField(event);
-    // }, true);
-
-    // this._table.addEventListener('blur', (event) => {
-    //   this._blurEditField(event);
-    // }, true);
-
-    // this._table.addEventListener('keydown', (event) => {
-    //   this._pressedEnterInEditField(event);
-    // });
-
-    this._toolbox.toolboxRow.addEventListener('click', (event) => {
-      console.log(event);
-    });
-
+    // Update toolboxes position depending on the mouse movements
     this._table.addEventListener('mousemove', (event) => {
       const { row, column } = hoveredCell(this._table, event, this._numberOfColumns, this._numberOfRows);
 
-      this._updateToolboxesPosition(row, column);
-    }, true);
-
-    this._element.addEventListener('mouseout', (event) => {
-      const row = 0, column = 0;
+      this._hoveredRow = row;
+      this._hoveredColumn = column;
 
       this._updateToolboxesPosition(row, column);
     }, true);
+
+    // Hide toolboxes when leaving the table
+    this._element.addEventListener('mouseleave', (event) => {
+      this._updateToolboxesPosition(0, 0);
+    });
+    
+    // Hide toolboxes when over the add column button
+    this._element.querySelector(`.${CSS.addColumn}`).addEventListener('mouseover', event => {
+      this._updateToolboxesPosition(0, 0);
+    });
+
+    // Hide toolboxes when over the add row button
+    this._element.querySelector(`.${CSS.addRow}`).addEventListener('mouseover', event => {
+      this._updateToolboxesPosition(0, 0);
+    });
+    
+    // Add column to right
+    this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnRight}`).addEventListener('click', event => {
+      event.stopPropagation();
+      this.addColumn(this._hoveredColumn + 1);
+      // this._updateToolboxesPosition(this._hoveredRow, this._hoveredColumn);
+
+      this._updateToolboxesPosition(0, 0);
+      this._toolbox.closeToolboxColumnMenu();
+    });
+
+    // Add column to left
+    this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnLeft}`).addEventListener('click', event => {
+      event.stopPropagation();
+      this.addColumn(this._hoveredColumn);
+      // this._hoveredColumn += 1;
+      // this._updateToolboxesPosition(this._hoveredRow, this._hoveredColumn);
+      this._updateToolboxesPosition(0, 0);
+      this._toolbox.closeToolboxColumnMenu();
+    })
   }
 
   _updateToolboxesPosition(row, column) {

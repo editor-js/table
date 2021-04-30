@@ -1,6 +1,7 @@
 .tc-toolbox-row {
   position: absolute;
-  transform: translate(-170%, -50%);
+  left: -30px;
+  transform: translateY(-50%);
   cursor: pointer;
   z-index: 1;
   visibility: hidden;;
@@ -8,8 +9,52 @@
 
 .tc-toolbox-column {
   position: absolute;
-  transform: translate(-50%, -120%);
+  top: -24px;
+  transform: translateX(-50%);
   cursor: pointer;
   z-index: 1;
   visibility: hidden;
+}
+
+.tc-toolbox-row__menu {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  /* width: 100px;
+  height: 30px; */
+  background: #000;
+}
+
+.tc-toolbox-column__menu {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  background: #fff;
+  width: 180px;
+  border: solid 1px #eaeaea;
+  box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13);
+  border-radius: 4px;
+  padding: 6px 12px;
+  display: grid;
+}
+
+.tc-toolbox-row__option, .tc-toolbox-column__option {
+  font-size: 0.9em;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-column-gap: 11px;
+  align-items: center;
+  padding: 5.5px 0;
+}
+
+.tc-toolbox-add-column-right {
+
+}
+
+.tc-toolbox-add-column-left {
+
+}
+
+.tc-toolbox-delete {
+
 }
