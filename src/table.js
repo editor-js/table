@@ -19,6 +19,10 @@ const CSS = {
   area: 'tc-table__area',
   toolboxAddColumnRight: 'tc-toolbox-add-column-right',
   toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
+  toolboxDeleteColumn: 'tc-toolbox-delete--column',
+  toolboxAddRowAbove: 'tc-toolbox-add-row-above',
+  toolboxAddRowBelow: 'tc-toolbox-add-row-below',
+  toolboxDeleteRow: 'tc-toolbox-delete--row',
 };
 
 /**
@@ -62,7 +66,15 @@ export class Table {
 
       if (index > 0) {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
-        insertBefore(newCell, cell);
+
+        if (cell) {
+          insertBefore(newCell, cell);
+        } else {
+          cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index - 1})`);
+          
+          insertAfter(newCell, cell);
+        }
+        
       } else {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
       }
@@ -79,18 +91,54 @@ export class Table {
    */
   addRow(index = -1) {
     this._numberOfRows++;
-    let row;
-    
+    let newRow;
+    let rowElem = create('div', [ CSS.row ]);
+
     if (index > 0) {
-      row = insertAfter(create('div', [ CSS.row ]), this._table.querySelector(`.${CSS.row}:nth-child(${index})`));
+      let row = this._table.querySelector(`.${CSS.row}:nth-child(${index})`);
+
+      if (row) {
+        newRow = insertBefore(rowElem, row);
+      } else {
+        row = this._table.querySelector(`.${CSS.row}:nth-child(${index - 1})`);
+
+        newRow = insertAfter(rowElem, row);
+      }
+      
     } else {
-      row = this._table.appendChild(create('div', [ CSS.row ]));
+      newRow = this._table.appendChild(rowElem);
     }
 
-    this._fillRow(row);
+    console.log('new row', newRow);
 
-    return row;
+    this._fillRow(newRow);
+
+    return newRow;
   };
+
+  /**
+   * Delete a column by index
+   * 
+   * @param {number} index 
+   */
+  deleteColumn(index) {
+    for (let i = 1; i <= this._numberOfRows; i++) {
+      this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`).remove();
+    }
+    
+    this._numberOfColumns--;
+  }
+
+  /**
+   * Delete a row by index
+   * 
+   * @param {number} index 
+   */
+  deleteRow(index) {
+    this._table.querySelector(`.${CSS.row}:nth-child(${index})`).remove();
+    
+    this._numberOfRows--;
+  }
 
   /**
    * Add buttons to fast add row/column
@@ -171,14 +219,13 @@ export class Table {
     this._table.addEventListener('mousemove', (event) => {
       const { row, column } = hoveredCell(this._table, event, this._numberOfColumns, this._numberOfRows);
 
-      this._hoveredRow = row;
-      this._hoveredColumn = column;
-
       this._updateToolboxesPosition(row, column);
     }, true);
 
     // Hide toolboxes when leaving the table
     this._element.addEventListener('mouseleave', (event) => {
+      this._toolbox.closeToolboxColumnMenu();
+      this._toolbox.closeToolboxRowMenu();
       this._updateToolboxesPosition(0, 0);
     });
     
@@ -195,46 +242,65 @@ export class Table {
     // Add column to right
     this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnRight}`).addEventListener('click', event => {
       event.stopPropagation();
-      this.addColumn(this._hoveredColumn + 1);
-      // this._updateToolboxesPosition(this._hoveredRow, this._hoveredColumn);
 
+      this.addColumn(this._hoveredColumn + 1);
       this._updateToolboxesPosition(0, 0);
-      this._toolbox.closeToolboxColumnMenu();
     });
 
     // Add column to left
     this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnLeft}`).addEventListener('click', event => {
       event.stopPropagation();
+
       this.addColumn(this._hoveredColumn);
-      // this._hoveredColumn += 1;
-      // this._updateToolboxesPosition(this._hoveredRow, this._hoveredColumn);
       this._updateToolboxesPosition(0, 0);
-      this._toolbox.closeToolboxColumnMenu();
+    });
+
+    // Add row above
+    this._toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowAbove}`).addEventListener('click', event => {
+      event.stopPropagation();
+
+      this.addRow(this._hoveredRow);
+      this._updateToolboxesPosition(0, 0);
+    });
+
+    // Add row below
+    this._toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowBelow}`).addEventListener('click', event => {
+      event.stopPropagation();
+
+      this.addRow(this._hoveredRow + 1);
+      this._updateToolboxesPosition(0, 0);
+    });
+
+    // Delete selected column
+    this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
+      this.deleteColumn(this._hoveredColumn);
+      this._updateToolboxesPosition(0, 0);
+    })
+
+    // Delete selected row
+    this._toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
+      this.deleteRow(this._hoveredRow);
+      this._updateToolboxesPosition(0, 0);
     })
   }
 
   _updateToolboxesPosition(row, column) {
-    this._toolbox.updateToolboxColumnPosition(this._numberOfColumns, column);
-    this._toolbox.updateToolboxRowPosition(this._numberOfRows, row);
-  }
-
-  /**
-   * @private
-   * @param {MouseEvent} event
-   */
-  _mouseEnterInDetectArea(event) {
-    if (!event.target.classList.contains(CSS.area)) {
+    if (this._hoveredRow== row && this._hoveredColumn == column) {
       return;
     }
 
-    const coordsCell = getCoords(event.target.closest('TD'));
-    const side = getSideByCoords(coordsCell, event.pageX, event.pageY);
+    if (this._hoveredColumn != column) {
+      this._toolbox.closeToolboxColumnMenu();
+    }
 
-    event.target.dispatchEvent(new CustomEvent('mouseInActivatingArea', {
-      detail: {
-        side: side,
-      },
-      bubbles: true,
-    }));
+    if (this._hoveredRow != row) {
+      this._toolbox.closeToolboxRowMenu();
+    }
+    
+    this._hoveredRow = row;
+    this._hoveredColumn = column;
+
+    this._toolbox.updateToolboxColumnPosition(this._numberOfColumns, column);
+    this._toolbox.updateToolboxRowPosition(this._numberOfRows, row);
   }
 }

@@ -126,8 +126,9 @@ export function getSideByCoords(coords, x, y) {
 /**
  * Insert element after the referenced
  * 
- * @param {*} newNode 
- * @param {*} referenceNode 
+ * @param {HTMLElement} newNode 
+ * @param {HTMLElement} referenceNode
+ * @returns {HTMLElement}
  */
 export function insertAfter(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -136,8 +137,9 @@ export function insertAfter(newNode, referenceNode) {
 /**
  * Insert element after the referenced
  * 
- * @param {*} newNode 
- * @param {*} referenceNode 
+ * @param {HTMLElement} newNode 
+ * @param {HTMLElement} referenceNode 
+ * @returns {HTMLElement}
  */
  export function insertBefore(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode);

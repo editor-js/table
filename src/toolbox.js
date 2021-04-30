@@ -2,6 +2,8 @@ import { create, getCoords, getSideByCoords, insertAfter, insertBefore } from '.
 import toolboxIcon from './img/toolboxIcon.svg';
 import newToLeftIcon from './img/new-to-left.svg';
 import newToRightIcon from './img/new-to-right.svg';
+import newToUp from './img/new-to-up.svg';
+import newToDown from './img/new-to-down.svg';
 import closeIcon from './img/cross.svg';
 
 const CSS = {
@@ -12,7 +14,11 @@ const CSS = {
   toolboxColumnMenu: 'tc-toolbox-column__menu',
   toolboxAddColumnRight: 'tc-toolbox-add-column-right',
   toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
+  toolboxAddRowAbove: 'tc-toolbox-add-row-above',
+  toolboxAddRowBelow: 'tc-toolbox-add-row-below',
   toolboxDelete: 'tc-toolbox-delete',
+  toolboxDeleteColumn: 'tc-toolbox-delete--column',
+  toolboxDeleteRow: 'tc-toolbox-delete--row',
   toolboxOption: 'tc-toolbox-row__option',
 }
 
@@ -40,6 +46,7 @@ export class Toolbox {
   _hangEvents() {
     this._toolboxRow.addEventListener('click', event => {
       console.log('Open row toolbox');
+      this.openToolboxRowMenu();
     });
 
     this._toolboxColumn.addEventListener('click', event => {
@@ -69,7 +76,31 @@ export class Toolbox {
   }
 
   _createRowMenu() {
-    let toolboxRowMenu = create('div', [ CSS.toolboxRowMenu ]);
+    let addRowAboveText = create('span');
+    let addRowBelowText = create('span');
+    let deleteRowText = create('span');
+
+    addRowAboveText.textContent = 'Add row above';
+    addRowBelowText.textContent = 'Add row below';
+    deleteRowText.textContent = 'Delete row';
+
+    let addRowAbove= create('div', [ CSS.toolboxAddRowAbove, CSS.toolboxOption ]);
+    addRowAbove.innerHTML = newToUp;
+    addRowAbove.append(addRowAboveText);
+
+    let addRowBelow = create('div', [ CSS.toolboxAddRowBelow, CSS.toolboxOption ]);
+    addRowBelow.innerHTML = newToDown;
+    addRowBelow.append(addRowBelowText);
+
+    let deleteRow = create('div', [ CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteRow ]);
+    deleteRow.innerHTML = closeIcon;
+    deleteRow.append(deleteRowText);
+
+    let toolboxRowMenu = create('div', [ CSS.toolboxRowMenu, CSS.hidden ], null, [
+      addRowAbove, 
+      addRowBelow,
+      deleteRow
+    ]);
 
     return toolboxRowMenu;
   }
@@ -91,7 +122,7 @@ export class Toolbox {
     addColumnLeft.innerHTML = newToLeftIcon;
     addColumnLeft.append(addColumnLeftText);
 
-    let deleteColumn = create('div', [ CSS.toolboxDelete, CSS.toolboxOption ]);
+    let deleteColumn = create('div', [ CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn ]);
     deleteColumn.innerHTML = closeIcon;
     deleteColumn.append(deleteColumnText);
 
@@ -126,6 +157,14 @@ export class Toolbox {
     } else {
       this._toolboxColumn.style.cssText = 'visibility: visible; ' + `left: calc((100% - 2.6em) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
     }
+  }
+
+  openToolboxRowMenu() {
+    this._toolboxRowMenu.classList.remove(CSS.hidden);
+  }
+
+  closeToolboxRowMenu() {
+    this._toolboxRowMenu.classList.add(CSS.hidden);
   }
 
   openToolboxColumnMenu() {

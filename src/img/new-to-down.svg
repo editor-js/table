@@ -12,9 +12,6 @@
                                 <use xlink:href="#006kfvgdia"/>
                             </mask>
                             <use fill="#1D202B" fill-rule="nonzero" transform="matrix(1 0 0 -1 0 11.8)" xlink:href="#006kfvgdia"/>
-                            <g fill="#1D202B" mask="url(#9sw534t73b)">
-                                <path d="M0 0H16V16H0z" transform="translate(-2.52 -2.04)"/>
-                            </g>
                         </g>
                     </g>
                 </g>
