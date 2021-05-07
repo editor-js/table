@@ -1,5 +1,7 @@
 const TableConstructor = require('./tableConstructor').TableConstructor;
-const svgIcon = require('./img/toolboxIcon.svg');
+const svgIcon = require('./img/tableIcon.svg');
+const withHeadings = require('./img/with-headings.svg');
+const withoutHeadings = require('./img/without-headings.svg');
 
 const CSS = {
   input: 'tc-table__inp',
@@ -64,10 +66,38 @@ class Table {
    * Return Tool's view
    *
    * @returns {HTMLDivElement}
-   * @public
    */
   render() {
     return this._tableConstructor.htmlElement;
+  }
+
+  /**
+   * Add settings to block
+   * @returns 
+   */
+  renderSettings(){
+    const settings = [
+      {
+        name: 'withHeading',
+        icon: withHeadings
+      },
+      {
+        name: 'withoutHeadings',
+        icon: withoutHeadings
+      },
+    ];
+    const wrapper = document.createElement('div');
+
+    settings.forEach( tune => {
+      let button = document.createElement('div');
+
+      button.classList.add('cdx-settings-button');
+
+      button.innerHTML = tune.icon;
+      wrapper.appendChild(button);
+    });
+
+    return wrapper;
   }
 
   /**
@@ -78,20 +108,20 @@ class Table {
    * @returns {TableData} - saved data
    */
   save(toolsContent) {
-    const table = toolsContent.querySelector('table');
+    const table = toolsContent.querySelector('.tc-table');
     const data = [];
-    const rows = table.rows;
+    const rows = table.childElementCount;
 
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const cols = Array.from(row.cells);
-      const inputs = cols.map(cell => cell.querySelector('.' + CSS.input));
-      const isWorthless = inputs.every(this._isEmpty);
+    for (let i = 1; i <= rows; i++) {
+      const row = table.querySelector(`.tc-row:nth-child(${i})`);
+      const cols = Array.from(row.querySelectorAll(`.tc-column`));
+      const isWorthless = cols.every(this._isEmpty);
 
       if (isWorthless) {
         continue;
       }
-      data.push(inputs.map(input => input.innerHTML));
+
+      data.push(cols.map(column => column.innerHTML));
     }
 
     return {

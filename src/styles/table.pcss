@@ -21,9 +21,9 @@
   &:after {
     position: absolute;
     content: "";
-    width: 2.6em;
+    width: 30px;
     height: 100%;
-    left: -2.6em;
+    left: -30px;
     top: 0;
   }
 
@@ -31,8 +31,8 @@
     position: absolute;
     content: "";
     width: 100%;
-    height: 2.6em;
-    top: -2.6em;
+    height: 30px;
+    top: -30px;
     left: 0;
   }
 }
@@ -40,7 +40,7 @@
 .tc-add-column {
   display: flex;
   justify-content: center;
-  padding-top: 0.8em;
+  flex-direction: column;
   border-top: 1px solid #e8e8eb;
 }
 
@@ -49,6 +49,15 @@
   display: flex;
   align-items: center;
   padding-left: 0.3em;
+}
+
+.tc-add-column, .tc-add-row {
+  transition: 0.1s;
+  cursor: pointer;
+
+  &:hover {
+    background: #f9f9fb;
+  }
 }
 
 .tc-row {
@@ -67,5 +76,10 @@
 
   &--pre {
     border-right: 0;
+    border-bottom: 1px solid #e8e8eb;
+    height: 2.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

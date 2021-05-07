@@ -45,16 +45,19 @@ export class Toolbox {
    */
   _hangEvents() {
     this._toolboxRow.addEventListener('click', event => {
-      console.log('Open row toolbox');
       this.openToolboxRowMenu();
     });
 
     this._toolboxColumn.addEventListener('click', event => {
-      console.log('Open column toolbox');
       this.openToolboxColumnMenu();
     });
   }
   
+  /**
+   * Creating a toolbox to open menu for a manipulating rows
+   * 
+   * @returns 
+   */
   createToolboxRow() {
     let toolboxRowMenu = this._createRowMenu();
     let toolboxRowElem = create('div', [ CSS.toolboxRow ]);
@@ -65,6 +68,11 @@ export class Toolbox {
     return toolboxRowElem;
   }
 
+  /**
+   * Creating a toolbox to open menu for a manipulating columns
+   * 
+   * @returns {HTMLElement} 
+   */
   createToolboxColumn() {
     let toolboxColumnMenu = this._createColumnMenu();
     let toolboxColumnElem = create('div', [ CSS.toolboxColumn ]);
@@ -75,6 +83,11 @@ export class Toolbox {
     return toolboxColumnElem;
   }
 
+  /**
+   * Creating a tooolbox row menu
+   * 
+   * @returns {HTMLElement} - row menu
+   */
   _createRowMenu() {
     let addRowAboveText = create('span');
     let addRowBelowText = create('span');
@@ -105,6 +118,11 @@ export class Toolbox {
     return toolboxRowMenu;
   }
 
+  /**
+   * Creating a tooolbox column menu
+   * 
+   * @returns {HTMLElement} - column menu
+   */
   _createColumnMenu() {
     let addColumnLeftText = create('span');
     let addColumnRightText = create('span');
@@ -135,10 +153,16 @@ export class Toolbox {
     return toolboxColumnMenu;
   }
 
+  /**
+   * Get toolbox row element
+   */
   get toolboxRow() {
     return this._toolboxRow;
   }
 
+  /**
+   * Get toolbox column element
+   */
   get toolboxColumn() {
     return this._toolboxColumn;
   }
@@ -146,8 +170,8 @@ export class Toolbox {
   /**
    * Change column toolbox position
    * 
-   * @param {*} numberOfColumns 
-   * @param {*} column - 
+   * @param {number} numberOfColumns - number of columns in the table
+   * @param {number} column - current column, if 0 then hide toolbox
    */
   updateToolboxColumnPosition(numberOfColumns = 0, column = this._column) {
     this._column = column;
@@ -159,18 +183,30 @@ export class Toolbox {
     }
   }
 
+  /**
+   * Show toolbox row menu when the toolbox was clicked 
+   */
   openToolboxRowMenu() {
     this._toolboxRowMenu.classList.remove(CSS.hidden);
   }
 
+  /**
+   * Hide toolbox row menu
+   */
   closeToolboxRowMenu() {
     this._toolboxRowMenu.classList.add(CSS.hidden);
   }
 
+  /**
+   * Show toolbox column menu when the column toolbox was clicked
+   */
   openToolboxColumnMenu() {
     this._toolboxColumnMenu.classList.remove(CSS.hidden);
   }
 
+  /**
+   * Hide toolbox column menu
+   */
   closeToolboxColumnMenu() {
     this._toolboxColumnMenu.classList.add(CSS.hidden);
   }

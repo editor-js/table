@@ -109,12 +109,35 @@ export class Table {
       newRow = this._table.appendChild(rowElem);
     }
 
-    console.log('new row', newRow);
-
     this._fillRow(newRow);
+
+    this._addPreColumn();
 
     return newRow;
   };
+
+  /**
+   * Add pre column block for the add column button
+   */
+  _addPreColumn() {
+    const preColumn = create('div', [CSS.preColumn]);
+    const addColumnButton = this._element.querySelector(`.${CSS.addColumn}`);
+
+    if (addColumnButton.childElementCount == 0) {
+      preColumn.innerHTML = svgPlusButton;
+    }
+
+    addColumnButton.append(preColumn);
+  }
+
+  /**
+   * Delete last pre column from the add column button
+   */
+  _deletePreColumn() {
+    const addColumnButton = this._element.querySelector(`.${CSS.addColumn}`);
+    console.log('Remove');
+    addColumnButton.removeChild(addColumnButton.lastChild);
+  }
 
   /**
    * Delete a column by index
@@ -125,7 +148,7 @@ export class Table {
     for (let i = 1; i <= this._numberOfRows; i++) {
       this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`).remove();
     }
-    
+  
     this._numberOfColumns--;
   }
 
@@ -136,15 +159,18 @@ export class Table {
    */
   deleteRow(index) {
     this._table.querySelector(`.${CSS.row}:nth-child(${index})`).remove();
-    
+    this._deletePreColumn();
+
     this._numberOfRows--;
   }
 
   /**
    * Add buttons to fast add row/column
+   * 
+   * @private
    */
   _fillAddButtons() {
-    this._element.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
+    // this._element.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
     this._element.querySelector(`.${CSS.addRow}`).innerHTML = svgPlusButton;
   }
 
@@ -169,6 +195,7 @@ export class Table {
   /**
    * returns selected/editable cell
    *
+   * @private
    * @returns {HTMLElement}
    */
   get selectedCell() {
@@ -176,8 +203,10 @@ export class Table {
   }
 
   /**
+   * Create wrapper with an additional interface
+   * 
    * @private
-   * @returns {HTMLElement} tbody - where rows will be
+   * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   _createTableWrapper() {
     return create('div', [ CSS.wrapper ], null, [
@@ -190,6 +219,7 @@ export class Table {
   }
 
   /**
+   * @todo fill cells
    * @private
    * @param {HTMLElement} cell - empty cell
    */
@@ -284,8 +314,15 @@ export class Table {
     })
   }
 
+  /**
+   * Update toolboxes position
+   * 
+   * @private
+   * @param {number} row - hovered row
+   * @param {number} column - hovered column
+   */
   _updateToolboxesPosition(row, column) {
-    if (this._hoveredRow== row && this._hoveredColumn == column) {
+    if (this._hoveredRow == row && this._hoveredColumn == column) {
       return;
     }
 

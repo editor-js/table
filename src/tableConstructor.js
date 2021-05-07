@@ -9,6 +9,8 @@ const CSS = {
   inputField: 'tc-table__inp',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
+  row: 'tc-row',
+  column: 'tc-column',
 };
 
 /**
@@ -63,7 +65,7 @@ export class TableConstructor {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
-          const input = this._table.body.rows[i].cells[j].querySelector('.' + CSS.inputField);
+          const input = this._table.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.column}:nth-child(${j + 1})`)
 
           input.innerHTML = data.content[i][j];
         }
@@ -92,7 +94,7 @@ export class TableConstructor {
     const configRows = !isNaN(parsedRows) && parsedRows > 0 ? parsedRows : undefined;
     const configCols = !isNaN(parsedCols) && parsedCols > 0 ? parsedCols : undefined;
     const defaultRows = 2;
-    const defaultCols = 3;
+    const defaultCols = 2;
     const rows = contentRows || configRows || defaultRows;
     const cols = contentCols || configCols || defaultCols;
 
@@ -123,6 +125,4 @@ export class TableConstructor {
       this._table.addRow();
     });
   }
-
-
 }

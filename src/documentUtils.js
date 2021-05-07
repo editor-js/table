@@ -43,6 +43,7 @@ export function create(tagName, cssClasses = null, attrs = null, children = null
 
 /**
  * Get item position relative to document
+ * 
  * @param {HTMLElement} elem - item
  * @returns {{x1: number, y1: number, x2: number, y2: number}} coordinates of the upper left (x1,y1) and lower right(x2,y2) corners
  */
@@ -58,9 +59,10 @@ export function getCoords(elem) {
 }
 
 /**
+ * Get the coordinates relative to the parent element
  * 
- * @param {*} elem 
- * @param {*} event 
+ * @param {HTMLElement} elem 
+ * @param {Event} event 
  * @returns mouse position relative to the element
  */
 export function getRelativeCoords(elem, event) {
@@ -77,11 +79,13 @@ export function getRelativeCoords(elem, event) {
 }
 
 /**
+ * Calculates the row and column that the cursor is currently hovering over
+ * 
  * @param {HTMLElement} table - table element
  * @param {Event} event - mousemove event
  * @param {number} numberOfColumns - number of columns in the table
  * @param {number} numberOfRows - number of rows in the table
- * @returns hovered cell coordinates as an integer row` and column
+ * @returns hovered cell coordinates as an integer row and column
  */
 export function hoveredCell(table, event, numberOfColumns, numberOfRows) {
   const { width, height, x, y } = getRelativeCoords(table, event);
@@ -92,35 +96,6 @@ export function hoveredCell(table, event, numberOfColumns, numberOfRows) {
     row: hoveredRow,
     column: hoveredColumn
   }
-}
-
-/**
- * Recognizes which side of the container  is closer to (x,y)
- * @param {{x1: number, y1: number, x2: number, y2: number}} coords - coords of container
- * @param x - x coord
- * @param y - y coord
- * @return {string}
- */
-export function getSideByCoords(coords, x, y) {
-  let side;
-  const sizeArea = 10;
-
-  // a point is close to the boundary if the distance between them is less than the allowed distance.
-  // +1px on each side due to fractional pixels
-  if (x - coords.x1 >= -1 && x - coords.x1 <= sizeArea + 1) {
-    side = 'left';
-  }
-  if (coords.x2 - x >= -1 && coords.x2 - x <= sizeArea + 1) {
-    side = 'right';
-  }
-  if (y - coords.y1 >= -1 && y - coords.y1 <= sizeArea + 1) {
-    side = 'top';
-  }
-  if (coords.y2 - y >= -1 && coords.y2 - y <= sizeArea + 1) {
-    side = 'bottom';
-  }
-
-  return side;
 }
 
 /**
