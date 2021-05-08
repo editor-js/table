@@ -39,8 +39,8 @@
 
 .tc-add-column {
   display: flex;
+  padding: 0.8em 0;
   justify-content: center;
-  flex-direction: column;
   border-top: 1px solid #e8e8eb;
 }
 
@@ -48,7 +48,7 @@
   height: 2.6em;
   display: flex;
   align-items: center;
-  padding-left: 0.3em;
+  padding-left: 0.6em;
 }
 
 .tc-add-column, .tc-add-row {
@@ -63,23 +63,33 @@
 .tc-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  position: relative;
+  border-bottom: 1px solid #e8e8eb;
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 2.6rem;
+    bottom: -1px;
+    right: -2.6rem;
+    border-bottom: 1px solid #e8e8eb;
+  }
+}
+
+.tc-row--heading {
+  border-bottom: 2px solid #e8e8eb;
+
+  &:after {
+    bottom: -2px;
+    border-bottom: 2px solid #e8e8eb;
+  }
 }
 
 .tc-column {
   height: 2rem;
   border-right: 1px solid #e8e8eb;
-  border-bottom: 1px solid #e8e8eb;
   clear: both;
   padding: 0.3em;
   overflow: hidden;
   outline: none;
-
-  &--pre {
-    border-right: 0;
-    border-bottom: 1px solid #e8e8eb;
-    height: 2.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }

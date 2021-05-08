@@ -5,7 +5,14 @@ const withoutHeadings = require('./img/without-headings.svg');
 
 const CSS = {
   input: 'tc-table__inp',
+  setting: 'tc-setting',
+  settingActive: 'tc-setting--active'
 };
+
+const tunes = {
+  withHeadings: 'With headings',
+  withoutHeadings: 'Without headings'
+}
 
 /**
  *  Tool for table's creating
@@ -58,8 +65,12 @@ class Table {
   constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.readOnly = readOnly;
+    this.data = {
+      withHeadings: true
+    }
 
     this._tableConstructor = new TableConstructor(data, config, api, readOnly);
+    this._tableConstructor.useHeadings(this.data.withHeadings);
   }
 
   /**
@@ -76,26 +87,41 @@ class Table {
    * @returns 
    */
   renderSettings(){
-    const settings = [
-      {
-        name: 'withHeading',
+    const settings = {
+      withHeadings:{
+        name: tunes.withHeadings,
         icon: withHeadings
       },
-      {
-        name: 'withoutHeadings',
+      withoutHeadings: {
+        name: tunes.withoutHeadings,
         icon: withoutHeadings
       },
-    ];
+    };
     const wrapper = document.createElement('div');
 
-    settings.forEach( tune => {
-      let button = document.createElement('div');
+    let withHeadingsButton = document.createElement('div');
+    withHeadingsButton.classList.add(CSS.setting);
+    withHeadingsButton.innerHTML = settings.withHeadings.icon;
 
-      button.classList.add('cdx-settings-button');
+    let withoutHeadingsButton = document.createElement('div');
+    withoutHeadingsButton.classList.add(CSS.setting);
+    withoutHeadingsButton.innerHTML = settings.withoutHeadings.icon;
 
-      button.innerHTML = tune.icon;
-      wrapper.appendChild(button);
+    if (this.data.withHeadings) {
+      withHeadingsButton.classList.add(CSS.settingActive);
+    } else {
+      withoutHeadingsButton.classList.add(CSS.settingActive);
+    }
+
+    withHeadingsButton.addEventListener('click', () => {
+      this._toggleTune(withHeadingsButton, withoutHeadingsButton);
     });
+
+    withoutHeadingsButton.addEventListener('click', () => {
+      this._toggleTune(withHeadingsButton, withoutHeadingsButton);
+    });
+
+    wrapper.append(withHeadingsButton, withoutHeadingsButton);
 
     return wrapper;
   }
@@ -124,9 +150,15 @@ class Table {
       data.push(cols.map(column => column.innerHTML));
     }
 
-    return {
-      content: data,
-    };
+    let result = {};
+
+    if (this.data.withHeadings) {
+      result.withHeadings = true;
+    }
+
+    result.content = data;
+
+    return result;
   }
 
   /**
@@ -136,6 +168,24 @@ class Table {
    */
   _isEmpty(input) {
     return !input.textContent.trim();
+  }
+
+  /**
+   * @private
+   * Click on the Settings Button
+   * @param {string} tuneName — tune name from this.settings
+   */
+  _toggleTune(withHeadingsButton, withoutHeadingsButton) {
+    if (withHeadingsButton.classList.contains(CSS.settingActive)) {
+      this.data.withHeadings = false;
+    } else {
+      this.data.withHeadings = true;
+    }
+    
+    withHeadingsButton.classList.toggle(CSS.settingActive);
+    withoutHeadingsButton.classList.toggle(CSS.settingActive);
+
+    this._tableConstructor.useHeadings(this.data.withHeadings);
   }
 }
 

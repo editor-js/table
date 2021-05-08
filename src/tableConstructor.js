@@ -125,4 +125,12 @@ export class TableConstructor {
       this._table.addRow();
     });
   }
+
+  /**
+   * Passes the new setting for changing the UI to the table 
+   * @param {boolean} withHeadings 
+   */
+  useHeadings(withHeadings) {
+    this._table.useHeadings(withHeadings);
+  }
 }

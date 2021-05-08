@@ -2,14 +2,15 @@ import { create, getCoords, getSideByCoords, insertAfter, insertBefore, hoveredC
 import './styles/table.pcss';
 import './styles/toolbox.pcss';
 import './styles/utils.pcss';
+import './styles/settings.pcss';
 import svgPlusButton from './img/plus.svg';
 import {Toolbox} from './toolbox';
 
 const CSS = {
   table: 'tc-table',
   row: 'tc-row',
+  rowHeading: 'tc-row--heading',
   column: 'tc-column',
-  preColumn: 'tc-column--pre',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
   addColumnCell: 'tc-add-column--cell',
@@ -111,33 +112,8 @@ export class Table {
 
     this._fillRow(newRow);
 
-    this._addPreColumn();
-
     return newRow;
   };
-
-  /**
-   * Add pre column block for the add column button
-   */
-  _addPreColumn() {
-    const preColumn = create('div', [CSS.preColumn]);
-    const addColumnButton = this._element.querySelector(`.${CSS.addColumn}`);
-
-    if (addColumnButton.childElementCount == 0) {
-      preColumn.innerHTML = svgPlusButton;
-    }
-
-    addColumnButton.append(preColumn);
-  }
-
-  /**
-   * Delete last pre column from the add column button
-   */
-  _deletePreColumn() {
-    const addColumnButton = this._element.querySelector(`.${CSS.addColumn}`);
-    console.log('Remove');
-    addColumnButton.removeChild(addColumnButton.lastChild);
-  }
 
   /**
    * Delete a column by index
@@ -159,7 +135,6 @@ export class Table {
    */
   deleteRow(index) {
     this._table.querySelector(`.${CSS.row}:nth-child(${index})`).remove();
-    this._deletePreColumn();
 
     this._numberOfRows--;
   }
@@ -170,7 +145,7 @@ export class Table {
    * @private
    */
   _fillAddButtons() {
-    // this._element.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
+    this._element.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
     this._element.querySelector(`.${CSS.addRow}`).innerHTML = svgPlusButton;
   }
 
@@ -228,7 +203,7 @@ export class Table {
   }
 
   /**
-   * Add pre-column cell to a row
+   * Add cells to a row
    * 
    * @private
    * @param {HTMLElement} row
@@ -339,5 +314,20 @@ export class Table {
 
     this._toolbox.updateToolboxColumnPosition(this._numberOfColumns, column);
     this._toolbox.updateToolboxRowPosition(this._numberOfRows, row);
+  }
+
+  /**
+   * Makes the first row headings
+   * @param {boolean} withHeadings - use headings row or not
+   */
+  useHeadings(withHeadings) {
+    console.log(withHeadings);
+
+    if (withHeadings) {
+      this._table.querySelector(`.${CSS.row}:first-child`).classList.add(CSS.rowHeading);
+    } else {
+      this._table.querySelector(`.${CSS.row}:first-child`).classList.remove(CSS.rowHeading);
+    }
+    
   }
 }
