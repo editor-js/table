@@ -9,7 +9,7 @@ import {Toolbox} from './toolbox';
 const CSS = {
   table: 'tc-table',
   row: 'tc-row',
-  rowHeading: 'tc-row--heading',
+  withHeadings: 'tc-table--heading',
   rowSelected: 'tc-row--selected',
   column: 'tc-column',
   columnSelected: 'tc-column--selected',
@@ -338,9 +338,9 @@ export class Table {
    */
   useHeadings(withHeadings) {
     if (withHeadings) {
-      this._table.querySelector(`.${CSS.row}:first-child`).classList.add(CSS.rowHeading);
+      this._table.classList.add(CSS.withHeadings);
     } else {
-      this._table.querySelector(`.${CSS.row}:first-child`).classList.remove(CSS.rowHeading);
+      this._table.classList.remove(CSS.withHeadings);
     }
   }
 

@@ -37,6 +37,15 @@
   }
 }
 
+.tc-table--heading .tc-row:first-child {
+  border-bottom: 2px solid #e8e8eb;
+
+  &:after {
+    bottom: -2px;
+    border-bottom: 2px solid #e8e8eb;
+  }
+}
+
 .tc-add-column {
   display: flex;
   padding: 0.8em 0;
@@ -85,15 +94,6 @@
 .tc-row--selected {
   &:after {
     background: #f9f9fb;
-  }
-}
-
-.tc-row--heading {
-  border-bottom: 2px solid #e8e8eb;
-
-  &:after {
-    bottom: -2px;
-    border-bottom: 2px solid #e8e8eb;
   }
 }
 
