@@ -68,11 +68,23 @@
 
   &:after {
     content: '';
+    pointer-events: none;
     position: absolute;
     width: 2.6rem;
+    height: 100%;
     bottom: -1px;
     right: -2.6rem;
     border-bottom: 1px solid #e8e8eb;
+  }
+
+  &--selected {
+    background: #f9f9fb;
+  }
+}
+
+.tc-row--selected {
+  &:after {
+    background: #f9f9fb;
   }
 }
 
@@ -92,4 +104,8 @@
   padding: 0.3em;
   overflow: hidden;
   outline: none;
+
+  &--selected {
+    background: #f9f9fb;
+  }
 }

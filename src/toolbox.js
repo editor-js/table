@@ -8,6 +8,7 @@ import closeIcon from './img/cross.svg';
 
 const CSS = {
   hidden: 'tc-hidden',
+  none: 'tc-none',
   toolboxRow: 'tc-toolbox-row',
   toolboxRowMenu: 'tc-toolbox-row__menu',
   toolboxColumn: 'tc-toolbox-column',
@@ -44,13 +45,7 @@ export class Toolbox {
    * @private
    */
   _hangEvents() {
-    this._toolboxRow.addEventListener('click', event => {
-      this.openToolboxRowMenu();
-    });
-
-    this._toolboxColumn.addEventListener('click', event => {
-      this.openToolboxColumnMenu();
-    });
+    
   }
   
   /**

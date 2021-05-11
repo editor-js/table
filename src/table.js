@@ -10,7 +10,9 @@ const CSS = {
   table: 'tc-table',
   row: 'tc-row',
   rowHeading: 'tc-row--heading',
+  rowSelected: 'tc-row--selected',
   column: 'tc-column',
+  columnSelected: 'tc-column--selected',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
   addColumnCell: 'tc-add-column--cell',
@@ -23,7 +25,7 @@ const CSS = {
   toolboxDeleteColumn: 'tc-toolbox-delete--column',
   toolboxAddRowAbove: 'tc-toolbox-add-row-above',
   toolboxAddRowBelow: 'tc-toolbox-add-row-below',
-  toolboxDeleteRow: 'tc-toolbox-delete--row',
+  toolboxDeleteRow: 'tc-toolbox-delete--row'
 };
 
 /**
@@ -44,6 +46,8 @@ export class Table {
     this._table = this._element.querySelector(`.${CSS.table}`);
     this._hoveredRow = 0;
     this._hoveredColumn = 0;
+    this._lastSelectedRow = 0;
+    this._lastSelectedColumn = 0;
 
     this._fillAddButtons();
 
@@ -287,6 +291,16 @@ export class Table {
       this.deleteRow(this._hoveredRow);
       this._updateToolboxesPosition(0, 0);
     })
+
+    this._toolbox.toolboxRow.addEventListener('click', event => {
+      this._selectRow(this._hoveredRow);
+      this._toolbox.openToolboxRowMenu();
+    });
+
+    this._toolbox.toolboxColumn.addEventListener('click', event => {
+      this._selectColumn(this._hoveredColumn);
+      this._toolbox.openToolboxColumnMenu();
+    });
   }
 
   /**
@@ -302,10 +316,12 @@ export class Table {
     }
 
     if (this._hoveredColumn != column) {
+      this._unselectColumn();
       this._toolbox.closeToolboxColumnMenu();
     }
 
     if (this._hoveredRow != row) {
+      this._unselectRow();
       this._toolbox.closeToolboxRowMenu();
     }
     
@@ -321,13 +337,52 @@ export class Table {
    * @param {boolean} withHeadings - use headings row or not
    */
   useHeadings(withHeadings) {
-    console.log(withHeadings);
-
     if (withHeadings) {
       this._table.querySelector(`.${CSS.row}:first-child`).classList.add(CSS.rowHeading);
     } else {
       this._table.querySelector(`.${CSS.row}:first-child`).classList.remove(CSS.rowHeading);
     }
-    
+  }
+
+  _selectRow(index) {
+    this._lastSelectedRow = index;
+    this._table.querySelector(`.${CSS.row}:nth-child(${index})`).classList.add(CSS.rowSelected);
+  }
+
+  _unselectRow() {
+    if (this._lastSelectedRow <= 0) {
+      return;
+    }
+
+    this._table.querySelector(`.${CSS.row}:nth-child(${this._lastSelectedRow})`).classList.remove(CSS.rowSelected);
+    this._lastSelectedRow = 0;
+  }
+
+  _selectColumn(index) {
+    for (let i = 1; i <= this._numberOfRows; i++) {
+      let column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+      console.log(column);  
+      if (column) {
+        column.classList.add(CSS.columnSelected);
+      }
+    }
+
+    this._lastSelectedColumn = index;
+  }
+
+  _unselectColumn() {
+    if (this._lastSelectedColumn <= 0) {
+      return;
+    }
+
+    for (let i = 1; i <= this._numberOfRows; i++) {
+      let column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${this._lastSelectedColumn})`);
+
+      if (column) {
+        column.classList.remove(CSS.columnSelected);
+      }
+    }
+
+    this._lastSelectedColumn = 0;
   }
 }
