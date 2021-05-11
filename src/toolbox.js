@@ -162,20 +162,20 @@ export class Toolbox {
     return this._toolboxColumn;
   }
 
-  /**
-   * Change column toolbox position
-   * 
-   * @param {number} numberOfColumns - number of columns in the table
-   * @param {number} column - current column, if 0 then hide toolbox
-   */
-  updateToolboxColumnPosition(numberOfColumns = 0, column = this._column) {
-    this._column = column;
+  hideDeleteColumnButton() {
+    this._toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.add(CSS.none);
+  }
 
-    if (this._column <= 0 || this._column > numberOfColumns) {
-      this._toolboxColumn.style.visibility = 'hidden';
-    } else {
-      this._toolboxColumn.style.cssText = 'visibility: visible; ' + `left: calc((100% - 2.6em) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
-    }
+  unhideDeleteColumnButton() {
+    this._toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.remove(CSS.none);
+  }
+
+  hideDeleteRowButton() {
+    this._toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.add(CSS.none);
+  }
+
+  unhideDeleteRowButton() {
+    this._toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.remove(CSS.none);
   }
 
   /**
@@ -207,6 +207,28 @@ export class Toolbox {
   }
 
   /**
+   * Change column toolbox position
+   * 
+   * @param {number} numberOfColumns - number of columns in the table
+   * @param {number} column - current column, if 0 then hide toolbox
+   */
+  updateToolboxColumnPosition(numberOfColumns = 0, column = this._column) {
+    this._column = column;
+
+    if (this._column <= 0 || this._column > numberOfColumns) {
+      this._toolboxColumn.style.visibility = 'hidden';
+    } else {
+      this._toolboxColumn.style.cssText = 'visibility: visible; ' + `left: calc((100% - 2.6em) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
+    }
+
+    if (numberOfColumns == 1) {
+      this.hideDeleteColumnButton();
+    } else {
+      this.unhideDeleteColumnButton();
+    }
+  }
+
+  /**
    * Change row toolbox position
    * 
    * @param {number} numberOfRows - number of rows
@@ -220,6 +242,12 @@ export class Toolbox {
     } else {
       this._toolboxRow.style.visibility = 'visible';
       this._toolboxRow.style.top = `calc((100% - 2.6em) / (${numberOfRows} * 2) * (1 + (${row} - 1) * 2))`;
+    }
+
+    if (numberOfRows == 1) {
+      this.hideDeleteRowButton();
+    } else {
+      this.unhideDeleteRowButton();
     }
   }
 }

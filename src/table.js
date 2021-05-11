@@ -346,7 +346,12 @@ export class Table {
 
   _selectRow(index) {
     this._lastSelectedRow = index;
-    this._table.querySelector(`.${CSS.row}:nth-child(${index})`).classList.add(CSS.rowSelected);
+    
+    const row = this._table.querySelector(`.${CSS.row}:nth-child(${index})`);
+
+    if (row) {
+      row.classList.add(CSS.rowSelected);
+    }
   }
 
   _unselectRow() {
@@ -354,14 +359,19 @@ export class Table {
       return;
     }
 
-    this._table.querySelector(`.${CSS.row}:nth-child(${this._lastSelectedRow})`).classList.remove(CSS.rowSelected);
+    const row = this._table.querySelector(`.${CSS.rowSelected}`);
+
+    if (row) {
+      row.classList.remove(CSS.rowSelected);
+    }
+
     this._lastSelectedRow = 0;
   }
 
   _selectColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
-      let column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
-      console.log(column);  
+      const column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+
       if (column) {
         column.classList.add(CSS.columnSelected);
       }
@@ -375,13 +385,11 @@ export class Table {
       return;
     }
 
-    for (let i = 1; i <= this._numberOfRows; i++) {
-      let column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${this._lastSelectedColumn})`);
+    let columns = this._table.querySelectorAll(`.${CSS.columnSelected}`);
 
-      if (column) {
-        column.classList.remove(CSS.columnSelected);
-      }
-    }
+    Array.from(columns).forEach(column => {
+      column.classList.remove(CSS.columnSelected);
+    })
 
     this._lastSelectedColumn = 0;
   }
