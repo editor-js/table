@@ -46,6 +46,12 @@
   }
 }
 
+
+.tc-table--heading .tc-row:first-child [contenteditable]:empty:before {
+  content: "Heading";
+  color: #7b7e89;
+}
+
 .tc-add-column {
   display: flex;
   padding: 0.8em 0;
@@ -101,7 +107,7 @@
   height: 2rem;
   border-right: 1px solid #e8e8eb;
   clear: both;
-  padding: 0.3em;
+  padding: .5em 0 .1em .3em;
   overflow: hidden;
   outline: none;
 
