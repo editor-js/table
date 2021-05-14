@@ -172,16 +172,6 @@ export class Table {
   }
 
   /**
-   * returns selected/editable cell
-   *
-   * @private
-   * @returns {HTMLElement}
-   */
-  get selectedCell() {
-    return this._selectedCell;
-  }
-
-  /**
    * Create wrapper with an additional interface
    * 
    * @private
@@ -301,6 +291,11 @@ export class Table {
       this._selectColumn(this._hoveredColumn);
       this._toolbox.openToolboxColumnMenu();
     });
+
+    // Prevent Enter p
+    this._table.onkeypress = (event) => {
+      return event.key != 'Enter';
+    }
   }
 
   /**
