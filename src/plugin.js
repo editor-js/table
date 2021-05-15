@@ -123,6 +123,9 @@ class Table {
 
     wrapper.append(withHeadingsButton, withoutHeadingsButton);
 
+    this.api.tooltip.onHover(withHeadingsButton, 'With headings', {placement: 'top'});
+    this.api.tooltip.onHover(withoutHeadingsButton, 'Without headings', {placement: 'top'});
+
     return wrapper;
   }
 
