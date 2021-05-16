@@ -83,8 +83,9 @@ class Table {
   }
 
   /**
-   * Add settings to block
-   * @returns 
+   * Add plugin settings
+   * 
+   * @returns {HTMLElement} - wrapper element
    */
   renderSettings(){
     const settings = {

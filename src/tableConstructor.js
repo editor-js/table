@@ -31,10 +31,15 @@ export class TableConstructor {
     this._table = new Table(readOnly);
     const size = this._resizeTable(data, config);
 
-    this._fillTable(data, size);
+    let apiStyles = null;
+    if (api && api.styles && api.styles.block) {
+      apiStyles = api.styles.block;
+    }
 
     /** creating container around table */
-    this._container = create('div', [CSS.editor, api.styles.block], null, [this._table.htmlElement]);
+    this._container = create('div', [CSS.editor, apiStyles], null, [this._table.htmlElement]);
+
+    this._fillTable(data, size);
 
     /** Activated elements */
     this._hoveredCell = null;
@@ -65,9 +70,9 @@ export class TableConstructor {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
-          const input = this._table.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.column}:nth-child(${j + 1})`)
+          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.column}:nth-child(${j + 1})`)
 
-          input.innerHTML = data.content[i][j];
+          cell.innerHTML = data.content[i][j];
         }
       }
     }

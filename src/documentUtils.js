@@ -1,5 +1,6 @@
 /**
  * Checks the item is not missed or messed
+ * 
  * @param {object|string[]|Element[]|HTMLElement|string} elem - element
  * @returns {boolean} true if element is correct
  * @private

@@ -71,7 +71,7 @@ var editor = EditorJS({
 
 ## Config Params
 
-| Field              | Type     | Description                              |
+| Field              | Type     | Description          |
 | ------------------ | -------- | ---------------------------------------- |
 | rows               | `number` | initial number of rows. by default `2`   |
 | cols               | `number` | initial number of columns. by default `2`|
@@ -79,15 +79,17 @@ var editor = EditorJS({
 ## Output data
 This Tool returns `data` with following format
 
-| Field     | Type         | Description                               |
+| Field     | Type         | Description           |
 | --------- | ------------ | ----------------------------------------- |
+| withHeadings | `boolean` | Uses the first line as headings |
 | content   | `string[][]` | two-dimensional array with table contents |
 
 ```json
 {
     "type" : "table",
     "data" : {
-        "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+        "withHeadings": true,
+        "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ]
     }
 }
 ```
