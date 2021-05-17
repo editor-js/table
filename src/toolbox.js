@@ -36,16 +36,6 @@ export class Toolbox {
     // row and column above which the toolboxes should be displayed, 0 means hide
     this._row = 0;
     this._column = 0;
-
-    // hang event on the toolboxes
-    this._hangEvents();
-  }
-
-  /**
-   * @private
-   */
-  _hangEvents() {
-    
   }
   
   /**
@@ -81,6 +71,7 @@ export class Toolbox {
   /**
    * Creating a tooolbox row menu
    * 
+   * @private
    * @returns {HTMLElement} - row menu
    */
   _createRowMenu() {
@@ -116,6 +107,7 @@ export class Toolbox {
   /**
    * Creating a tooolbox column menu
    * 
+   * @private
    * @returns {HTMLElement} - column menu
    */
   _createColumnMenu() {
@@ -162,18 +154,30 @@ export class Toolbox {
     return this._toolboxColumn;
   }
 
+  /**
+   * Hide delete column button for event when we only have one column left
+   */
   hideDeleteColumnButton() {
     this._toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.add(CSS.none);
   }
 
+  /**
+   * Unhide delete column button when we have more than one column left again
+   */
   unhideDeleteColumnButton() {
     this._toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.remove(CSS.none);
   }
 
+  /**
+   * Hide delete row button for event when we only have one row left
+   */
   hideDeleteRowButton() {
     this._toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.add(CSS.none);
   }
 
+  /**
+   * Unhide delete column button when we have more than one row left again
+   */
   unhideDeleteRowButton() {
     this._toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.remove(CSS.none);
   }

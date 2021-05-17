@@ -212,6 +212,8 @@ export class Table {
 
   /**
    * @private
+   * 
+   * Hangs the necessary handlers to events
    */
   _hangEvents() {
     // Update toolboxes position depending on the mouse movements
@@ -339,6 +341,11 @@ export class Table {
     }
   }
 
+  /**
+   * Add effect of a selected row
+   * 
+   * @param {number} index 
+   */
   _selectRow(index) {
     this._lastSelectedRow = index;
     
@@ -349,6 +356,9 @@ export class Table {
     }
   }
 
+  /**
+   * Remove effect of a selected row
+   */
   _unselectRow() {
     if (this._lastSelectedRow <= 0) {
       return;
@@ -363,6 +373,11 @@ export class Table {
     this._lastSelectedRow = 0;
   }
 
+  /**
+   * Add effect of a selected column
+   * 
+   * @param {number} index 
+   */
   _selectColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
       const column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
@@ -375,6 +390,9 @@ export class Table {
     this._lastSelectedColumn = index;
   }
 
+  /**
+   * Remove effect of a selected column
+   */
   _unselectColumn() {
     if (this._lastSelectedColumn <= 0) {
       return;
