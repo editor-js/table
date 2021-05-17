@@ -66,7 +66,7 @@ class Table {
     this.api = api;
     this.readOnly = readOnly;
     this.data = {
-      withHeadings: true
+      withHeadings: data && data.withHeadings ? data.withHeadings : false
     }
 
     this._tableConstructor = new TableConstructor(data, config, api, readOnly);
@@ -83,7 +83,7 @@ class Table {
   }
 
   /**
-   * Add plugin settings
+   * Add plugin settings 
    * 
    * @returns {HTMLElement} - wrapper element
    */
