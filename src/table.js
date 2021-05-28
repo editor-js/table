@@ -296,6 +296,10 @@ export class Table {
 
     // Prevent Enter p
     this._table.onkeypress = (event) => {
+      if (event.key == 'Enter' && event.shiftKey) {
+        return true;
+      }
+
       return event.key != 'Enter';
     }
   }
@@ -326,7 +330,7 @@ export class Table {
     this._hoveredColumn = column;
 
     this._toolbox.updateToolboxColumnPosition(this._numberOfColumns, column);
-    this._toolbox.updateToolboxRowPosition(this._numberOfRows, row);
+    this._toolbox.updateToolboxRowPosition(this._numberOfRows, row, this._table);
   }
 
   /**

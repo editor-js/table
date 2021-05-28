@@ -1,4 +1,4 @@
-import { create, getCoords, getSideByCoords, insertAfter, insertBefore } from './documentUtils';
+import { create,getRelativeCoordsOfTwoElems } from './documentUtils';
 import toolboxIcon from './img/toolboxIcon.svg';
 import newToLeftIcon from './img/new-to-left.svg';
 import newToRightIcon from './img/new-to-right.svg';
@@ -237,15 +237,20 @@ export class Toolbox {
    * 
    * @param {number} numberOfRows - number of rows
    * @param {number} row - hovered row
+   * @param {HTMLElement} table - table element 
    */
-   updateToolboxRowPosition(numberOfRows = 0, row = this._row) {
+   updateToolboxRowPosition(numberOfRows = 0, row = this._row, table) {
     this._row = row;
 
     if (this._row <= 0 || this._row > numberOfRows) {
       this._toolboxRow.style.visibility = 'hidden';
     } else {
+      const hoveredRowElement = table.querySelector(`.tc-row:nth-child(${this._row})`);
+      const { y1: topOffset } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
+      const { height } = hoveredRowElement.getBoundingClientRect();
+  
       this._toolboxRow.style.visibility = 'visible';
-      this._toolboxRow.style.top = `calc((100% - 2.6em) / (${numberOfRows} * 2) * (1 + (${row} - 1) * 2))`;
+      this._toolboxRow.style.top = `${topOffset + height / 2}px`;
     }
 
     if (numberOfRows == 1) {

@@ -59,6 +59,18 @@ export function getCoords(elem) {
   };
 }
 
+export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
+  const firstCoords = getCoords(firstElem);
+  const secondCoords = getCoords(secondElem);
+
+  return {
+    y1: secondCoords.y1 - firstCoords.y1,
+    x1: secondCoords.x1 - firstCoords.x1,
+    x2: secondCoords.x2 - firstCoords.x2,
+    y2: secondCoords.y2 - firstCoords.y2
+  }
+}
+
 /**
  * Get the coordinates relative to the parent element
  * 
