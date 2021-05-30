@@ -23,9 +23,9 @@
   &:after {
     position: absolute;
     content: "";
-    width: 30px;
+    width: 33px;
     height: 100%;
-    left: -30px;
+    left: -33px;
     top: 0;
   }
 
@@ -71,15 +71,31 @@
   display: flex;
   align-items: center;
   padding-left: 0.6em;
+  position: relative;
+
+  &:before {
+    content: '';
+    transition: 0s;
+    position: absolute;
+    right: -34px;
+    width: 34px;
+    height: 100%;
+  }
 }
 
 .tc-add-column, .tc-add-row {
-  transition: 0.1s;
+  transition: 0s;
   cursor: pointer;
 
   &:hover {
+    transition: 0.1s;
     background: #f9f9fb;
   }
+}
+
+.tc-add-row:hover:before {
+  transition: 0.1s;
+  background: #f9f9fb;
 }
 
 .tc-row {
@@ -111,15 +127,31 @@
 }
 
 .tc-column {
-  min-height: 22px;
+  min-height: 21px;
   border-right: 1px solid #e8e8eb;
   clear: both;
-  padding: 6px 0 6px 12px;
+  padding: 7px 0 6px 12px;
   overflow: hidden;
   outline: none;
   line-break: normal;
 
   &--selected {
     background: #f9f9fb;
+  }
+}
+
+.tc-menu-animation {
+  animation-name: rocket;
+  animation-duration: 0.1s;
+}
+
+@keyframes rocket {
+  0% {  
+    transform:translateX(-10px);
+    opacity: 0;  
+  }
+  100% { 
+    transform:translateX(0);
+    opacity: 1;
   }
 }

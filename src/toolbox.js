@@ -21,6 +21,7 @@ const CSS = {
   toolboxDeleteColumn: 'tc-toolbox-delete--column',
   toolboxDeleteRow: 'tc-toolbox-delete--row',
   toolboxOption: 'tc-toolbox-row__option',
+  menuAnimation: 'tc-menu-animation'
 }
 
 /**
@@ -186,6 +187,7 @@ export class Toolbox {
    * Show toolbox row menu when the toolbox was clicked 
    */
   openToolboxRowMenu() {
+    this._toolboxRowMenu.classList.add(CSS.menuAnimation);
     this._toolboxRowMenu.classList.remove(CSS.hidden);
   }
 
@@ -193,6 +195,7 @@ export class Toolbox {
    * Hide toolbox row menu
    */
   closeToolboxRowMenu() {
+    this._toolboxRowMenu.classList.remove(CSS.menuAnimation);
     this._toolboxRowMenu.classList.add(CSS.hidden);
   }
 
@@ -200,6 +203,7 @@ export class Toolbox {
    * Show toolbox column menu when the column toolbox was clicked
    */
   openToolboxColumnMenu() {
+    this._toolboxColumnMenu.classList.add(CSS.menuAnimation);
     this._toolboxColumnMenu.classList.remove(CSS.hidden);
   }
 
@@ -207,6 +211,7 @@ export class Toolbox {
    * Hide toolbox column menu
    */
   closeToolboxColumnMenu() {
+    this._toolboxColumnMenu.classList.remove(CSS.menuAnimation);
     this._toolboxColumnMenu.classList.add(CSS.hidden);
   }
 
@@ -220,9 +225,10 @@ export class Toolbox {
     this._column = column;
 
     if (this._column <= 0 || this._column > numberOfColumns) {
-      this._toolboxColumn.style.visibility = 'hidden';
+      this._toolboxColumn.style.opacity = '0';
+
     } else {
-      this._toolboxColumn.style.cssText = 'visibility: visible; ' + `left: calc((100% - 2.6em) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
+      this._toolboxColumn.style.cssText = 'opacity: 1; ' + `left: calc((100% - 35px) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
     }
 
     if (numberOfColumns == 1) {
@@ -243,13 +249,13 @@ export class Toolbox {
     this._row = row;
 
     if (this._row <= 0 || this._row > numberOfRows) {
-      this._toolboxRow.style.visibility = 'hidden';
+      this._toolboxRow.style.opacity = '0';
     } else {
       const hoveredRowElement = table.querySelector(`.tc-row:nth-child(${this._row})`);
       const { y1: topOffset } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
       const { height } = hoveredRowElement.getBoundingClientRect();
   
-      this._toolboxRow.style.visibility = 'visible';
+      this._toolboxRow.style.opacity = '1';
       this._toolboxRow.style.top = `${topOffset + height / 2}px`;
     }
 
