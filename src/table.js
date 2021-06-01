@@ -1,4 +1,4 @@
-import { create, getCoords, getSideByCoords, insertAfter, insertBefore, hoveredCell } from './documentUtils';
+import { create, getRelativeCoords, getRelativeCoordsOfTwoElems, insertAfter, insertBefore } from './documentUtils';
 import './styles/table.pcss';
 import './styles/toolbox.pcss';
 import './styles/utils.pcss';
@@ -225,7 +225,7 @@ export class Table {
   _hangEvents() {
     // Update toolboxes position depending on the mouse movements
     this._table.addEventListener('mousemove', (event) => {
-      const { row, column } = hoveredCell(this._table, event, this._numberOfColumns, this._numberOfRows);
+      const { row, column } = this._hoveredCell(event);
 
       this._updateToolboxesPosition(row, column);
     }, true);
@@ -301,8 +301,6 @@ export class Table {
       this._toolbox.openToolboxColumnMenu();
     });
 
-    
-
     this._table.onkeypress = (event) => {
       if (event.key == 'Enter' && event.shiftKey) {
         return true;
@@ -328,6 +326,10 @@ export class Table {
         event.stopPropagation();
 
         this._selectCell(this._focusedCell);
+      }
+
+      if (event.key == "Delete") {
+
       }
 
       // if (event.key == "ArrowUp") {
@@ -479,5 +481,46 @@ export class Table {
     })
 
     this._lastSelectedColumn = 0;
+  }
+
+  /**
+   * Calculates the row and column that the cursor is currently hovering over
+   * 
+   * @param {Event} event - mousemove event
+   * @returns hovered cell coordinates as an integer row and column
+   */
+  _hoveredCell(event) {
+    let hoveredRow = 0;
+    let hoveredColumn = 0;
+    const { width, height, x, y } = getRelativeCoords(this._table, event);
+
+    // Looking for hovered column
+    for (let i = 1; i <= this._numberOfColumns && x >= 0; i++) {
+      const cell = this._table.querySelector(`.${CSS.row}:first-child .${CSS.column}:nth-child(${i})`);
+      const { fromRightBorder } = getRelativeCoordsOfTwoElems(this._table, cell);
+
+      if (x < width - fromRightBorder) {
+        hoveredColumn = i;
+
+        break;
+      }
+    }
+
+    // Looking for hovered row
+    for (let i = 1; i <= this._numberOfRows && y >= 0; i++) {
+      const row = this._table.querySelector(`.${CSS.row}:nth-child(${i})`);
+      const { fromBottomBorder } = getRelativeCoordsOfTwoElems(this._table, row);
+
+      if (y < height - fromBottomBorder) {
+        hoveredRow = i;
+
+        break;
+      }
+    }
+
+    return {
+      row: hoveredRow,
+      column: hoveredColumn
+    }
   }
 }

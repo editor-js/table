@@ -59,15 +59,21 @@ export function getCoords(elem) {
   };
 }
 
+/**
+ * Calc paddings of the first element relative to the second
+ * @param {HTMLElement} firstElem - outer element, if the second element is inside it, then all padding will be positive 
+ * @param {HTMLElement} secondElem - inner element, if its borders go beyond the first, then the paddings will be considered negative 
+ * @returns {{fromTopBorder: number, fromLeftBorder: number, fromRightBorder: number, fromBottomBorder: number}}
+ */
 export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
   const firstCoords = getCoords(firstElem);
   const secondCoords = getCoords(secondElem);
 
   return {
-    y1: secondCoords.y1 - firstCoords.y1,
-    x1: secondCoords.x1 - firstCoords.x1,
-    x2: secondCoords.x2 - firstCoords.x2,
-    y2: secondCoords.y2 - firstCoords.y2
+    fromTopBorder: secondCoords.y1 - firstCoords.y1,
+    fromLeftBorder: secondCoords.x1 - firstCoords.x1,
+    fromRightBorder: firstCoords.x2 - secondCoords.x2,
+    fromBottomBorder: firstCoords.y2 - secondCoords.y2
   }
 }
 
@@ -88,26 +94,6 @@ export function getRelativeCoords(elem, event) {
     height,
     x: clientX - x,
     y: clientY - y
-  }
-}
-
-/**
- * Calculates the row and column that the cursor is currently hovering over
- * 
- * @param {HTMLElement} table - table element
- * @param {Event} event - mousemove event
- * @param {number} numberOfColumns - number of columns in the table
- * @param {number} numberOfRows - number of rows in the table
- * @returns hovered cell coordinates as an integer row and column
- */
-export function hoveredCell(table, event, numberOfColumns, numberOfRows) {
-  const { width, height, x, y } = getRelativeCoords(table, event);
-  const hoveredRow =  Math.floor(y / (height / numberOfRows)) + 1;
-  const hoveredColumn = Math.floor(x / (width / numberOfColumns)) + 1;
-
-  return {
-    row: hoveredRow,
-    column: hoveredColumn
   }
 }
 

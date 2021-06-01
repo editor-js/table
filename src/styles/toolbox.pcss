@@ -26,7 +26,6 @@
   border: solid 1px #eaeaea;
   box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13);
   border-radius: 4px;
-  padding: 6px 0;
   display: grid;
 
   &:before {
@@ -53,7 +52,23 @@
   grid-template-columns: auto 1fr;
   grid-column-gap: 11px;
   align-items: center;
-  padding: 5.5px 12px;
+  padding: 5px 12px;
+
+  &:hover {
+    background: #f7f7f7;
+  }
+
+  &:first-child {
+    padding-top: 10px;
+  }
+
+  &:nth-child(2) {
+    padding: 7.5px 12px;
+  }
+
+  &:last-child {
+    padding-bottom: 10px;
+  }
 }
 
 .tc-toolbox-add-column-right {
@@ -73,7 +88,6 @@
 }
 
 .tc-toolbox-delete {
-
   &--column {
 
   }

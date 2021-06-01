@@ -252,11 +252,11 @@ export class Toolbox {
       this._toolboxRow.style.opacity = '0';
     } else {
       const hoveredRowElement = table.querySelector(`.tc-row:nth-child(${this._row})`);
-      const { y1: topOffset } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
+      const { fromTopBorder } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
       const { height } = hoveredRowElement.getBoundingClientRect();
   
       this._toolboxRow.style.opacity = '1';
-      this._toolboxRow.style.top = `${topOffset + height / 2}px`;
+      this._toolboxRow.style.top = `${fromTopBorder + height / 2}px`;
     }
 
     if (numberOfRows == 1) {
