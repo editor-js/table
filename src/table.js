@@ -283,14 +283,29 @@ export class Table {
       this._updateToolboxesPosition();
     })
     
-    // Open toolbox row menu
+    // Open/close toolbox row menu
     this._toolbox.toolboxRow.addEventListener('click', event => {
+      if (this._hoveredRow == this._lastSelectedRow) {
+        this._unselectRow();
+        this._toolbox.closeToolboxRowMenu();
+        
+        return;
+      }
+
       this._selectRow(this._hoveredRow);
       this._toolbox.openToolboxRowMenu();
     });
     
-    // Open toolbox column menu
+    // Open/close toolbox column menu
     this._toolbox.toolboxColumn.addEventListener('click', event => {
+      console.log(this._hoveredColumn, this._lastSelectedColumn);
+      if (this._hoveredColumn == this._lastSelectedColumn) {
+        this._unselectColumn();
+        this._toolbox.closeToolboxColumnMenu();
+
+        return;
+      }
+
       this._selectColumn(this._hoveredColumn);
       this._toolbox.openToolboxColumnMenu();
     });
