@@ -27,6 +27,7 @@
   box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13);
   border-radius: 4px;
   display: grid;
+  will-change: transform, opacity;
 
   &:before {
     content: "";
@@ -52,22 +53,41 @@
   grid-template-columns: auto 1fr;
   grid-column-gap: 11px;
   align-items: center;
-  padding: 5px 12px;
+  padding: 7px 12px;
 
   &:hover {
     background: #f7f7f7;
   }
 
   &:first-child {
-    padding-top: 10px;
-  }
-
-  &:nth-child(2) {
-    padding: 7.5px 12px;
+    padding-top: 14px;
   }
 
   &:last-child {
-    padding-bottom: 10px;
+    padding-bottom: 14px;
+  }
+}
+
+.tc-menu-animation {
+  animation-name: menuShowing;
+  animation-duration: 0.1s;
+} 
+
+@keyframes menuShowing {
+  0% {
+    opacity:0;
+    -webkit-transform:translateY(-8px) scale(.9);
+    transform:translateY(-8px) scale(.9)
+  }
+  70% {
+    opacity:1;
+    -webkit-transform:translateY(2px);
+    transform:translateY(2px)
+  }
+  to {
+    
+    -webkit-transform:translateY(0);
+    transform:translateY(0)
   }
 }
 

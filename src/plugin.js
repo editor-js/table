@@ -144,7 +144,7 @@ class Table {
 
     for (let i = 1; i <= rows; i++) {
       const row = table.querySelector(`.tc-row:nth-child(${i})`);
-      const cols = Array.from(row.querySelectorAll(`.tc-column`));
+      const cols = Array.from(row.querySelectorAll(`.tc-cell`));
       const isWorthless = cols.every(this._isEmpty);
 
       if (isWorthless) {

@@ -11,15 +11,12 @@ const CSS = {
   row: 'tc-row',
   withHeadings: 'tc-table--heading',
   rowSelected: 'tc-row--selected',
-  column: 'tc-column',
-  columnSelected: 'tc-column--selected',
+  cell: 'tc-cell',
+  cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
   addColumnCell: 'tc-add-column--cell',
-  inputField: 'tc-table__inp',
-  cell: 'tc-table__cell',
   wrapper: 'tc-table__wrap',
-  area: 'tc-table__area',
   toolboxAddColumnRight: 'tc-toolbox-add-column-right',
   toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
   toolboxDeleteColumn: 'tc-toolbox-delete--column',
@@ -74,15 +71,15 @@ export class Table {
 
     for (let i = 1; i <= this._numberOfRows; i++) {
       let cell;
-      const newCell = create('div', [CSS.column], { contenteditable: !this.readOnly });
+      const newCell = create('div', [CSS.cell], { contenteditable: !this.readOnly });
 
       if (index > 0) {
-        cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+        cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
 
         if (cell) {
           insertBefore(newCell, cell);
         } else {
-          cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index - 1})`);
+          cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index - 1})`);
 
           insertAfter(newCell, cell);
         }
@@ -90,8 +87,6 @@ export class Table {
       } else {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
       }
-
-      this._fillCell(cell);
     }
   };
 
@@ -133,7 +128,13 @@ export class Table {
    */
   deleteColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
-      this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`).remove();
+      const cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
+      
+      if (!cell) {
+        return;
+      }
+
+      cell.remove();
     }
 
     this._numberOfColumns--;
@@ -195,15 +196,6 @@ export class Table {
   }
 
   /**
-   * @todo fill cells
-   * @private
-   * @param {HTMLElement} cell - empty cell
-   */
-  _fillCell(cell) {
-    // cell.classList.add(CSS.cell);
-  }
-
-  /**
    * Add cells to a row
    * 
    * @private
@@ -211,7 +203,7 @@ export class Table {
    */
   _fillRow(row) {
     for (let i = 1; i <= this._numberOfColumns; i++) {
-      const newCell = create('div', [CSS.column], { contenteditable: !this.readOnly });
+      const newCell = create('div', [CSS.cell], { contenteditable: !this.readOnly });
 
       row.appendChild(newCell);
     }
@@ -290,12 +282,14 @@ export class Table {
       this.deleteRow(this._hoveredRow);
       this._updateToolboxesPosition();
     })
-
+    
+    // Open toolbox row menu
     this._toolbox.toolboxRow.addEventListener('click', event => {
       this._selectRow(this._hoveredRow);
       this._toolbox.openToolboxRowMenu();
     });
-
+    
+    // Open toolbox column menu
     this._toolbox.toolboxColumn.addEventListener('click', event => {
       this._selectColumn(this._hoveredColumn);
       this._toolbox.openToolboxColumnMenu();
@@ -327,28 +321,6 @@ export class Table {
 
         this._selectCell(this._focusedCell);
       }
-
-      if (event.key == "Delete") {
-
-      }
-
-      // if (event.key == "ArrowUp") {
-      //   event.stopPropagation();
-
-      //   if (this._focusedCell.row > 1) {
-      //     this._focusedCell.row -= 1;
-      //     this._focusCell();
-      //   }
-      // }
-
-      // if (event.key == "ArrowDown") {
-      //   event.stopPropagation();
-
-      //   if (this._focusedCell.row < this._numberOfRows) {
-      //     this._focusedCell.row += 1;
-      //     this._focusCell();
-      //   }
-      // }
     });
 
     this._table.addEventListener('focusin', event => {
@@ -357,7 +329,7 @@ export class Table {
 
       this._focusedCell = {
         row: Array.from(this._table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
-        column: Array.from(row.querySelectorAll(`.${CSS.column}`)).indexOf(cell) + 1
+        column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
       }
     });
   }
@@ -368,13 +340,13 @@ export class Table {
 
   _selectCell({ row, column }) {
     // console.log('select', row, column);
-    // console.log(this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.column}:nth-child(${column})`));
+    // console.log(this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`));
   }
 
   get _focusedCellElem () {
     const { row, column } = this._focusedCell;
 
-    return this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.column}:nth-child(${column})`)
+    return this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`)
   }
 
   /**
@@ -456,10 +428,10 @@ export class Table {
    */
   _selectColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
-      const column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.column}:nth-child(${index})`);
+      const column = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
 
       if (column) {
-        column.classList.add(CSS.columnSelected);
+        column.classList.add(CSS.cellSelected);
       }
     }
 
@@ -474,10 +446,10 @@ export class Table {
       return;
     }
 
-    let columns = this._table.querySelectorAll(`.${CSS.columnSelected}`);
+    let columns = this._table.querySelectorAll(`.${CSS.cellSelected}`);
 
     Array.from(columns).forEach(column => {
-      column.classList.remove(CSS.columnSelected);
+      column.classList.remove(CSS.cellSelected);
     })
 
     this._lastSelectedColumn = 0;
@@ -496,7 +468,7 @@ export class Table {
 
     // Looking for hovered column
     for (let i = 1; i <= this._numberOfColumns && x >= 0; i++) {
-      const cell = this._table.querySelector(`.${CSS.row}:first-child .${CSS.column}:nth-child(${i})`);
+      const cell = this._table.querySelector(`.${CSS.row}:first-child .${CSS.cell}:nth-child(${i})`);
       const { fromRightBorder } = getRelativeCoordsOfTwoElems(this._table, cell);
 
       if (x < width - fromRightBorder) {

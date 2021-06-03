@@ -10,7 +10,7 @@ const CSS = {
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
   row: 'tc-row',
-  column: 'tc-column',
+  cell: 'tc-cell',
 };
 
 /**
@@ -70,7 +70,7 @@ export class TableConstructor {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
-          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.column}:nth-child(${j + 1})`)
+          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.cell}:nth-child(${j + 1})`)
 
           cell.innerHTML = data.content[i][j];
         }
