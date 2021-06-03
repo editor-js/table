@@ -15,7 +15,6 @@ const CSS = {
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
-  addColumnCell: 'tc-add-column--cell',
   wrapper: 'tc-table__wrap',
   toolboxAddColumnRight: 'tc-toolbox-add-column-right',
   toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
@@ -47,7 +46,7 @@ export class Table {
     this._lastSelectedColumn = 0;
 
     // The cell in which the focus is currently located, if 0 and 0 then there is no focus 
-    // Used to switch between cells with buttons
+    // Uses to switch between cells with buttons
     this._focusedCell = {
       row: 0,
       column: 0
@@ -298,7 +297,6 @@ export class Table {
     
     // Open/close toolbox column menu
     this._toolbox.toolboxColumn.addEventListener('click', event => {
-      console.log(this._hoveredColumn, this._lastSelectedColumn);
       if (this._hoveredColumn == this._lastSelectedColumn) {
         this._unselectColumn();
         this._toolbox.closeToolboxColumnMenu();
@@ -333,8 +331,6 @@ export class Table {
     this._table.addEventListener('keydown', (event) => {      
       if (event.key == "Tab") {
         event.stopPropagation();
-
-        this._selectCell(this._focusedCell);
       }
     });
 
@@ -349,13 +345,9 @@ export class Table {
     });
   }
 
+  // Set the cursor focus to the focused cell
   _focusCell() {
     this._focusedCellElem.focus();
-  }
-
-  _selectCell({ row, column }) {
-    // console.log('select', row, column);
-    // console.log(this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`));
   }
 
   get _focusedCellElem () {
