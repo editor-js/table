@@ -1,4 +1,4 @@
-import { create,getRelativeCoordsOfTwoElems } from './documentUtils';
+import { create, getRelativeCoordsOfTwoElems } from './documentUtils';
 import toolboxIcon from './img/toolboxIcon.svg';
 import newToLeftIcon from './img/new-to-left.svg';
 import newToRightIcon from './img/new-to-right.svg';
@@ -22,12 +22,15 @@ const CSS = {
   toolboxDeleteRow: 'tc-toolbox-delete--row',
   toolboxOption: 'tc-toolbox-row__option',
   menuAnimation: 'tc-menu-animation'
-}
+};
 
 /**
  * @constructor
  */
 export class Toolbox {
+  /**
+   * Creates toolbox buttons and toolbox menus
+   */
   constructor() {
     this._toolboxRow = this.createToolboxRow();
     this._toolboxColumn = this.createToolboxColumn();
@@ -38,11 +41,11 @@ export class Toolbox {
     this._row = 0;
     this._column = 0;
   }
-  
+
   /**
    * Creating a toolbox to open menu for a manipulating rows
-   * 
-   * @returns 
+   *
+   * @returns
    */
   createToolboxRow() {
     let toolboxRowMenu = this._createRowMenu();
@@ -56,8 +59,8 @@ export class Toolbox {
 
   /**
    * Creating a toolbox to open menu for a manipulating columns
-   * 
-   * @returns {HTMLElement} 
+   *
+   * @returns {HTMLElement}
    */
   createToolboxColumn() {
     let toolboxColumnMenu = this._createColumnMenu();
@@ -71,7 +74,7 @@ export class Toolbox {
 
   /**
    * Creating a tooolbox row menu
-   * 
+   *
    * @private
    * @returns {HTMLElement} - row menu
    */
@@ -84,20 +87,23 @@ export class Toolbox {
     addRowBelowText.textContent = 'Add row below';
     deleteRowText.textContent = 'Delete row';
 
-    let addRowAbove= create('div', [ CSS.toolboxAddRowAbove, CSS.toolboxOption ]);
+    let addRowAbove = create('div', [CSS.toolboxAddRowAbove, CSS.toolboxOption]);
+
     addRowAbove.innerHTML = newToUp;
     addRowAbove.append(addRowAboveText);
 
-    let addRowBelow = create('div', [ CSS.toolboxAddRowBelow, CSS.toolboxOption ]);
+    let addRowBelow = create('div', [CSS.toolboxAddRowBelow, CSS.toolboxOption]);
+
     addRowBelow.innerHTML = newToDown;
     addRowBelow.append(addRowBelowText);
 
-    let deleteRow = create('div', [ CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteRow ]);
+    let deleteRow = create('div', [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteRow]);
+
     deleteRow.innerHTML = closeIcon;
     deleteRow.append(deleteRowText);
 
-    let toolboxRowMenu = create('div', [ CSS.toolboxRowMenu, CSS.hidden ], null, [
-      addRowAbove, 
+    let toolboxRowMenu = create('div', [CSS.toolboxRowMenu, CSS.hidden], null, [
+      addRowAbove,
       addRowBelow,
       deleteRow
     ]);
@@ -107,7 +113,7 @@ export class Toolbox {
 
   /**
    * Creating a tooolbox column menu
-   * 
+   *
    * @private
    * @returns {HTMLElement} - column menu
    */
@@ -120,20 +126,23 @@ export class Toolbox {
     addColumnRightText.textContent = 'Add column to right';
     deleteColumnText.textContent = 'Delete column';
 
-    let addColumnRight = create('div', [ CSS.toolboxAddColumnRight, CSS.toolboxOption ]);
+    let addColumnRight = create('div', [CSS.toolboxAddColumnRight, CSS.toolboxOption]);
+
     addColumnRight.innerHTML = newToRightIcon;
     addColumnRight.append(addColumnRightText);
 
-    let addColumnLeft = create('div', [ CSS.toolboxAddColumnLeft, CSS.toolboxOption ]);
+    let addColumnLeft = create('div', [CSS.toolboxAddColumnLeft, CSS.toolboxOption]);
+
     addColumnLeft.innerHTML = newToLeftIcon;
     addColumnLeft.append(addColumnLeftText);
 
-    let deleteColumn = create('div', [ CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn ]);
+    let deleteColumn = create('div', [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn]);
+
     deleteColumn.innerHTML = closeIcon;
     deleteColumn.append(deleteColumnText);
 
-    let toolboxColumnMenu = create('div', [ CSS.toolboxColumnMenu, CSS.hidden ], null, [
-      addColumnLeft, 
+    let toolboxColumnMenu = create('div', [CSS.toolboxColumnMenu, CSS.hidden], null, [
+      addColumnLeft,
       addColumnRight,
       deleteColumn
     ]);
@@ -184,7 +193,7 @@ export class Toolbox {
   }
 
   /**
-   * Show toolbox row menu when the toolbox was clicked 
+   * Show toolbox row menu when the toolbox was clicked
    */
   openToolboxRowMenu() {
     this._toolboxRowMenu.classList.add(CSS.menuAnimation);
@@ -217,7 +226,7 @@ export class Toolbox {
 
   /**
    * Change column toolbox position
-   * 
+   *
    * @param {number} numberOfColumns - number of columns in the table
    * @param {number} column - current column, if 0 then hide toolbox
    */
@@ -226,7 +235,6 @@ export class Toolbox {
 
     if (this._column <= 0 || this._column > numberOfColumns) {
       this._toolboxColumn.style.opacity = '0';
-
     } else {
       this._toolboxColumn.style.cssText = 'opacity: 1; ' + `left: calc((100% - 35px) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
     }
@@ -240,12 +248,12 @@ export class Toolbox {
 
   /**
    * Change row toolbox position
-   * 
+   *
    * @param {number} numberOfRows - number of rows
    * @param {number} row - hovered row
-   * @param {HTMLElement} table - table element 
+   * @param {HTMLElement} table - table element
    */
-   updateToolboxRowPosition(numberOfRows = 0, row = this._row, table) {
+  updateToolboxRowPosition(numberOfRows = 0, row = this._row, table) {
     this._row = row;
 
     if (this._row <= 0 || this._row > numberOfRows) {
@@ -254,7 +262,7 @@ export class Toolbox {
       const hoveredRowElement = table.querySelector(`.tc-row:nth-child(${this._row})`);
       const { fromTopBorder } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
       const { height } = hoveredRowElement.getBoundingClientRect();
-  
+
       this._toolboxRow.style.opacity = '1';
       this._toolboxRow.style.top = `${fromTopBorder + height / 2}px`;
     }

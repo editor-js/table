@@ -45,12 +45,12 @@ export class Table {
     this._lastSelectedRow = 0;
     this._lastSelectedColumn = 0;
 
-    // The cell in which the focus is currently located, if 0 and 0 then there is no focus 
+    // The cell in which the focus is currently located, if 0 and 0 then there is no focus
     // Uses to switch between cells with buttons
     this._focusedCell = {
       row: 0,
       column: 0
-    }
+    };
 
     this._fillAddButtons();
 
@@ -70,7 +70,7 @@ export class Table {
 
     for (let i = 1; i <= this._numberOfRows; i++) {
       let cell;
-      const newCell = create('div', [CSS.cell], { contenteditable: !this.readOnly });
+      const newCell = create('div', [ CSS.cell ], { contenteditable: !this.readOnly });
 
       if (index > 0) {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
@@ -82,7 +82,6 @@ export class Table {
 
           insertAfter(newCell, cell);
         }
-
       } else {
         cell = this._table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
       }
@@ -98,7 +97,7 @@ export class Table {
   addRow(index = -1) {
     this._numberOfRows++;
     let newRow;
-    let rowElem = create('div', [CSS.row]);
+    let rowElem = create('div', [ CSS.row ]);
 
     if (index > 0) {
       let row = this._table.querySelector(`.${CSS.row}:nth-child(${index})`);
@@ -110,7 +109,6 @@ export class Table {
 
         newRow = insertAfter(rowElem, row);
       }
-
     } else {
       newRow = this._table.appendChild(rowElem);
     }
@@ -122,13 +120,13 @@ export class Table {
 
   /**
    * Delete a column by index
-   * 
-   * @param {number} index 
+   *
+   * @param {number} index
    */
   deleteColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
       const cell = this._table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
-      
+
       if (!cell) {
         return;
       }
@@ -141,8 +139,8 @@ export class Table {
 
   /**
    * Delete a row by index
-   * 
-   * @param {number} index 
+   *
+   * @param {number} index
    */
   deleteRow(index) {
     this._table.querySelector(`.${CSS.row}:nth-child(${index})`).remove();
@@ -152,7 +150,7 @@ export class Table {
 
   /**
    * Add buttons to fast add row/column
-   * 
+   *
    * @private
    */
   _fillAddButtons() {
@@ -180,29 +178,29 @@ export class Table {
 
   /**
    * Create wrapper with an additional interface
-   * 
+   *
    * @private
    * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   _createTableWrapper() {
-    return create('div', [CSS.wrapper], null, [
+    return create('div', [ CSS.wrapper ], null, [
       this._toolbox.toolboxRow,
       this._toolbox.toolboxColumn,
-      create('div', [CSS.table]),
-      create('div', [CSS.addColumn]),
-      create('div', [CSS.addRow])
+      create('div', [ CSS.table ]),
+      create('div', [ CSS.addColumn ]),
+      create('div', [ CSS.addRow ])
     ]);
   }
 
   /**
    * Add cells to a row
-   * 
+   *
    * @private
    * @param {HTMLElement} row
    */
   _fillRow(row) {
     for (let i = 1; i <= this._numberOfColumns; i++) {
-      const newCell = create('div', [CSS.cell], { contenteditable: !this.readOnly });
+      const newCell = create('div', [ CSS.cell ], { contenteditable: !this.readOnly });
 
       row.appendChild(newCell);
     }
@@ -210,7 +208,7 @@ export class Table {
 
   /**
    * @private
-   * 
+   *
    * Hangs the necessary handlers to events
    */
   _hangEvents() {
@@ -274,27 +272,27 @@ export class Table {
     this._toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
       this.deleteColumn(this._hoveredColumn);
       this._updateToolboxesPosition();
-    })
+    });
 
     // Delete selected row
     this._toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
       this.deleteRow(this._hoveredRow);
       this._updateToolboxesPosition();
-    })
-    
+    });
+
     // Open/close toolbox row menu
     this._toolbox.toolboxRow.addEventListener('click', event => {
       if (this._hoveredRow == this._lastSelectedRow) {
         this._unselectRow();
         this._toolbox.closeToolboxRowMenu();
-        
+
         return;
       }
 
       this._selectRow(this._hoveredRow);
       this._toolbox.openToolboxRowMenu();
     });
-    
+
     // Open/close toolbox column menu
     this._toolbox.toolboxColumn.addEventListener('click', event => {
       if (this._hoveredColumn == this._lastSelectedColumn) {
@@ -321,15 +319,15 @@ export class Table {
           this.addRow();
           this._focusedCell.row += 1;
           this._focusCell(this._focusedCell);
-          this._updateToolboxesPosition(0 ,0);
+          this._updateToolboxesPosition(0, 0);
         }
       }
 
       return event.key != 'Enter';
-    }
+    };
 
-    this._table.addEventListener('keydown', (event) => {      
-      if (event.key == "Tab") {
+    this._table.addEventListener('keydown', (event) => {
+      if (event.key == 'Tab') {
         event.stopPropagation();
       }
     });
@@ -341,24 +339,31 @@ export class Table {
       this._focusedCell = {
         row: Array.from(this._table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
         column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
-      }
+      };
     });
   }
 
-  // Set the cursor focus to the focused cell
+  /**
+   * Set the cursor focus to the focused cell
+   */
   _focusCell() {
     this._focusedCellElem.focus();
   }
 
-  get _focusedCellElem () {
+  /**
+   * Get current focused element
+   *
+   * @returns {HTMLElement} - focused cell
+   */
+  get _focusedCellElem() {
     const { row, column } = this._focusedCell;
 
-    return this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`)
+    return this._table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`);
   }
 
   /**
    * Update toolboxes position
-   * 
+   *
    * @private
    * @param {number} row - hovered row
    * @param {number} column - hovered column
@@ -399,8 +404,8 @@ export class Table {
 
   /**
    * Add effect of a selected row
-   * 
-   * @param {number} index 
+   *
+   * @param {number} index
    */
   _selectRow(index) {
     this._lastSelectedRow = index;
@@ -430,8 +435,8 @@ export class Table {
 
   /**
    * Add effect of a selected column
-   * 
-   * @param {number} index 
+   *
+   * @param {number} index
    */
   _selectColumn(index) {
     for (let i = 1; i <= this._numberOfRows; i++) {
@@ -457,14 +462,14 @@ export class Table {
 
     Array.from(columns).forEach(column => {
       column.classList.remove(CSS.cellSelected);
-    })
+    });
 
     this._lastSelectedColumn = 0;
   }
 
   /**
    * Calculates the row and column that the cursor is currently hovering over
-   * 
+   *
    * @param {Event} event - mousemove event
    * @returns hovered cell coordinates as an integer row and column
    */
@@ -474,7 +479,7 @@ export class Table {
     const { width, height, x, y } = getRelativeCoords(this._table, event);
 
     // Looking for hovered column
-    for (let i = 1; i <= this._numberOfColumns && x >= 0; i++) {
+    for (let i = 1; i <= this._numberOfColumns; i++) {
       const cell = this._table.querySelector(`.${CSS.row}:first-child .${CSS.cell}:nth-child(${i})`);
       const { fromRightBorder } = getRelativeCoordsOfTwoElems(this._table, cell);
 
@@ -486,7 +491,7 @@ export class Table {
     }
 
     // Looking for hovered row
-    for (let i = 1; i <= this._numberOfRows && y >= 0; i++) {
+    for (let i = 1; i <= this._numberOfRows; i++) {
       const row = this._table.querySelector(`.${CSS.row}:nth-child(${i})`);
       const { fromBottomBorder } = getRelativeCoordsOfTwoElems(this._table, row);
 
@@ -500,6 +505,6 @@ export class Table {
     return {
       row: hoveredRow,
       column: hoveredColumn
-    }
+    };
   }
 }

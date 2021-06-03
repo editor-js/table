@@ -1,5 +1,5 @@
 import './styles/table-constructor.pcss';
-import {create, getCoords, getSideByCoords} from './documentUtils';
+import {create} from './documentUtils';
 import {Table} from './table';
 
 const CSS = {
@@ -10,7 +10,7 @@ const CSS = {
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
   row: 'tc-row',
-  cell: 'tc-cell',
+  cell: 'tc-cell'
 };
 
 /**
@@ -32,12 +32,13 @@ export class TableConstructor {
     const size = this._resizeTable(data, config);
 
     let apiStyles = null;
+
     if (api && api.styles && api.styles.block) {
       apiStyles = api.styles.block;
     }
 
     /** creating container around table */
-    this._container = create('div', [CSS.editor, apiStyles], null, [this._table.htmlElement]);
+    this._container = create('div', [CSS.editor, apiStyles], null, [ this._table.htmlElement ]);
 
     this._fillTable(data, size);
 
@@ -70,7 +71,7 @@ export class TableConstructor {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
-          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.cell}:nth-child(${j + 1})`)
+          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.cell}:nth-child(${j + 1})`);
 
           cell.innerHTML = data.content[i][j];
         }
@@ -132,8 +133,8 @@ export class TableConstructor {
   }
 
   /**
-   * Passes the new setting for changing the UI to the table 
-   * @param {boolean} withHeadings 
+   * Passes the new setting for changing the UI to the table
+   * @param {boolean} withHeadings
    */
   useHeadings(withHeadings) {
     this._table.useHeadings(withHeadings);

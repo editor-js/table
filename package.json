@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
   "repository": "https://github.com/editor-js/table",
   "author": {

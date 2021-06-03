@@ -12,7 +12,7 @@ const CSS = {
 const tunes = {
   withHeadings: 'With headings',
   withoutHeadings: 'Without headings'
-}
+};
 
 /**
  *  Tool for table's creating
@@ -50,7 +50,7 @@ class Table {
   static get toolbox() {
     return {
       icon: svgIcon,
-      title: 'Table',
+      title: 'Table'
     };
   }
 
@@ -67,7 +67,7 @@ class Table {
     this.readOnly = readOnly;
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false
-    }
+    };
 
     this._tableConstructor = new TableConstructor(data, config, api, readOnly);
     this._tableConstructor.useHeadings(this.data.withHeadings);
@@ -83,28 +83,30 @@ class Table {
   }
 
   /**
-   * Add plugin settings 
-   * 
+   * Add plugin settings
+   *
    * @returns {HTMLElement} - wrapper element
    */
-  renderSettings(){
+  renderSettings() {
     const settings = {
-      withHeadings:{
+      withHeadings: {
         name: tunes.withHeadings,
         icon: withHeadings
       },
       withoutHeadings: {
         name: tunes.withoutHeadings,
         icon: withoutHeadings
-      },
+      }
     };
     const wrapper = document.createElement('div');
 
     let withHeadingsButton = document.createElement('div');
+
     withHeadingsButton.classList.add(CSS.setting);
     withHeadingsButton.innerHTML = settings.withHeadings.icon;
 
     let withoutHeadingsButton = document.createElement('div');
+
     withoutHeadingsButton.classList.add(CSS.setting);
     withoutHeadingsButton.innerHTML = settings.withoutHeadings.icon;
 
@@ -144,7 +146,7 @@ class Table {
 
     for (let i = 1; i <= rows; i++) {
       const row = table.querySelector(`.tc-row:nth-child(${i})`);
-      const cols = Array.from(row.querySelectorAll(`.tc-cell`));
+      const cols = Array.from(row.querySelectorAll('.tc-cell'));
       const isWorthless = cols.every(this._isEmpty);
 
       if (isWorthless) {
@@ -185,7 +187,7 @@ class Table {
     } else {
       this.data.withHeadings = true;
     }
-    
+
     withHeadingsButton.classList.toggle(CSS.settingActive);
     withoutHeadingsButton.classList.toggle(CSS.settingActive);
 

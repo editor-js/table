@@ -1,6 +1,6 @@
 /**
  * Checks the item is not missed or messed
- * 
+ *
  * @param {object|string[]|Element[]|HTMLElement|string} elem - element
  * @returns {boolean} true if element is correct
  * @private
@@ -44,7 +44,7 @@ export function create(tagName, cssClasses = null, attrs = null, children = null
 
 /**
  * Get item position relative to document
- * 
+ *
  * @param {HTMLElement} elem - item
  * @returns {{x1: number, y1: number, x2: number, y2: number}} coordinates of the upper left (x1,y1) and lower right(x2,y2) corners
  */
@@ -61,8 +61,8 @@ export function getCoords(elem) {
 
 /**
  * Calc paddings of the first element relative to the second
- * @param {HTMLElement} firstElem - outer element, if the second element is inside it, then all padding will be positive 
- * @param {HTMLElement} secondElem - inner element, if its borders go beyond the first, then the paddings will be considered negative 
+ * @param {HTMLElement} firstElem - outer element, if the second element is inside it, then all padding will be positive
+ * @param {HTMLElement} secondElem - inner element, if its borders go beyond the first, then the paddings will be considered negative
  * @returns {{fromTopBorder: number, fromLeftBorder: number, fromRightBorder: number, fromBottomBorder: number}}
  */
 export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
@@ -74,14 +74,14 @@ export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
     fromLeftBorder: secondCoords.x1 - firstCoords.x1,
     fromRightBorder: firstCoords.x2 - secondCoords.x2,
     fromBottomBorder: firstCoords.y2 - secondCoords.y2
-  }
+  };
 }
 
 /**
  * Get the coordinates relative to the parent element
- * 
- * @param {HTMLElement} elem 
- * @param {Event} event 
+ *
+ * @param {HTMLElement} elem
+ * @param {Event} event
  * @returns mouse position relative to the element
  */
 export function getRelativeCoords(elem, event) {
@@ -94,13 +94,13 @@ export function getRelativeCoords(elem, event) {
     height,
     x: clientX - x,
     y: clientY - y
-  }
+  };
 }
 
 /**
  * Insert element after the referenced
- * 
- * @param {HTMLElement} newNode 
+ *
+ * @param {HTMLElement} newNode
  * @param {HTMLElement} referenceNode
  * @returns {HTMLElement}
  */
@@ -110,11 +110,11 @@ export function insertAfter(newNode, referenceNode) {
 
 /**
  * Insert element after the referenced
- * 
- * @param {HTMLElement} newNode 
- * @param {HTMLElement} referenceNode 
+ *
+ * @param {HTMLElement} newNode
+ * @param {HTMLElement} referenceNode
  * @returns {HTMLElement}
  */
- export function insertBefore(newNode, referenceNode) {
+export function insertBefore(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
