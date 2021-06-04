@@ -45,7 +45,7 @@ export class Toolbox {
   /**
    * Creating a toolbox to open menu for a manipulating rows
    *
-   * @returns
+   * @returns {HTMLElement} - row toolbox wrapper
    */
   createToolboxRow() {
     let toolboxRowMenu = this._createRowMenu();
@@ -60,7 +60,7 @@ export class Toolbox {
   /**
    * Creating a toolbox to open menu for a manipulating columns
    *
-   * @returns {HTMLElement}
+   * @returns {HTMLElement} - column toolbox wrapper
    */
   createToolboxColumn() {
     let toolboxColumnMenu = this._createColumnMenu();

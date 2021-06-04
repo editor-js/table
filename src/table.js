@@ -31,6 +31,7 @@ export class Table {
   /**
    * Creates
    *
+   * @constructor
    * @param {boolean} readOnly - read-only mode flag
    */
   constructor(readOnly) {
@@ -207,9 +208,9 @@ export class Table {
   }
 
   /**
-   * @private
-   *
    * Hangs the necessary handlers to events
+   *
+   * @private
    */
   _hangEvents() {
     // Update toolboxes position depending on the mouse movements
@@ -282,6 +283,9 @@ export class Table {
 
     // Open/close toolbox row menu
     this._toolbox.toolboxRow.addEventListener('click', event => {
+      this._unselectColumn();
+      this._toolbox.closeToolboxColumnMenu();
+
       if (this._hoveredRow == this._lastSelectedRow) {
         this._unselectRow();
         this._toolbox.closeToolboxRowMenu();
@@ -295,6 +299,9 @@ export class Table {
 
     // Open/close toolbox column menu
     this._toolbox.toolboxColumn.addEventListener('click', event => {
+      this._unselectRow();
+      this._toolbox.closeToolboxRowMenu();
+
       if (this._hoveredColumn == this._lastSelectedColumn) {
         this._unselectColumn();
         this._toolbox.closeToolboxColumnMenu();
@@ -345,6 +352,8 @@ export class Table {
 
   /**
    * Set the cursor focus to the focused cell
+   *
+   * @private
    */
   _focusCell() {
     this._focusedCellElem.focus();
@@ -353,6 +362,7 @@ export class Table {
   /**
    * Get current focused element
    *
+   * @private
    * @returns {HTMLElement} - focused cell
    */
   get _focusedCellElem() {
@@ -392,6 +402,7 @@ export class Table {
 
   /**
    * Makes the first row headings
+   *
    * @param {boolean} withHeadings - use headings row or not
    */
   useHeadings(withHeadings) {
@@ -405,6 +416,7 @@ export class Table {
   /**
    * Add effect of a selected row
    *
+   * @private
    * @param {number} index
    */
   _selectRow(index) {
@@ -418,6 +430,8 @@ export class Table {
 
   /**
    * Remove effect of a selected row
+   *
+   * @private
    */
   _unselectRow() {
     if (this._lastSelectedRow <= 0) {
@@ -436,6 +450,7 @@ export class Table {
   /**
    * Add effect of a selected column
    *
+   * @private
    * @param {number} index
    */
   _selectColumn(index) {
@@ -452,6 +467,8 @@ export class Table {
 
   /**
    * Remove effect of a selected column
+   *
+   * @private
    */
   _unselectColumn() {
     if (this._lastSelectedColumn <= 0) {
@@ -470,6 +487,7 @@ export class Table {
   /**
    * Calculates the row and column that the cursor is currently hovering over
    *
+   * @private
    * @param {Event} event - mousemove event
    * @returns hovered cell coordinates as an integer row and column
    */

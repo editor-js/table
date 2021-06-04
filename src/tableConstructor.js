@@ -134,6 +134,7 @@ export class TableConstructor {
 
   /**
    * Passes the new setting for changing the UI to the table
+   *
    * @param {boolean} withHeadings
    */
   useHeadings(withHeadings) {
