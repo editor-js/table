@@ -66,30 +66,51 @@ export class Table {
   }
 
   /**
+   * Get tabel cell
+   *
+   * @param {number} row - cell row coordinate
+   * @param {number} column - cell column coordinate
+   * @returns {HTMLElement}
+   */
+  getCell(row, column) {
+    return this.table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`);
+  }
+
+  /**
+   * Get tabel row
+   *
+   * @param {number} row - row coordinate
+   * @returns {HTMLElement}
+   */
+  getRow(row) {
+    return this.table.querySelector(`.${CSS.row}:nth-child(${row})`);
+  }
+
+  /**
    * Add column in table on index place
    * Add cells in each row
    *
-   * @param {number} index - number in the array of columns, where new column to insert, -1 if insert at the end
+   * @param {number} columnIndex - number in the array of columns, where new column to insert, -1 if insert at the end
    */
-  addColumn(index = -1) {
+  addColumn(columnIndex = -1) {
     this.numberOfColumns++;
 
-    for (let i = 1; i <= this.numberOfRows; i++) {
+    for (let rowIndex = 1; rowIndex <= this.numberOfRows; rowIndex++) {
       let cell;
       const newCell = create('div', [ CSS.cell ], { contenteditable: !this.readOnly });
 
-      if (index > 0) {
-        cell = this.table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
+      if (columnIndex > 0) {
+        cell = this.getCell(rowIndex, columnIndex);
 
         if (cell) {
           insertBefore(newCell, cell);
         } else {
-          cell = this.table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index - 1})`);
+          cell = this.getCell(rowIndex, columnIndex - 1);
 
           insertAfter(newCell, cell);
         }
       } else {
-        cell = this.table.querySelector(`.${CSS.row}:nth-child(${i})`).appendChild(newCell);
+        cell = this.getRow(rowIndex).appendChild(newCell);
       }
     }
   };
@@ -106,12 +127,12 @@ export class Table {
     let rowElem = create('div', [ CSS.row ]);
 
     if (index > 0) {
-      let row = this.table.querySelector(`.${CSS.row}:nth-child(${index})`);
+      let row = this.getRow(index);
 
       if (row) {
         newRow = insertBefore(rowElem, row);
       } else {
-        row = this.table.querySelector(`.${CSS.row}:nth-child(${index - 1})`);
+        row = this.getRow(index - 1);
 
         newRow = insertAfter(rowElem, row);
       }
@@ -131,7 +152,7 @@ export class Table {
    */
   deleteColumn(index) {
     for (let i = 1; i <= this.numberOfRows; i++) {
-      const cell = this.table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
+      const cell = this.getCell(i, index);
 
       if (!cell) {
         return;
@@ -149,7 +170,7 @@ export class Table {
    * @param {number} index
    */
   deleteRow(index) {
-    this.table.querySelector(`.${CSS.row}:nth-child(${index})`).remove();
+    this.getRow(index).remove();
 
     this.numberOfRows--;
   }
@@ -441,7 +462,7 @@ export class Table {
   get focusedCellElem() {
     const { row, column } = this.focusedCell;
 
-    return this.table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`);
+    return this.getCell(row, column);
   }
 
   /**
@@ -482,7 +503,7 @@ export class Table {
    */
   selectRow(index) {
     this.lastSelectedRow = index;
-    const row = this.table.querySelector(`.${CSS.row}:nth-child(${index})`);
+    const row = this.getRow(index);
 
     if (row) {
       row.classList.add(CSS.rowSelected);
@@ -513,10 +534,10 @@ export class Table {
    */
   selectColumn(index) {
     for (let i = 1; i <= this.numberOfRows; i++) {
-      const column = this.table.querySelector(`.${CSS.row}:nth-child(${i}) .${CSS.cell}:nth-child(${index})`);
+      const cell = this.getCell(i, index);
 
-      if (column) {
-        column.classList.add(CSS.cellSelected);
+      if (cell) {
+        cell.classList.add(CSS.cellSelected);
       }
     }
 
@@ -531,9 +552,9 @@ export class Table {
       return;
     }
 
-    let columns = this.table.querySelectorAll(`.${CSS.cellSelected}`);
+    let cells = this.table.querySelectorAll(`.${CSS.cellSelected}`);
 
-    Array.from(columns).forEach(column => {
+    Array.from(cells).forEach(column => {
       column.classList.remove(CSS.cellSelected);
     });
 
@@ -553,7 +574,7 @@ export class Table {
 
     // Looking for hovered column
     for (let i = 1; i <= this.numberOfColumns; i++) {
-      const cell = this.table.querySelector(`.${CSS.row}:first-child .${CSS.cell}:nth-child(${i})`);
+      const cell = this.getCell(1, i);
       const { fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 
       if (x < width - fromRightBorder) {
@@ -565,7 +586,7 @@ export class Table {
 
     // Looking for hovered row
     for (let i = 1; i <= this.numberOfRows; i++) {
-      const row = this.table.querySelector(`.${CSS.row}:nth-child(${i})`);
+      const row = this.getRow(i);
       const { fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, row);
 
       if (y < height - fromBottomBorder) {
