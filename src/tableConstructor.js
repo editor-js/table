@@ -45,10 +45,6 @@ export class TableConstructor {
     /** Activated elements */
     this._hoveredCell = null;
     this._hoveredCellSide = null;
-
-    if (!this.readOnly) {
-      this._hangEvents();
-    }
   }
 
   /**
@@ -115,21 +111,6 @@ export class TableConstructor {
       rows: rows,
       cols: cols
     };
-  }
-
-  /**
-   * @private
-   *
-   * hang necessary events
-   */
-  _hangEvents() {
-    this._container.querySelector(`.${CSS.addColumn}`).addEventListener('click', (event) => {
-      this._table.addColumn();
-    });
-
-    this._container.querySelector(`.${CSS.addRow}`).addEventListener('click', (event) => {
-      this._table.addRow();
-    });
   }
 
   /**

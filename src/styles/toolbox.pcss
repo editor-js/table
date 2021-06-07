@@ -47,6 +47,10 @@
   width: 190px;
 }
 
+.tc-toolbox-row__menu, .tc-toolbox-column__menu {
+  padding: 7px 0;
+}
+
 .tc-toolbox-row__option, .tc-toolbox-column__option {
   font-size: 0.9em;
   display: grid;
@@ -57,14 +61,6 @@
 
   &:hover {
     background: #f7f7f7;
-  }
-
-  &:first-child {
-    padding-top: 14px;
-  }
-
-  &:last-child {
-    padding-bottom: 14px;
   }
 }
 
@@ -85,34 +81,7 @@
     transform:translateY(2px)
   }
   to {
-    
     -webkit-transform:translateY(0);
     transform:translateY(0)
-  }
-}
-
-.tc-toolbox-add-column-right {
-
-}
-
-.tc-toolbox-add-column-left {
-
-}
-
-.tc-toolbox-add-row-above {
-
-}
-
-.tc-toolbox-add-row-below {
-
-}
-
-.tc-toolbox-delete {
-  &--column {
-
-  }
-
-  &--row {
-
   }
 }

@@ -69,8 +69,8 @@ class Table {
       withHeadings: data && data.withHeadings ? data.withHeadings : false
     };
 
-    this._tableConstructor = new TableConstructor(data, config, api, readOnly);
-    this._tableConstructor.useHeadings(this.data.withHeadings);
+    this.tableConstructor = new TableConstructor(data, config, api, readOnly);
+    this.tableConstructor.useHeadings(this.data.withHeadings);
   }
 
   /**
@@ -79,7 +79,7 @@ class Table {
    * @returns {HTMLDivElement}
    */
   render() {
-    return this._tableConstructor.htmlElement;
+    return this.tableConstructor.htmlElement;
   }
 
   /**
@@ -117,11 +117,11 @@ class Table {
     }
 
     withHeadingsButton.addEventListener('click', () => {
-      this._toggleTune(withHeadingsButton, withoutHeadingsButton);
+      this.toggleTune(withHeadingsButton, withoutHeadingsButton);
     });
 
     withoutHeadingsButton.addEventListener('click', () => {
-      this._toggleTune(withHeadingsButton, withoutHeadingsButton);
+      this.toggleTune(withHeadingsButton, withoutHeadingsButton);
     });
 
     wrapper.append(withHeadingsButton, withoutHeadingsButton);
@@ -136,7 +136,6 @@ class Table {
    * Extract Tool's data from the view
    *
    * @param {HTMLElement} toolsContent - Tool HTML element
-   *
    * @returns {TableData} - saved data
    */
   save(toolsContent) {
@@ -147,7 +146,7 @@ class Table {
     for (let i = 1; i <= rows; i++) {
       const row = table.querySelector(`.tc-row:nth-child(${i})`);
       const cols = Array.from(row.querySelectorAll('.tc-cell'));
-      const isWorthless = cols.every(this._isEmpty);
+      const isWorthless = cols.every(this.isEmpty);
 
       if (isWorthless) {
         continue;
@@ -168,20 +167,19 @@ class Table {
   }
 
   /**
-   * @private
    * @param {HTMLElement} input - input field
    * @returns {boolean}
    */
-  _isEmpty(input) {
+  isEmpty(input) {
     return !input.textContent.trim();
   }
 
   /**
-   * @private
    * Click on the Settings Button
+   *
    * @param {string} tuneName — tune name from this.settings
    */
-  _toggleTune(withHeadingsButton, withoutHeadingsButton) {
+  toggleTune(withHeadingsButton, withoutHeadingsButton) {
     if (withHeadingsButton.classList.contains(CSS.settingActive)) {
       this.data.withHeadings = false;
     } else {
@@ -191,7 +189,7 @@ class Table {
     withHeadingsButton.classList.toggle(CSS.settingActive);
     withoutHeadingsButton.classList.toggle(CSS.settingActive);
 
-    this._tableConstructor.useHeadings(this.data.withHeadings);
+    this.tableConstructor.useHeadings(this.data.withHeadings);
   }
 }
 

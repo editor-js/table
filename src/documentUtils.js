@@ -3,14 +3,14 @@
  *
  * @param {object|string[]|Element[]|HTMLElement|string} elem - element
  * @returns {boolean} true if element is correct
- * @private
  */
-function _isNotMissed(elem) {
+function isNotMissed(elem) {
   return (!(elem === undefined || elem === null));
 }
 
 /**
  * Create DOM element with set parameters
+ *
  * @param {string} tagName - Html tag of the element to be created
  * @param {string[]} cssClasses - Css classes that must be applied to an element
  * @param {object} attrs - Attributes that must be applied to the element
@@ -20,21 +20,21 @@ function _isNotMissed(elem) {
 export function create(tagName, cssClasses = null, attrs = null, children = null) {
   const elem = document.createElement(tagName);
 
-  if (_isNotMissed(cssClasses)) {
+  if (isNotMissed(cssClasses)) {
     for (let i = 0; i < cssClasses.length; i++) {
-      if (_isNotMissed(cssClasses[i])) {
+      if (isNotMissed(cssClasses[i])) {
         elem.classList.add(cssClasses[i]);
       }
     }
   }
-  if (_isNotMissed(attrs)) {
+  if (isNotMissed(attrs)) {
     for (let key in attrs) {
       elem.setAttribute(key, attrs[key]);
     }
   }
-  if (_isNotMissed(children)) {
+  if (isNotMissed(children)) {
     for (let i = 0; i < children.length; i++) {
-      if (_isNotMissed(children[i])) {
+      if (isNotMissed(children[i])) {
         elem.appendChild(children[i]);
       }
     }
@@ -61,6 +61,7 @@ export function getCoords(elem) {
 
 /**
  * Calc paddings of the first element relative to the second
+ *
  * @param {HTMLElement} firstElem - outer element, if the second element is inside it, then all padding will be positive
  * @param {HTMLElement} secondElem - inner element, if its borders go beyond the first, then the paddings will be considered negative
  * @returns {{fromTopBorder: number, fromLeftBorder: number, fromRightBorder: number, fromBottomBorder: number}}
