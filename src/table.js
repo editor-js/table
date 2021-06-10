@@ -55,8 +55,11 @@ export class Table {
       column: 0
     };
 
-    // function for event listeners to hide toolbox menus
-    this.clickOutsideMenuHandler = this.clickOutsideMenus.bind(this);
+    // Listener to hide the menu when click outside of this menu
+    this.clickOutsideMenuListener = this.clickOutsideMenus.bind(this);
+
+    // Listener to hide toolboxes and menus when click outside the table
+    this.clickOutsideWrapperListener = this.clickOutsideWrapper.bind(this);
 
     this.fillAddButtons();
 
@@ -238,19 +241,24 @@ export class Table {
       const { row, column } = this.hoveredCell(event);
 
       this.updateToolboxesPosition(row, column);
+
+      // set the listener to close toolboxes when click outside
+      document.addEventListener('click', this.clickOutsideWrapperListener);
     }, true);
 
+    // Add a column to the end
     this.element.querySelector(`.${CSS.addColumn}`).addEventListener('click', (event) => {
       this.addColumn();
       this.hideEverything();
     });
 
+    // Add a row to the bottom
     this.element.querySelector(`.${CSS.addRow}`).addEventListener('click', (event) => {
       this.addRow();
       this.hideEverything();
     });
 
-    // Add column to right
+    // Add a column to the right
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnRight}`).addEventListener('click', event => {
       event.stopPropagation();
 
@@ -258,7 +266,7 @@ export class Table {
       this.hideAndUnselect();
     });
 
-    // Add column to left
+    // Add a column to the left
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnLeft}`).addEventListener('click', event => {
       event.stopPropagation();
 
@@ -266,7 +274,7 @@ export class Table {
       this.hideAndUnselect();
     });
 
-    // Add row above
+    // Add a row above
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowAbove}`).addEventListener('click', event => {
       event.stopPropagation();
 
@@ -274,7 +282,7 @@ export class Table {
       this.hideAndUnselect();
     });
 
-    // Add row below
+    // Add a row below
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowBelow}`).addEventListener('click', event => {
       event.stopPropagation();
 
@@ -282,13 +290,13 @@ export class Table {
       this.hideAndUnselect();
     });
 
-    // Delete selected column
+    // Delete a selected column
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
       this.deleteColumn(this.hoveredColumn);
       this.hideEverything();
     });
 
-    // Delete selected row
+    // Delete a selected row
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
       this.deleteRow(this.hoveredRow);
       this.hideEverything();
@@ -303,14 +311,14 @@ export class Table {
       if (this.hoveredRow == this.lastSelectedRow) {
         this.unselectRow();
         this.toolbox.closeToolboxRowMenu();
-        this.element.removeEventListener('click', this.clickOutsideMenuHandler, true);
+        this.element.removeEventListener('click', this.clickOutsideMenuListener, true);
 
         return;
       }
 
       this.selectRow(this.hoveredRow);
       this.toolbox.openToolboxRowMenu();
-      this.element.addEventListener('click', this.clickOutsideMenuHandler, true);
+      this.element.addEventListener('click', this.clickOutsideMenuListener, true);
     });
 
     // Open/close toolbox column menu
@@ -322,14 +330,14 @@ export class Table {
       if (this.hoveredColumn == this.lastSelectedColumn) {
         this.unselectColumn();
         this.toolbox.closeToolboxColumnMenu();
-        this.element.removeEventListener('click', this.clickOutsideMenuHandler, true);
+        this.element.removeEventListener('click', this.clickOutsideMenuListener, true);
 
         return;
       }
 
       this.selectColumn(this.hoveredColumn);
       this.toolbox.openToolboxColumnMenu();
-      this.element.addEventListener('click', this.clickOutsideMenuHandler, true);
+      this.element.addEventListener('click', this.clickOutsideMenuListener, true);
     });
 
     // Controls some buttons inside the table
@@ -370,8 +378,6 @@ export class Table {
         column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
       };
     });
-
-    document.addEventListener('click', this.clickOutsideWrapper.bind(this));
   }
 
   /**
@@ -400,6 +406,7 @@ export class Table {
   clickOutsideWrapper(event) {
     if (event.target.closest(`.${CSS.wrapper}`) === null) {
       this.hideEverything();
+      document.removeEventListener('click', this.clickOutsideWrapperListener);
     }
   }
 
@@ -420,7 +427,6 @@ export class Table {
       this.toolbox.closeToolboxRowMenu();
     }
   }
-
   /**
    * Unselect row/column
    * Close toolbox menu

@@ -28,7 +28,7 @@ export class TableConstructor {
     this.readOnly = readOnly;
 
     /** creating table */
-    this._table = new Table(readOnly);
+    this.table = new Table(readOnly);
     const size = this._resizeTable(data, config);
 
     let apiStyles = null;
@@ -38,13 +38,13 @@ export class TableConstructor {
     }
 
     /** creating container around table */
-    this._container = create('div', [CSS.editor, apiStyles], null, [ this._table.htmlElement ]);
+    this.container = create('div', [CSS.editor, apiStyles], null, [ this.table.htmlElement ]);
 
-    this._fillTable(data, size);
+    this.fillTable(data, size);
 
     /** Activated elements */
-    this._hoveredCell = null;
-    this._hoveredCellSide = null;
+    this.hoveredCell = null;
+    this.hoveredCellSide = null;
   }
 
   /**
@@ -52,7 +52,7 @@ export class TableConstructor {
    * @return {HTMLElement}
    */
   get htmlElement() {
-    return this._container;
+    return this.container;
   }
 
   /**
@@ -62,12 +62,12 @@ export class TableConstructor {
    * @param {TableData} data - data for insert in table
    * @param {{rows: number, cols: number}} size - contains number of rows and cols
    */
-  _fillTable(data, size) {
+  fillTable(data, size) {
     if (data.content !== undefined) {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
-          const cell = this._container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.cell}:nth-child(${j + 1})`);
+          const cell = this.container.querySelector(`.${CSS.row}:nth-child(${i + 1}) .${CSS.cell}:nth-child(${j + 1})`);
 
           cell.innerHTML = data.content[i][j];
         }
@@ -101,10 +101,10 @@ export class TableConstructor {
     const cols = contentCols || configCols || defaultCols;
 
     for (let i = 0; i < rows; i++) {
-      this._table.addRow();
+      this.table.addRow();
     }
     for (let i = 0; i < cols; i++) {
-      this._table.addColumn();
+      this.table.addColumn();
     }
 
     return {
@@ -119,6 +119,6 @@ export class TableConstructor {
    * @param {boolean} withHeadings
    */
   useHeadings(withHeadings) {
-    this._table.useHeadings(withHeadings);
+    this.table.useHeadings(withHeadings);
   }
 }
