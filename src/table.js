@@ -47,6 +47,8 @@ export class Table {
     this.hoveredColumn = 0;
     this.lastSelectedRow = 0;
     this.lastSelectedColumn = 0;
+    this.showDeleteRowConfirmation = false;
+    this.showDeleteColumnConfirmation = false;
 
     // The cell in which the focus is currently located, if 0 and 0 then there is no focus
     // Uses to switch between cells with buttons
@@ -292,14 +294,30 @@ export class Table {
 
     // Delete a selected column
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
-      this.deleteColumn(this.hoveredColumn);
-      this.hideEverything();
+      event.stopPropagation();
+
+      if (this.isColumnEmpty(this.hoveredColumn) || this.showDeleteColumnConfirmation) {
+        this.deleteColumn(this.hoveredColumn);
+        this.hideEverything();
+        this.showDeleteColumnConfirmation = false;
+      } else {
+        this.toolbox.setDeleteColumnConfirmation();
+        this.showDeleteColumnConfirmation = true;
+      }
     });
 
     // Delete a selected row
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
-      this.deleteRow(this.hoveredRow);
-      this.hideEverything();
+      event.stopPropagation();
+
+      if (this.isRowEmpty(this.hoveredRow) || this.showDeleteRowConfirmation) {
+        this.deleteRow(this.hoveredRow);
+        this.hideEverything();
+        this.showDeleteRowConfirmation = false;
+      } else {
+        this.toolbox.setDeleteRowConfirmation();
+        this.showDeleteRowConfirmation = true;
+      }
     });
 
     // Open/close toolbox row menu
@@ -315,6 +333,8 @@ export class Table {
 
         return;
       }
+
+      this.showDeleteRowConfirmation = false;
 
       this.selectRow(this.hoveredRow);
       this.toolbox.openToolboxRowMenu();
@@ -334,6 +354,8 @@ export class Table {
 
         return;
       }
+
+      this.showDeleteColumnConfirmation = false;
 
       this.selectColumn(this.hoveredColumn);
       this.toolbox.openToolboxColumnMenu();
@@ -434,8 +456,8 @@ export class Table {
    */
   hideEverything() {
     this.unselectRow();
-    this.toolbox.closeToolboxRowMenu();
     this.unselectColumn();
+    this.toolbox.closeToolboxRowMenu();
     this.toolbox.closeToolboxColumnMenu();
     this.updateToolboxesPosition(0, 0);
   }
@@ -447,8 +469,8 @@ export class Table {
    */
   hideAndUnselect() {
     this.unselectRow();
-    this.toolbox.closeToolboxRowMenu();
     this.unselectColumn();
+    this.toolbox.closeToolboxRowMenu();
     this.toolbox.closeToolboxColumnMenu();
     this.updateToolboxesPosition();
   }
@@ -514,6 +536,42 @@ export class Table {
     if (row) {
       row.classList.add(CSS.rowSelected);
     }
+  }
+
+  /**
+   * Check every cell in row for emptyness
+   *
+   * @param {number} index - index of a row
+   * @returns {boolean}
+   */
+  isRowEmpty(index) {
+    for (let i = 1; i <= this.numberOfColumns; i++) {
+      const cell = this.getCell(index, i);
+
+      if (cell.textContent.trim() != '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Check every cell in column for emptyness
+   *
+   * @param {number} index - index of a column
+   * @returns {boolean}
+   */
+  isColumnEmpty(index) {
+    for (let i = 1; i <= this.numberOfRows; i++) {
+      const cell = this.getCell(i, index);
+
+      if (cell.textContent.trim() != '') {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**

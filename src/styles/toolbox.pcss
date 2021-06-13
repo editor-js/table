@@ -85,3 +85,19 @@
     transform:translateY(0)
   }
 }
+
+.tc-toolbox-delete {
+  transition: background-color 0.3s ease;
+
+  &--confirm {
+    background-color: #e24a4a !important;
+    color: #fff;
+
+    svg {
+      transition: 0.2s ease-out;
+      transform: rotate(90deg);
+      filter: invert(100%);
+    }
+  }
+}
+

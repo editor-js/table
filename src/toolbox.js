@@ -21,7 +21,8 @@ const CSS = {
   toolboxDeleteColumn: 'tc-toolbox-delete--column',
   toolboxDeleteRow: 'tc-toolbox-delete--row',
   toolboxOption: 'tc-toolbox-row__option',
-  menuAnimation: 'tc-menu-animation'
+  menuAnimation: 'tc-menu-animation',
+  deleteConfirm: 'tc-toolbox-delete--confirm'
 };
 
 /**
@@ -190,6 +191,7 @@ export class Toolbox {
   closeToolboxRowMenu() {
     this.toolboxRowMenu.classList.remove(CSS.menuAnimation);
     this.toolboxRowMenu.classList.add(CSS.hidden);
+    this.unsetDeleteRowConfirmation();
   }
 
   /**
@@ -206,6 +208,35 @@ export class Toolbox {
   closeToolboxColumnMenu() {
     this.toolboxColumnMenu.classList.remove(CSS.menuAnimation);
     this.toolboxColumnMenu.classList.add(CSS.hidden);
+    this.unsetDeleteColumnConfiramtion();
+  }
+
+  /**
+   * Set the class to confirm deletion for the column menu
+   */
+  setDeleteColumnConfirmation() {
+    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDelete}`).classList.add(CSS.deleteConfirm);
+  }
+
+  /**
+   * Set the class to confirm deletion for the row menu
+   */
+  setDeleteRowConfirmation() {
+    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDelete}`).classList.add(CSS.deleteConfirm);
+  }
+
+  /**
+   * Remove the class to confirm deletion for the column menu
+   */
+  unsetDeleteColumnConfiramtion() {
+    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDelete}`).classList.remove(CSS.deleteConfirm);
+  }
+
+  /**
+   * Remove the class to confirm deletion for the row menu
+   */
+  unsetDeleteRowConfirmation() {
+    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDelete}`).classList.remove(CSS.deleteConfirm);
   }
 
   /**
