@@ -296,7 +296,7 @@ export class Table {
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
       event.stopPropagation();
 
-      if (this.isColumnEmpty(this.hoveredColumn) || this.showDeleteColumnConfirmation) {
+      if (this.showDeleteColumnConfirmation) {
         this.deleteColumn(this.hoveredColumn);
         this.hideEverything();
         this.showDeleteColumnConfirmation = false;
@@ -310,7 +310,7 @@ export class Table {
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
       event.stopPropagation();
 
-      if (this.isRowEmpty(this.hoveredRow) || this.showDeleteRowConfirmation) {
+      if (this.showDeleteRowConfirmation) {
         this.deleteRow(this.hoveredRow);
         this.hideEverything();
         this.showDeleteRowConfirmation = false;
@@ -536,42 +536,6 @@ export class Table {
     if (row) {
       row.classList.add(CSS.rowSelected);
     }
-  }
-
-  /**
-   * Check every cell in row for emptyness
-   *
-   * @param {number} index - index of a row
-   * @returns {boolean}
-   */
-  isRowEmpty(index) {
-    for (let i = 1; i <= this.numberOfColumns; i++) {
-      const cell = this.getCell(index, i);
-
-      if (cell.textContent.trim() != '') {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * Check every cell in column for emptyness
-   *
-   * @param {number} index - index of a column
-   * @returns {boolean}
-   */
-  isColumnEmpty(index) {
-    for (let i = 1; i <= this.numberOfRows; i++) {
-      const cell = this.getCell(i, index);
-
-      if (cell.textContent.trim() != '') {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /**
