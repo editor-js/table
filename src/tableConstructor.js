@@ -29,7 +29,7 @@ export class TableConstructor {
 
     /** creating table */
     this.table = new Table(readOnly);
-    const size = this._resizeTable(data, config);
+    const size = this.resizeTable(data, config);
 
     let apiStyles = null;
 
@@ -85,7 +85,7 @@ export class TableConstructor {
    * @param {number|string} config.cols - number of cols in configuration
    * @return {{rows: number, cols: number}} - number of cols and rows
    */
-  _resizeTable(data, config) {
+  resizeTable(data, config) {
     const isValidArray = Array.isArray(data.content);
     const isNotEmptyArray = isValidArray ? data.content.length : false;
     const contentRows = isValidArray ? data.content.length : undefined;
