@@ -1,7 +1,8 @@
-const TableConstructor = require('./tableConstructor').TableConstructor;
-const svgIcon = require('./img/tableIcon.svg');
-const withHeadings = require('./img/with-headings.svg');
-const withoutHeadings = require('./img/without-headings.svg');
+import { TableConstructor } from './tableConstructor';
+import tableIcon from './img/tableIcon.svg';
+import withHeadings from './img/with-headings.svg';
+import withoutHeadings from './img/without-headings.svg';
+import { create } from './documentUtils';
 
 const CSS = {
   input: 'tc-table__inp',
@@ -9,6 +10,9 @@ const CSS = {
   settingActive: 'tc-setting--active'
 };
 
+/**
+ * Additional settings for the table
+ */
 const tunes = {
   withHeadings: 'With headings',
   withoutHeadings: 'Without headings'
@@ -20,7 +24,7 @@ const tunes = {
  *  @typedef {object} TableData - object with the data transferred to form a table
  *  @property {string[][]} content - two-dimensional array which contains table content
  */
-class Table {
+export default class Table {
   /**
    * Notify core that read-only mode is supported
    *
@@ -38,20 +42,6 @@ class Table {
    */
   static get enableLineBreaks() {
     return true;
-  }
-
-  /**
-   * Get Tool toolbox settings
-   * icon - Tool icon's SVG
-   * title - title to show in toolbox
-   *
-   * @returns {{icon: string, title: string}}
-   */
-  static get toolbox() {
-    return {
-      icon: svgIcon,
-      title: 'Table'
-    };
   }
 
   /**
@@ -74,12 +64,26 @@ class Table {
   }
 
   /**
+   * Get Tool toolbox settings
+   * icon - Tool icon's SVG
+   * title - title to show in toolbox
+   *
+   * @returns {{icon: string, title: string}}
+   */
+  static get toolbox() {
+    return {
+      icon: tableIcon,
+      title: 'Table'
+    };
+  }
+
+  /**
    * Return Tool's view
    *
    * @returns {HTMLDivElement}
    */
   render() {
-    return this.tableConstructor.htmlElement;
+    return this.tableConstructor.container;
   }
 
   /**
@@ -100,21 +104,11 @@ class Table {
     };
     const wrapper = document.createElement('div');
 
-    let withHeadingsButton = document.createElement('div');
+    let withHeadingsButton = create('div', [CSS.setting, this.data.withHeadings ? CSS.settingActive : '']);
+    let withoutHeadingsButton = create('div', [CSS.setting, this.data.withHeadings ? '' : CSS.settingActive]);
 
-    withHeadingsButton.classList.add(CSS.setting);
     withHeadingsButton.innerHTML = settings.withHeadings.icon;
-
-    let withoutHeadingsButton = document.createElement('div');
-
-    withoutHeadingsButton.classList.add(CSS.setting);
     withoutHeadingsButton.innerHTML = settings.withoutHeadings.icon;
-
-    if (this.data.withHeadings) {
-      withHeadingsButton.classList.add(CSS.settingActive);
-    } else {
-      withoutHeadingsButton.classList.add(CSS.settingActive);
-    }
 
     withHeadingsButton.addEventListener('click', () => {
       this.toggleTune(withHeadingsButton, withoutHeadingsButton);
@@ -146,7 +140,7 @@ class Table {
     for (let i = 1; i <= rows; i++) {
       const row = table.querySelector(`.tc-row:nth-child(${i})`);
       const cols = Array.from(row.querySelectorAll('.tc-cell'));
-      const isWorthless = cols.every(this.isEmpty);
+      const isWorthless = cols.every(this.isCellEmpty);
 
       if (isWorthless) {
         continue;
@@ -167,11 +161,11 @@ class Table {
   }
 
   /**
-   * @param {HTMLElement} input - input field
+   * @param {HTMLElement} cell - cell element
    * @returns {boolean}
    */
-  isEmpty(input) {
-    return !input.textContent.trim();
+  isCellEmpty(cell) {
+    return !cell.textContent.trim();
   }
 
   /**
@@ -192,5 +186,3 @@ class Table {
     this.tableConstructor.useHeadings(this.data.withHeadings);
   }
 }
-
-module.exports = Table;

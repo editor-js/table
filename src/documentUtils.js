@@ -1,14 +1,4 @@
 /**
- * Checks the item is not missed or messed
- *
- * @param {object|string[]|Element[]|HTMLElement|string} elem - element
- * @returns {boolean} true if element is correct
- */
-function isNotMissed(elem) {
-  return (!(elem === undefined || elem === null));
-}
-
-/**
  * Create DOM element with set parameters
  *
  * @param {string} tagName - Html tag of the element to be created
@@ -20,25 +10,26 @@ function isNotMissed(elem) {
 export function create(tagName, cssClasses = null, attrs = null, children = null) {
   const elem = document.createElement(tagName);
 
-  if (isNotMissed(cssClasses)) {
+  if (cssClasses) {
     for (let i = 0; i < cssClasses.length; i++) {
-      if (isNotMissed(cssClasses[i])) {
+      if (cssClasses[i]) {
         elem.classList.add(cssClasses[i]);
       }
     }
   }
-  if (isNotMissed(attrs)) {
+  if (attrs) {
     for (let key in attrs) {
       elem.setAttribute(key, attrs[key]);
     }
   }
-  if (isNotMissed(children)) {
+  if (children) {
     for (let i = 0; i < children.length; i++) {
-      if (isNotMissed(children[i])) {
+      if (children[i]) {
         elem.appendChild(children[i]);
       }
     }
   }
+
   return elem;
 }
 
@@ -79,11 +70,10 @@ export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
 }
 
 /**
- * Get the coordinates relative to the parent element
+ * Get the cursor coordinates relative to the element
  *
- * @param {HTMLElement} elem
- * @param {Event} event
- * @returns mouse position relative to the element
+ * @param {HTMLElement} elem - element relative to which the coordinates will be calculated
+ * @param {Event} event - mouse event
  */
 export function getRelativeCoords(elem, event) {
   const rect = elem.getBoundingClientRect();

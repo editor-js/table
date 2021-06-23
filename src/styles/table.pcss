@@ -1,4 +1,23 @@
 /* tc- project's prefix*/
+.tc-wrap {
+  --color-background: #f9f9fb;
+  --color-placeholder: #7b7e89;
+  --color-border: #e8e8eb;
+  --cell-size: 34px;
+
+  border-left: 0px;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin-top: 18px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
+
+  & svg {
+    vertical-align: top;
+  }
+}
 
 .tc-table {
   position: relative;
@@ -6,22 +25,10 @@
   height: 100%;
   display: grid;
   font-size: 14px;
-  border-top: 1px solid #e8e8eb;
+  border-top: 1px solid var(--color-border);
   line-height: 1.4;
 
-  &__wrap {
-    /*border: 1px solid #DBDBE2;*/
-    border-left: 0px;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    margin-top: 18px;
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: calc(100% - 34px) 34px;
-  }
-
-  &:after {
+  &::after {
     position: absolute;
     content: "";
     width: 33px;
@@ -30,7 +37,7 @@
     top: 0;
   }
 
-  &:before {
+  &::before {
     position: absolute;
     content: "";
     width: 100%;
@@ -38,33 +45,30 @@
     top: -30px;
     left: 0;
   }
-}
 
-.tc-table__wrap svg {
-  vertical-align: top;
-}
+  &--heading {
+    & .tc-row:first-child {
+      font-weight: 500;
+      border-bottom: 2px solid var(--color-border);
 
-.tc-table--heading .tc-row:first-child {
-  font-weight: 500;
-  border-bottom: 2px solid #e8e8eb;
+      &::after {
+        bottom: -2px;
+        border-bottom: 2px solid var(--color-border);
+      }
+    }
 
-  &:after {
-    bottom: -2px;
-    border-bottom: 2px solid #e8e8eb;
+    & .tc-row:first-child [contenteditable]:empty:before {
+      content: "Heading";
+      color: var(--color-placeholder);
+    }
   }
-}
-
-
-.tc-table--heading .tc-row:first-child [contenteditable]:empty:before {
-  content: "Heading";
-  color: #7b7e89;
 }
 
 .tc-add-column {
   display: flex;
   padding: 9px 0;
   justify-content: center;
-  border-top: 1px solid #e8e8eb;
+  border-top: 1px solid var(--color-border);
 }
 
 .tc-add-row {
@@ -74,9 +78,8 @@
   padding-left: 0.6em;
   position: relative;
 
-  &:before {
+  &::before {
     content: '';
-    transition: 0s;
     position: absolute;
     right: -34px;
     width: 34px;
@@ -90,22 +93,22 @@
 
   &:hover {
     transition: 0.1s;
-    background: #f9f9fb;
+    background: var(--color-background);
   }
 }
 
 .tc-add-row:hover:before {
   transition: 0.1s;
-  background: #f9f9fb;
+  background: var(--color-background);
 }
 
 .tc-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
   position: relative;
-  border-bottom: 1px solid #e8e8eb;
+  border-bottom: 1px solid var(--color-border);
 
-  &:after {
+  &::after {
     content: '';
     pointer-events: none;
     position: absolute;
@@ -113,23 +116,21 @@
     height: 100%;
     bottom: -1px;
     right: -34px;
-    border-bottom: 1px solid #e8e8eb;
+    border-bottom: 1px solid var(--color-border);
   }
 
   &--selected {
-    background: #f9f9fb;
-  }
-}
-
-.tc-row--selected {
-  &:after {
-    background: #f9f9fb;
+    background: var(--color-background);
+    
+    &::after {
+      background: var(--color-background);
+    }
   }
 }
 
 .tc-cell {
   min-height: 21px;
-  border-right: 1px solid #e8e8eb;
+  border-right: 1px solid var(--color-border);
   clear: both;
   padding: 6px 2px 6px 12px;
   overflow: hidden;
@@ -137,6 +138,6 @@
   line-break: normal;
 
   &--selected {
-    background: #f9f9fb;
+    background: var(--color-background);
   }
 }

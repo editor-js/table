@@ -28,7 +28,7 @@ export class TableConstructor {
     this.readOnly = readOnly;
 
     /** creating table */
-    this.table = new Table(readOnly);
+    this.table = new Table(readOnly, api);
     const size = this.resizeTable(data, config);
 
     let apiStyles = null;
@@ -38,21 +38,13 @@ export class TableConstructor {
     }
 
     /** creating container around table */
-    this.container = create('div', [CSS.editor, apiStyles], null, [ this.table.htmlElement ]);
+    this.container = create('div', [CSS.editor, apiStyles], null, [ this.table.wrapper ]);
 
     this.fillTable(data, size);
 
     /** Activated elements */
     this.hoveredCell = null;
     this.hoveredCellSide = null;
-  }
-
-  /**
-   * returns html element of TableConstructor;
-   * @return {HTMLElement}
-   */
-  get htmlElement() {
-    return this.container;
   }
 
   /**
