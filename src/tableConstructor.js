@@ -28,7 +28,7 @@ export class TableConstructor {
     this.readOnly = readOnly;
 
     /** creating table */
-    this.table = new Table(readOnly, api);
+    this.tableInstance = new Table(readOnly, api);
     const size = this.resizeTable(data, config);
 
     let apiStyles = null;
@@ -38,7 +38,7 @@ export class TableConstructor {
     }
 
     /** creating container around table */
-    this.container = create('div', [CSS.editor, apiStyles], null, [ this.table.wrapper ]);
+    this.container = create('div', [CSS.editor, apiStyles], null, [ this.tableInstance.wrapper ]);
 
     this.fillTable(data, size);
 
@@ -93,10 +93,10 @@ export class TableConstructor {
     const cols = contentCols || configCols || defaultCols;
 
     for (let i = 0; i < rows; i++) {
-      this.table.addRow();
+      this.tableInstance.addRow();
     }
     for (let i = 0; i < cols; i++) {
-      this.table.addColumn();
+      this.tableInstance.addColumn();
     }
 
     return {
@@ -106,11 +106,42 @@ export class TableConstructor {
   }
 
   /**
+   * @param {HTMLElement} cell - cell element
+   * @returns {boolean}
+   */
+  isCellEmpty(cell) {
+    return !cell.textContent.trim();
+  }
+
+  /**
+   * Collects data from cells into a two-dimensional array
+   *
+   * @returns {String[][]}
+   */
+  getData() {
+    const data = [];
+
+    for (let i = 1; i <= this.tableInstance.numberOfRows; i++) {
+      const row = this.tableInstance.table.querySelector(`.${CSS.row}:nth-child(${i})`);
+      const cells = Array.from(row.querySelectorAll(`.${CSS.cell}`));
+      const isWorthless = cells.every(this.isCellEmpty);
+
+      if (isWorthless) {
+        continue;
+      }
+
+      data.push(cells.map(cell => cell.innerHTML));
+    }
+
+    return data;
+  }
+
+  /**
    * Passes the new setting for changing the UI to the table
    *
    * @param {boolean} withHeadings
    */
   useHeadings(withHeadings) {
-    this.table.useHeadings(withHeadings);
+    this.tableInstance.useHeadings(withHeadings);
   }
 }

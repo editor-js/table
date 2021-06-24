@@ -1,66 +1,70 @@
-.tc-toolbox-row {
-  position: absolute;
-  left: -30px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-
-.tc-toolbox-column {
-  position: absolute;
-  top: -24px;
-  transform: translateX(-50%);
-  cursor: pointer;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-
-.tc-toolbox-row__menu, .tc-toolbox-column__menu {
-  position: absolute;
-  left: 30px;
-  top: 0;
-  background: #fff;
-  border: solid 1px #eaeaea;
-  box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13);
-  border-radius: 4px;
-  display: grid;
-  will-change: transform, opacity;
-
-  &:before {
-    content: "";
+.tc-toolbox {
+  &-row, &-column {
     position: absolute;
-    left: -30px;
-    top: 0;
-    width: 30px;
-    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.1s;
+
+    &__menu {
+      background: #fff;
+      border: solid 1px #eaeaea;
+      box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13);
+      border-radius: 4px;
+      display: grid;
+      will-change: transform, opacity;
+      padding: 7px 0;
+      left: 30px;
+      top: 0;
+    }
+
+    &__option {
+      font-size: 0.9em;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-column-gap: 11px;
+      align-items: center;
+      padding: 7px 12px;
+
+      &:hover {
+        background: #f7f7f7;
+      }
+    }
   }
-}
 
-.tc-toolbox-row__menu {
-  width: 165px;
-}
+  &-row {
+    left: -30px;
+    transform: translateY(-50%);
 
-.tc-toolbox-column__menu {
-  width: 190px;
-}
+    &__menu {
+      position: absolute;
+      width: 165px;
+    }
+  }
 
-.tc-toolbox-row__menu, .tc-toolbox-column__menu {
-  padding: 7px 0;
-}
+  &-column {
+    top: -24px;
+    transform: translateX(-50%);
 
-.tc-toolbox-row__option, .tc-toolbox-column__option {
-  font-size: 0.9em;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 11px;
-  align-items: center;
-  padding: 7px 12px;
+    &__menu {
+      position: absolute;
+      width: 190px;
+    }
+  }
 
-  &:hover {
-    background: #f7f7f7;
+  &-delete {
+    transition: background-color 0.3s ease;
+
+    &--confirm {
+      background-color: #e24a4a !important;
+      color: #fff;
+
+      svg {
+        transition: 0.2s ease-out;
+        transform: rotate(90deg);
+        filter: invert(100%);
+      }
+    }
   }
 }
 
@@ -83,21 +87,6 @@
   to {
     -webkit-transform:translateY(0);
     transform:translateY(0)
-  }
-}
-
-.tc-toolbox-delete {
-  transition: background-color 0.3s ease;
-
-  &--confirm {
-    background-color: #e24a4a !important;
-    color: #fff;
-
-    svg {
-      transition: 0.2s ease-out;
-      transform: rotate(90deg);
-      filter: invert(100%);
-    }
   }
 }
 

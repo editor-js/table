@@ -133,21 +133,7 @@ export default class Table {
    * @returns {TableData} - saved data
    */
   save(toolsContent) {
-    const table = toolsContent.querySelector('.tc-table');
-    const data = [];
-    const rows = table.childElementCount;
-
-    for (let i = 1; i <= rows; i++) {
-      const row = table.querySelector(`.tc-row:nth-child(${i})`);
-      const cols = Array.from(row.querySelectorAll('.tc-cell'));
-      const isWorthless = cols.every(this.isCellEmpty);
-
-      if (isWorthless) {
-        continue;
-      }
-
-      data.push(cols.map(column => column.innerHTML));
-    }
+    const data = this.tableConstructor.getData();
 
     let result = {};
 
@@ -158,14 +144,6 @@ export default class Table {
     result.content = data;
 
     return result;
-  }
-
-  /**
-   * @param {HTMLElement} cell - cell element
-   * @returns {boolean}
-   */
-  isCellEmpty(cell) {
-    return !cell.textContent.trim();
   }
 
   /**

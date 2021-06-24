@@ -51,7 +51,7 @@ export function getCoords(elem) {
 }
 
 /**
- * Calc paddings of the first element relative to the second
+ * Calculate paddings of the first element relative to the second
  *
  * @param {HTMLElement} firstElem - outer element, if the second element is inside it, then all padding will be positive
  * @param {HTMLElement} secondElem - inner element, if its borders go beyond the first, then the paddings will be considered negative

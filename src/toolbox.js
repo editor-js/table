@@ -8,7 +8,7 @@ import closeIcon from './img/cross.svg';
 
 const CSS = {
   hidden: 'tc-hidden',
-  none: 'tc-none',
+  displayNone: 'tc-display-none',
   toolboxRow: 'tc-toolbox-row',
   toolboxRowMenu: 'tc-toolbox-row__menu',
   toolboxColumn: 'tc-toolbox-column',
@@ -153,28 +153,28 @@ export class Toolbox {
    * Hide delete column button for event when we only have one column left
    */
   hideDeleteColumnButton() {
-    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.add(CSS.none);
+    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.add(CSS.displayNone);
   }
 
   /**
    * Unhide delete column button when we have more than one column left again
    */
   unhideDeleteColumnButton() {
-    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.remove(CSS.none);
+    this.toolboxColumnMenu.querySelector(`.${CSS.toolboxDeleteColumn}`).classList.remove(CSS.displayNone);
   }
 
   /**
    * Hide delete row button for event when we only have one row left
    */
   hideDeleteRowButton() {
-    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.add(CSS.none);
+    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.add(CSS.displayNone);
   }
 
   /**
    * Unhide delete column button when we have more than one row left again
    */
   unhideDeleteRowButton() {
-    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.remove(CSS.none);
+    this.toolboxRowMenu.querySelector(`.${CSS.toolboxDeleteRow}`).classList.remove(CSS.displayNone);
   }
 
   /**

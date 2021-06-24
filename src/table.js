@@ -40,15 +40,35 @@ export class Table {
   constructor(readOnly, api) {
     this.readOnly = readOnly;
     this.api = api;
+
+    // Current number of columns in the table
     this.numberOfColumns = 0;
+
+    // Current number of rows in the table
     this.numberOfRows = 0;
-    this.toolbox = new Toolbox(api);
+
+    // Table toolboxes
+    this.toolbox = new Toolbox();
+
+    // Table wrapper element
     this.wrapper = this.createTableWrapper();
+
+    // Table element
     this.table = this.wrapper.querySelector(`.${CSS.table}`);
+
+    // Current hovered row index
     this.hoveredRow = 0;
+
+    // Current hovered column index
     this.hoveredColumn = 0;
+
+    // Index of last selected row via toolbox
     this.lastSelectedRow = 0;
+
+    // Index of last selected column via toolbox
     this.lastSelectedColumn = 0;
+
+    // Toggle switches to confirm deletion
     this.showDeleteRowConfirmation = false;
     this.showDeleteColumnConfirmation = false;
 
@@ -67,7 +87,7 @@ export class Table {
     // Listener to hide toolboxes and menus when click outside the table
     this.clickOutsideWrapperListener = this.clickOutsideWrapper.bind(this);
 
-    this.fillAddButtons();
+    this.fillInQuickAddButtons();
 
     if (!this.readOnly) {
       this.bindEvents();
@@ -190,7 +210,7 @@ export class Table {
   /**
    * Add buttons to fast add row/column
    */
-  fillAddButtons() {
+  fillInQuickAddButtons() {
     this.wrapper.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
     this.wrapper.querySelector(`.${CSS.addRow}`).innerHTML = svgPlusButton;
   }
@@ -604,31 +624,47 @@ export class Table {
    * @returns hovered cell coordinates as an integer row and column
    */
   hoveredCell(event) {
-    let hoveredRow = 0;
-    let hoveredColumn = 0;
+    let hoveredRow = this.isHoveredRowIsCurrent(event) ? this.hoveredRow : 0;
+    let hoveredColumn = this.isHoveredColumnIsCurrent(event) ? this.hoveredColumn : 0;
+    let leftBorder = 0; let rightBorder = this.numberOfColumns;
+    let topBorder = 0; let bottomBorder = this.numberOfRows;
     const { width, height, x, y } = getRelativeCoords(this.table, event);
 
-    // Looking for hovered column
-    for (let i = 1; i <= this.numberOfColumns; i++) {
-      const cell = this.getCell(1, i);
-      const { fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
+    // Looking for hovered column using binsearch
+    if (x >= 0 && !hoveredColumn) {
+      while (leftBorder < rightBorder) {
+        const mid = Math.ceil((leftBorder + rightBorder) / 2);
+        const cell = this.getCell(1, mid);
+        const { fromRightBorder, fromLeftBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 
-      if (x < width - fromRightBorder) {
-        hoveredColumn = i;
+        if (x < fromLeftBorder) {
+          rightBorder = mid;
+        } else if (x > width - fromRightBorder) {
+          leftBorder = mid;
+        } else {
+          hoveredColumn = mid;
 
-        break;
+          break;
+        }
       }
     }
 
-    // Looking for hovered row
-    for (let i = 1; i <= this.numberOfRows; i++) {
-      const row = this.getRow(i);
-      const { fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, row);
+    // Looking for hovered row using binsearch
+    if (y >= 0 && !hoveredRow) {
+      while (topBorder < bottomBorder) {
+        const mid = Math.ceil((topBorder + bottomBorder) / 2);
+        const cell = this.getCell(mid, 1);
+        const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 
-      if (y < height - fromBottomBorder) {
-        hoveredRow = i;
+        if (y < fromTopBorder) {
+          bottomBorder = mid;
+        } else if (y > height - fromBottomBorder) {
+          topBorder = mid;
+        } else {
+          hoveredRow = mid;
 
-        break;
+          break;
+        }
       }
     }
 
@@ -636,5 +672,41 @@ export class Table {
       row: hoveredRow,
       column: hoveredColumn
     };
+  }
+
+  /**
+   * Quick check to optimise the search of hovered row
+   *
+   * @param {MouseEvent} event
+   * @returns {boolean}
+   */
+  isHoveredRowIsCurrent(event) {
+    if (!this.hoveredRow) {
+      return false;
+    }
+
+    const { height, y } = getRelativeCoords(this.table, event);
+    const cell = this.getCell(this.hoveredRow, 1);
+    const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
+
+    return fromTopBorder <= y && y <= height - fromBottomBorder;
+  }
+
+  /**
+   * Quick check to optimise the search of hovered column
+   *
+   * @param {MouseEvent} event
+   * @returns {boolean}
+   */
+  isHoveredColumnIsCurrent(event) {
+    if (!this.hoveredColumn) {
+      return false;
+    }
+
+    const { width, x } = getRelativeCoords(this.table, event);
+    const cell = this.getCell(1, this.hoveredColumn);
+    const { fromLeftBorder, fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
+
+    return fromLeftBorder <= x && x <= width - fromRightBorder;
   }
 }
