@@ -274,16 +274,16 @@ export class Table {
 
       // set the listener to close toolboxes when click outside
       document.addEventListener('click', this.clickOutsideWrapperListener);
-    }, true);
+    }, {passive: true});
 
     // Add a column to the end
-    this.wrapper.querySelector(`.${CSS.addColumn}`).addEventListener('click', (event) => {
+    this.wrapper.querySelector(`.${CSS.addColumn}`).addEventListener('click', () => {
       this.addColumn();
       this.hideEverything();
-    });
+    }, {passive: true});
 
     // Add a row to the bottom
-    this.wrapper.querySelector(`.${CSS.addRow}`).addEventListener('click', (event) => {
+    this.wrapper.querySelector(`.${CSS.addRow}`).addEventListener('click', () => {
       this.addRow();
       this.hideEverything();
     });
@@ -294,7 +294,7 @@ export class Table {
 
       this.addColumn(this.hoveredColumn + 1);
       this.hideAndUnselect();
-    });
+    }, {passive: true});
 
     // Add a column to the left
     this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnLeft}`).addEventListener('click', event => {
@@ -302,7 +302,7 @@ export class Table {
 
       this.addColumn(this.hoveredColumn);
       this.hideAndUnselect();
-    });
+    }, {passive: true});
 
     // Add a row above
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowAbove}`).addEventListener('click', event => {
@@ -332,7 +332,7 @@ export class Table {
         this.toolbox.setDeleteColumnConfirmation();
         this.showDeleteColumnConfirmation = true;
       }
-    });
+    }, {passive: true});
 
     // Delete a selected row
     this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
@@ -367,7 +367,7 @@ export class Table {
       this.selectRow(this.hoveredRow);
       this.toolbox.openToolboxRowMenu();
       this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
-    });
+    }, {passive: true});
 
     // Open/close toolbox column menu
     this.toolbox.toolboxColumn.addEventListener('click', event => {
@@ -388,7 +388,7 @@ export class Table {
       this.selectColumn(this.hoveredColumn);
       this.toolbox.openToolboxColumnMenu();
       this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
-    });
+    }, {passive: true});
 
     // Controls some buttons inside the table
     this.table.onkeypress = (event) => {
@@ -416,7 +416,7 @@ export class Table {
       if (event.key == 'Tab') {
         event.stopPropagation();
       }
-    });
+    }, {passive: true});
 
     // Determine the position of the cell in focus
     this.table.addEventListener('focusin', event => {
@@ -427,7 +427,7 @@ export class Table {
         row: Array.from(this.table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
         column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
       };
-    });
+    }, {passive: true});
   }
 
   /**
@@ -632,7 +632,9 @@ export class Table {
 
     // Looking for hovered column using binsearch
     if (x >= 0 && !hoveredColumn) {
-      while (leftBorder < rightBorder) {
+      let totalIterations = 0;
+
+      while (leftBorder < rightBorder && totalIterations < 10) {
         const mid = Math.ceil((leftBorder + rightBorder) / 2);
         const cell = this.getCell(1, mid);
         const { fromRightBorder, fromLeftBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
@@ -646,12 +648,16 @@ export class Table {
 
           break;
         }
+
+        totalIterations++;
       }
     }
 
     // Looking for hovered row using binsearch
     if (y >= 0 && !hoveredRow) {
-      while (topBorder < bottomBorder) {
+      let totalIterations = 0;
+
+      while (topBorder < bottomBorder && totalIterations < 10) {
         const mid = Math.ceil((topBorder + bottomBorder) / 2);
         const cell = this.getCell(mid, 1);
         const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
@@ -665,12 +671,14 @@ export class Table {
 
           break;
         }
+
+        totalIterations++;
       }
     }
 
     return {
-      row: hoveredRow,
-      column: hoveredColumn
+      row: hoveredRow || this.hoveredRow,
+      column: hoveredColumn || this.hoveredColumn
     };
   }
 
