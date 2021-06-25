@@ -276,121 +276,113 @@ export class Table {
       document.addEventListener('click', this.clickOutsideWrapperListener);
     }, {passive: true});
 
-    // Add a column to the end
-    this.wrapper.querySelector(`.${CSS.addColumn}`).addEventListener('click', () => {
-      this.addColumn();
-      this.hideEverything();
-    }, {passive: true});
+    // Controls quick add buttons
+    this.wrapper.addEventListener('click', (event) => {
+      const addRowClicked = event.target.closest(`.${CSS.addRow}`);
+      const addColumnClicked = event.target.closest(`.${CSS.addColumn}`);
 
-    // Add a row to the bottom
-    this.wrapper.querySelector(`.${CSS.addRow}`).addEventListener('click', () => {
-      this.addRow();
-      this.hideEverything();
-    });
-
-    // Add a column to the right
-    this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnRight}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      this.addColumn(this.hoveredColumn + 1);
-      this.hideAndUnselect();
-    }, {passive: true});
-
-    // Add a column to the left
-    this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxAddColumnLeft}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      this.addColumn(this.hoveredColumn);
-      this.hideAndUnselect();
-    }, {passive: true});
-
-    // Add a row above
-    this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowAbove}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      this.addRow(this.hoveredRow);
-      this.hideAndUnselect();
-    });
-
-    // Add a row below
-    this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxAddRowBelow}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      this.addRow(this.hoveredRow + 1);
-      this.hideAndUnselect();
-    });
-
-    // Delete a selected column
-    this.toolbox.toolboxColumn.querySelector(`.${CSS.toolboxDeleteColumn}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      if (this.showDeleteColumnConfirmation) {
-        this.deleteColumn(this.hoveredColumn);
+      if (addRowClicked) {
+        this.addRow();
         this.hideEverything();
+      }
+
+      if (addColumnClicked) {
+        this.addColumn();
+        this.hideEverything();
+      }
+    });
+
+    // Controls toolbox with adding and deleting columns
+    this.toolbox.toolboxColumn.addEventListener('click', (event) => {
+      event.stopPropagation();
+
+      const toolboxColumnIconClicked = event.target.closest('svg');
+      const addColumnRightClicked = event.target.closest(`.${CSS.toolboxAddColumnRight}`);
+      const addColumnLeftClicked = event.target.closest(`.${CSS.toolboxAddColumnLeft}`);
+      const deleteColumnClicked = event.target.closest(`.${CSS.toolboxDeleteColumn}`);
+
+      if (addColumnRightClicked) {
+        this.addColumn(this.hoveredColumn + 1);
+        this.hideAndUnselect();
+      }
+
+      if (addColumnLeftClicked) {
+        this.addColumn(this.hoveredColumn);
+        this.hideAndUnselect();
+      }
+
+      if (deleteColumnClicked) {
+        if (this.showDeleteColumnConfirmation) {
+          this.deleteColumn(this.hoveredColumn);
+          this.hideEverything();
+          this.showDeleteColumnConfirmation = false;
+        } else {
+          this.toolbox.setDeleteColumnConfirmation();
+          this.showDeleteColumnConfirmation = true;
+        }
+      }
+
+      // Open/close toolbox column menu
+      if (toolboxColumnIconClicked) {
+        this.unselectRowAndHideMenu();
+
+        if (this.hoveredColumn == this.lastSelectedColumn) {
+          this.unselectColumnAndHideMenu();
+
+          return;
+        }
+
         this.showDeleteColumnConfirmation = false;
-      } else {
-        this.toolbox.setDeleteColumnConfirmation();
-        this.showDeleteColumnConfirmation = true;
-      }
-    }, {passive: true});
-
-    // Delete a selected row
-    this.toolbox.toolboxRow.querySelector(`.${CSS.toolboxDeleteRow}`).addEventListener('click', event => {
-      event.stopPropagation();
-
-      if (this.showDeleteRowConfirmation) {
-        this.deleteRow(this.hoveredRow);
-        this.hideEverything();
-        this.showDeleteRowConfirmation = false;
-      } else {
-        this.toolbox.setDeleteRowConfirmation();
-        this.showDeleteRowConfirmation = true;
+        this.selectColumnAndOpenMenu();
       }
     });
 
-    // Open/close toolbox row menu
-    this.toolbox.toolboxRow.addEventListener('click', event => {
-      this.unselectColumn();
-      this.toolbox.closeToolboxColumnMenu();
+    // Controls toolbox with adding and deleting rows
+    this.toolbox.toolboxRow.addEventListener('click', (event) => {
       event.stopPropagation();
 
-      if (this.hoveredRow == this.lastSelectedRow) {
-        this.unselectRow();
-        this.toolbox.closeToolboxRowMenu();
-        this.wrapper.removeEventListener('click', this.clickOutsideMenuListener, true);
+      const toolboxRowIconClicked = event.target.closest('svg');
+      const addRowAboveClicked = event.target.closest(`.${CSS.toolboxAddRowAbove}`);
+      const addRowBelowClicked = event.target.closest(`.${CSS.toolboxAddRowBelow}`);
+      const deleteRowClicked = event.target.closest(`.${CSS.toolboxDeleteRow}`);
 
-        return;
+      if (addRowAboveClicked) {
+        this.addRow(this.hoveredRow);
+        this.hideAndUnselect();
       }
 
-      this.showDeleteRowConfirmation = false;
-
-      this.selectRow(this.hoveredRow);
-      this.toolbox.openToolboxRowMenu();
-      this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
-    }, {passive: true});
-
-    // Open/close toolbox column menu
-    this.toolbox.toolboxColumn.addEventListener('click', event => {
-      this.unselectRow();
-      this.toolbox.closeToolboxRowMenu();
-      event.stopPropagation();
-
-      if (this.hoveredColumn == this.lastSelectedColumn) {
-        this.unselectColumn();
-        this.toolbox.closeToolboxColumnMenu();
-        this.wrapper.removeEventListener('click', this.clickOutsideMenuListener, true);
-
-        return;
+      if (addRowBelowClicked) {
+        this.addRow(this.hoveredRow + 1);
+        this.hideAndUnselect();
       }
 
-      this.showDeleteColumnConfirmation = false;
+      if (deleteRowClicked) {
+        if (this.showDeleteRowConfirmation) {
+          this.deleteRow(this.hoveredRow);
+          this.hideEverything();
+          this.showDeleteRowConfirmation = false;
+        } else {
+          this.toolbox.setDeleteRowConfirmation();
+          this.showDeleteRowConfirmation = true;
+        }
+      }
 
-      this.selectColumn(this.hoveredColumn);
-      this.toolbox.openToolboxColumnMenu();
-      this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
-    }, {passive: true});
+      // Open/close toolbox column menu
+      if (toolboxRowIconClicked) {
+        this.unselectColumnAndHideMenu();
 
-    // Controls some buttons inside the table
+        if (this.hoveredRow == this.lastSelectedRow) {
+          this.unselectRowAndHideMenu();
+
+          return;
+        }
+
+        this.showDeleteRowConfirmation = false;
+        this.selectRowAndOpenMenu();
+      }
+    });
+
+    // Controls some of the keyboard buttons inside the table
     this.table.onkeypress = (event) => {
       if (event.key == 'Enter' && event.shiftKey) {
         return true;
@@ -411,12 +403,12 @@ export class Table {
       return event.key != 'Enter';
     };
 
-    // Controls some buttons inside the table
+    // Controls some of the keyboard buttons inside the table
     this.table.addEventListener('keydown', (event) => {
       if (event.key == 'Tab') {
         event.stopPropagation();
       }
-    }, {passive: true});
+    });
 
     // Determine the position of the cell in focus
     this.table.addEventListener('focusin', event => {
@@ -476,6 +468,8 @@ export class Table {
       this.unselectRow();
       this.toolbox.closeToolboxRowMenu();
     }
+
+    this.wrapper.removeEventListener('click', this.clickOutsideMenuListener);
   }
   /**
    * Unselect row/column
@@ -558,10 +552,10 @@ export class Table {
    * @param {number} index
    */
   selectRow(index) {
-    this.lastSelectedRow = index;
     const row = this.getRow(index);
 
     if (row) {
+      this.lastSelectedRow = index;
       row.classList.add(CSS.rowSelected);
     }
   }
@@ -716,5 +710,45 @@ export class Table {
     const { fromLeftBorder, fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 
     return fromLeftBorder <= x && x <= width - fromRightBorder;
+  }
+
+  /**
+   * Remove the selection effect from the column
+   * Hide toolbox column menu and remove clickOutside handler
+   */
+  selectRowAndOpenMenu() {
+    this.selectRow(this.hoveredRow);
+    this.toolbox.openToolboxRowMenu();
+    this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
+  }
+
+  /**
+   * Add the selection effect for the column
+   * Open toolbox column menu and add clickOutside handler
+   */
+  selectColumnAndOpenMenu() {
+    this.selectColumn(this.hoveredColumn);
+    this.toolbox.openToolboxColumnMenu();
+    this.wrapper.addEventListener('click', this.clickOutsideMenuListener);
+  }
+
+  /**
+   * Remove selection effect from a column
+   * Hide toolbox column menu and remove clickOutside handler
+   */
+  unselectColumnAndHideMenu() {
+    this.unselectColumn();
+    this.toolbox.closeToolboxColumnMenu();
+    this.wrapper.removeEventListener('click', this.clickOutsideMenuListener);
+  }
+
+  /**
+   * Remove the selection effect from the row
+   * Hide toolbox column menu and remove clickOutside handler
+   */
+  unselectRowAndHideMenu() {
+    this.unselectRow();
+    this.toolbox.closeToolboxRowMenu();
+    this.wrapper.removeEventListener('click', this.clickOutsideMenuListener, true);
   }
 }

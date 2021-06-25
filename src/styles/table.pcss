@@ -51,15 +51,15 @@
       font-weight: 500;
       border-bottom: 2px solid var(--color-border);
 
+      & [contenteditable]:empty:before {
+        content: "Heading";
+        color: var(--color-placeholder);
+      }
+      
       &::after {
         bottom: -2px;
         border-bottom: 2px solid var(--color-border);
       }
-    }
-
-    & .tc-row:first-child [contenteditable]:empty:before {
-      content: "Heading";
-      color: var(--color-placeholder);
     }
   }
 }
@@ -87,19 +87,23 @@
   }
 }
 
-.tc-add-column, .tc-add-row {
-  transition: 0s;
-  cursor: pointer;
-
-  &:hover {
-    transition: 0.1s;
-    background: var(--color-background);
+.tc-add {
+  &-column, &-row {
+    transition: 0s;
+    cursor: pointer;
+  
+    &:hover {
+      transition: 0.1s;
+      background: var(--color-background);
+    }
   }
-}
 
-.tc-add-row:hover:before {
-  transition: 0.1s;
-  background: var(--color-background);
+  &-row {
+    &:hover:before {
+      transition: 0.1s;
+      background: var(--color-background);
+    }
+  }
 }
 
 .tc-row {
@@ -121,10 +125,12 @@
 
   &--selected {
     background: var(--color-background);
-    
-    &::after {
-      background: var(--color-background);
-    }
+  }
+}
+
+.tc-row--selected {
+  &:after {
+    background: var(--color-background);
   }
 }
 

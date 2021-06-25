@@ -111,11 +111,11 @@ export default class Table {
     withoutHeadingsButton.innerHTML = settings.withoutHeadings.icon;
 
     withHeadingsButton.addEventListener('click', () => {
-      this.toggleTune(withHeadingsButton, withoutHeadingsButton);
+      this.setUseHeadings(true, withHeadingsButton, withoutHeadingsButton);
     });
 
     withoutHeadingsButton.addEventListener('click', () => {
-      this.toggleTune(withHeadingsButton, withoutHeadingsButton);
+      this.setUseHeadings(false, withHeadingsButton, withoutHeadingsButton);
     });
 
     wrapper.append(withHeadingsButton, withoutHeadingsButton);
@@ -147,19 +147,22 @@ export default class Table {
   }
 
   /**
-   * Click on the Settings Button
+   * Changes the state of the withHeading setting
    *
-   * @param {string} tuneName — tune name from this.settings
+   * @param {boolean} useHeadings - use headings in the table or not
+   * @param {HTMLElement} withHeadingsButton - the click button on which this setting is set
+   * @param {HTMLElement} withoutHeadingsButton - the click button on which this setting removes
    */
-  toggleTune(withHeadingsButton, withoutHeadingsButton) {
-    if (withHeadingsButton.classList.contains(CSS.settingActive)) {
-      this.data.withHeadings = false;
-    } else {
-      this.data.withHeadings = true;
-    }
+  setUseHeadings(useHeadings, withHeadingsButton, withoutHeadingsButton) {
+    this.data.withHeadings = useHeadings;
 
-    withHeadingsButton.classList.toggle(CSS.settingActive);
-    withoutHeadingsButton.classList.toggle(CSS.settingActive);
+    if (useHeadings) {
+      withHeadingsButton.classList.add(CSS.settingActive);
+      withoutHeadingsButton.classList.remove(CSS.settingActive);
+    } else {
+      withHeadingsButton.classList.remove(CSS.settingActive);
+      withoutHeadingsButton.classList.add(CSS.settingActive);
+    }
 
     this.tableConstructor.useHeadings(this.data.withHeadings);
   }
