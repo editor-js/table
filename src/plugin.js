@@ -166,4 +166,9 @@ export default class Table {
 
     this.tableConstructor.useHeadings(this.data.withHeadings);
   }
+
+  /**
+   * Plugin destroyer
+   */
+  destroy() {}
 }

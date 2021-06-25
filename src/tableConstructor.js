@@ -55,7 +55,7 @@ export class TableConstructor {
    * @param {{rows: number, cols: number}} size - contains number of rows and cols
    */
   fillTable(data, size) {
-    if (data.content !== undefined) {
+    if (data && data.content) {
       for (let i = 0; i < size.rows && i < data.content.length; i++) {
         for (let j = 0; j < size.cols && j < data.content[i].length; j++) {
           // get current cell and her editable part
@@ -78,12 +78,13 @@ export class TableConstructor {
    * @return {{rows: number, cols: number}} - number of cols and rows
    */
   resizeTable(data, config) {
-    const isValidArray = Array.isArray(data.content);
-    const isNotEmptyArray = isValidArray ? data.content.length : false;
-    const contentRows = isValidArray ? data.content.length : undefined;
-    const contentCols = isNotEmptyArray ? data.content[0].length : undefined;
-    const parsedRows = Number.parseInt(config.rows);
-    const parsedCols = Number.parseInt(config.cols);
+    const content = data && data.content;
+    const isValidArray = Array.isArray(content);
+    const isNotEmptyArray = isValidArray ? content.length : false;
+    const contentRows = isValidArray ? content.length : undefined;
+    const contentCols = isNotEmptyArray ? content[0].length : undefined;
+    const parsedRows = Number.parseInt(config && config.rows);
+    const parsedCols = Number.parseInt(config && config.cols);
     // value of config have to be positive number
     const configRows = !isNaN(parsedRows) && parsedRows > 0 ? parsedRows : undefined;
     const configCols = !isNaN(parsedCols) && parsedCols > 0 ? parsedCols : undefined;

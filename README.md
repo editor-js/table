@@ -3,7 +3,7 @@
 # Table tool
 Table Block for the [Editor.js](https://editorjs.io).
 
-![](https://capella.pics/870d30f0-ef73-423e-b56c-bb4f98e36e73.jpg)
+![](https://capella.pics/619031fb-be62-436f-90db-c5e8aa8dd31b.jpg)
 
 ## Installation
 
