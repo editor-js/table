@@ -1,4 +1,4 @@
-import { create, getRelativeCoords, getRelativeCoordsOfTwoElems, insertAfter, insertBefore } from './documentUtils';
+import { create, getCursorPositionRelativeToElement, getRelativeCoordsOfTwoElems, insertAfter, insertBefore } from './documentUtils';
 import './styles/table.pcss';
 import './styles/toolbox.pcss';
 import './styles/utils.pcss';
@@ -213,15 +213,6 @@ export class Table {
   fillInQuickAddButtons() {
     this.wrapper.querySelector(`.${CSS.addColumn}`).innerHTML = svgPlusButton;
     this.wrapper.querySelector(`.${CSS.addRow}`).innerHTML = svgPlusButton;
-  }
-
-  /**
-   * get real table tag
-   *
-   * @returns {HTMLElement}
-   */
-  get body() {
-    return this.table;
   }
 
   /**
@@ -622,7 +613,7 @@ export class Table {
     let hoveredColumn = this.isHoveredColumnIsCurrent(event) ? this.hoveredColumn : 0;
     let leftBorder = 0; let rightBorder = this.numberOfColumns;
     let topBorder = 0; let bottomBorder = this.numberOfRows;
-    const { width, height, x, y } = getRelativeCoords(this.table, event);
+    const { width, height, x, y } = getCursorPositionRelativeToElement(this.table, event);
 
     // Looking for hovered column using binsearch
     if (x >= 0 && !hoveredColumn) {
@@ -687,7 +678,7 @@ export class Table {
       return false;
     }
 
-    const { height, y } = getRelativeCoords(this.table, event);
+    const { height, y } = getCursorPositionRelativeToElement(this.table, event);
     const cell = this.getCell(this.hoveredRow, 1);
     const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 
@@ -705,7 +696,7 @@ export class Table {
       return false;
     }
 
-    const { width, x } = getRelativeCoords(this.table, event);
+    const { width, x } = getCursorPositionRelativeToElement(this.table, event);
     const cell = this.getCell(1, this.hoveredColumn);
     const { fromLeftBorder, fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
 

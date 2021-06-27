@@ -5,24 +5,26 @@ import withoutHeadings from './img/without-headings.svg';
 import { create } from './documentUtils';
 
 const CSS = {
-  input: 'tc-table__inp',
   setting: 'tc-setting',
   settingActive: 'tc-setting--active'
 };
 
 /**
- * Additional settings for the table
- */
-const tunes = {
-  withHeadings: 'With headings',
-  withoutHeadings: 'Without headings'
-};
-
-/**
- *  Tool for table's creating
+ * Tool for table's creating
  *
- *  @typedef {object} TableData - object with the data transferred to form a table
- *  @property {string[][]} content - two-dimensional array which contains table content
+ * @typedef {object} Config - configuration that the user can set for the table
+ * @property {number} rows - number of rows in the table
+ * @property {number} cols - number of columns in the table
+ *
+ * @typedef {object} Tune - setting for the table
+ * @property {string} name - tune name
+ * @property {HTMLElement} icon - icon for the tune
+ * @property {boolean} isActive - default state of the tune
+ * @property {void} setTune - set tune state to the table data
+ *
+ * @typedef {object} TableData - object with the data transferred to form a table
+ * @property {boolean} withHeading - setting to use cells of the first row as headings
+ * @property {string[][]} content - two-dimensional array which contains table content
  */
 export default class Table {
   /**
@@ -48,7 +50,7 @@ export default class Table {
    * Render plugin`s main Element and fill it with saved data
    *
    * @param {TableData} data — previously saved data
-   * @param {object} config - user config for Tool
+   * @param {Config} config - user config for Tool
    * @param {object} api - Editor.js API
    * @param {boolean} readOnly - read-only mode flag
    */
@@ -56,7 +58,8 @@ export default class Table {
     this.api = api;
     this.readOnly = readOnly;
     this.data = {
-      withHeadings: data && data.withHeadings ? data.withHeadings : false
+      withHeadings: data && data.withHeadings || false,
+      content: data && data.content || []
     };
 
     this.tableConstructor = new TableConstructor(data, config, api, readOnly);
@@ -92,77 +95,70 @@ export default class Table {
    * @returns {HTMLElement} - wrapper element
    */
   renderSettings() {
-    const settings = {
-      withHeadings: {
-        name: tunes.withHeadings,
-        icon: withHeadings
-      },
-      withoutHeadings: {
-        name: tunes.withoutHeadings,
-        icon: withoutHeadings
-      }
-    };
     const wrapper = document.createElement('div');
+    const tunes = [ {
+      name: this.api.i18n.t('With headings'),
+      icon: withHeadings,
+      isActive: this.data.withHeadings,
+      setTune: () => this.data.withHeadings = true
+    }, {
+      name: this.api.i18n.t('Without headings'),
+      icon: withoutHeadings,
+      isActive: !this.data.withHeadings,
+      setTune: () => this.data.withHeadings = false
+    } ];
 
-    let withHeadingsButton = create('div', [CSS.setting, this.data.withHeadings ? CSS.settingActive : '']);
-    let withoutHeadingsButton = create('div', [CSS.setting, this.data.withHeadings ? '' : CSS.settingActive]);
+    tunes.forEach((tune) => {
+      let tuneButton = create('div', [CSS.setting, tune.isActive ? CSS.settingActive : '']);
 
-    withHeadingsButton.innerHTML = settings.withHeadings.icon;
-    withoutHeadingsButton.innerHTML = settings.withoutHeadings.icon;
+      tuneButton.innerHTML = tune.icon;
+      tuneButton.addEventListener('click', () => this.toggleTune(tune, tuneButton));
 
-    withHeadingsButton.addEventListener('click', () => {
-      this.setUseHeadings(true, withHeadingsButton, withoutHeadingsButton);
+      this.api.tooltip.onHover(tuneButton, tune.name, {
+        placement: 'top',
+        hidingDelay: 500
+      });
+
+      wrapper.append(tuneButton);
     });
-
-    withoutHeadingsButton.addEventListener('click', () => {
-      this.setUseHeadings(false, withHeadingsButton, withoutHeadingsButton);
-    });
-
-    wrapper.append(withHeadingsButton, withoutHeadingsButton);
-
-    this.api.tooltip.onHover(withHeadingsButton, 'With headings', {placement: 'top'});
-    this.api.tooltip.onHover(withoutHeadingsButton, 'Without headings', {placement: 'top'});
 
     return wrapper;
   }
 
   /**
-   * Extract Tool's data from the view
+   * Extract table data from the view
    *
-   * @param {HTMLElement} toolsContent - Tool HTML element
    * @returns {TableData} - saved data
    */
-  save(toolsContent) {
-    const data = this.tableConstructor.getData();
+  save() {
+    const tableContent = this.tableConstructor.getData();
 
-    let result = {};
-
-    if (this.data.withHeadings) {
-      result.withHeadings = true;
-    }
-
-    result.content = data;
+    let result = {
+      withHeadings: this.data.withHeadings,
+      content: tableContent
+    };
 
     return result;
   }
 
   /**
-   * Changes the state of the withHeading setting
+   * Changes the state of the tune
+   * Updates its representation in the table
    *
-   * @param {boolean} useHeadings - use headings in the table or not
-   * @param {HTMLElement} withHeadingsButton - the click button on which this setting is set
-   * @param {HTMLElement} withoutHeadingsButton - the click button on which this setting removes
+   * @param {Tune} tune - one of the table settings
+   * @param {HTMLElement} tuneButton - DOM element of the tune
    */
-  setUseHeadings(useHeadings, withHeadingsButton, withoutHeadingsButton) {
-    this.data.withHeadings = useHeadings;
+  toggleTune(tune, tuneButton) {
+    const buttons = tuneButton.parentNode.querySelectorAll('.' + CSS.setting);
 
-    if (useHeadings) {
-      withHeadingsButton.classList.add(CSS.settingActive);
-      withoutHeadingsButton.classList.remove(CSS.settingActive);
-    } else {
-      withHeadingsButton.classList.remove(CSS.settingActive);
-      withoutHeadingsButton.classList.add(CSS.settingActive);
-    }
+    // Clear other buttons
+    Array.from(buttons).forEach((button) =>
+      button.classList.remove(CSS.settingActive)
+    );
+
+    // Mark active button
+    tuneButton.classList.toggle(CSS.settingActive);
+    tune.setTune();
 
     this.tableConstructor.useHeadings(this.data.withHeadings);
   }

@@ -70,12 +70,12 @@ export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
 }
 
 /**
- * Get the cursor coordinates relative to the element
+ * Get the width and height of an element and the position of the cursor relative to it
  *
  * @param {HTMLElement} elem - element relative to which the coordinates will be calculated
  * @param {Event} event - mouse event
  */
-export function getRelativeCoords(elem, event) {
+export function getCursorPositionRelativeToElement(elem, event) {
   const rect = elem.getBoundingClientRect();
   const { width, height, x, y } = rect;
   const { clientX, clientY } = event;
