@@ -1,24 +1,16 @@
 .tc-setting {
+  --color-default: #000;
   --color-active: #388ae5;
   --color-background: #eff2f5;
 
   width: 52px;
   height: 34px;
-  line-height: 34px;
-  margin-right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 !important;
-  text-align: center;
   border-radius: 3px;
   cursor: pointer;
-  border: 0;
-  outline: none;
-  background-color: transparent;
-  vertical-align: bottom;
-  color: #000;
-  margin: 0;
+  color: var(--color-default);
   transition: background-color .3s ease;
   will-change: background-color;
   
@@ -31,7 +23,7 @@
   }
 
   &:hover {
-    background-color: #eff2f5;
-    transition: var(--color-background) 0s;
+    background-color: var(--color-background);
+    transition: background-color 0s;
   }
 }

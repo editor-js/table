@@ -1,4 +1,4 @@
-import { create, getRelativeCoordsOfTwoElems } from './documentUtils';
+import { create, getRelativeCoordsOfTwoElems, createElem } from './documentUtils';
 import toolboxIcon from './img/toolboxIcon.svg';
 import newToLeftIcon from './img/new-to-left.svg';
 import newToRightIcon from './img/new-to-right.svg';
@@ -33,9 +33,9 @@ export class Toolbox {
    * Creates toolbox buttons and toolbox menus
    */
   constructor() {
-    this.toolboxRow = this.createToolboxRow();
+    this.element = this.createToolboxRow();
     this.toolboxColumn = this.createToolboxColumn();
-    this.toolboxRowMenu = this.toolboxRow.querySelector(`.${CSS.toolboxRowMenu}`);
+    this.toolboxRowMenu = this.element.querySelector(`.${CSS.toolboxRowMenu}`);
     this.toolboxColumnMenu = this.toolboxColumn.querySelector(`.${CSS.toolboxColumnMenu}`);
 
     // row and column above which the toolboxes should be displayed, 0 means hide
@@ -117,36 +117,43 @@ export class Toolbox {
    * @returns {HTMLElement} - column menu
    */
   createColumnMenu() {
-    let addColumnLeftText = create('span');
-    let addColumnRightText = create('span');
-    let deleteColumnText = create('span');
+    let addColumnLeftText = createElem({
+      tagName: 'span',
+      textContent: 'Add column to left'
+    });
+    let addColumnRightText = createElem({
+      tagName: 'span',
+      textContent: 'Add column to right'
+    });
+    let deleteColumnText = createElem({
+      tagName: 'span',
+      textContent: 'Delete column'
+    });
 
-    addColumnLeftText.textContent = 'Add column to left';
-    addColumnRightText.textContent = 'Add column to right';
-    deleteColumnText.textContent = 'Delete column';
+    let addColumnRight = createElem({
+      tagName: 'div',
+      innerHTML: newToRightIcon,
+      cssClasses: [CSS.toolboxAddColumnRight, CSS.toolboxOption],
+      children: [ addColumnRightText ]
+    });
+    let addColumnLeft = createElem({
+      tagName: 'div',
+      innerHTML: newToLeftIcon,
+      cssClasses: [CSS.toolboxAddColumnLeft, CSS.toolboxOption],
+      children: [ addColumnLeftText ]
+    });
+    let deleteColumn = createElem({
+      tagName: 'div',
+      innerHTML: closeIcon,
+      cssClasses: [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn],
+      children: [ deleteColumnText ]
+    });
 
-    let addColumnRight = create('div', [CSS.toolboxAddColumnRight, CSS.toolboxOption]);
-
-    addColumnRight.innerHTML = newToRightIcon;
-    addColumnRight.append(addColumnRightText);
-
-    let addColumnLeft = create('div', [CSS.toolboxAddColumnLeft, CSS.toolboxOption]);
-
-    addColumnLeft.innerHTML = newToLeftIcon;
-    addColumnLeft.append(addColumnLeftText);
-
-    let deleteColumn = create('div', [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn]);
-
-    deleteColumn.innerHTML = closeIcon;
-    deleteColumn.append(deleteColumnText);
-
-    let toolboxColumnMenu = create('div', [CSS.toolboxColumnMenu, CSS.hidden], null, [
-      addColumnLeft,
-      addColumnRight,
-      deleteColumn
-    ]);
-
-    return toolboxColumnMenu;
+    return createElem({
+      tagName: 'div',
+      cssClasses: [CSS.toolboxColumnMenu, CSS.hidden],
+      children: [addColumnLeft, addColumnRight, deleteColumn]
+    });
   }
 
   /**
@@ -272,14 +279,14 @@ export class Toolbox {
     this.row = row;
 
     if (this.row <= 0 || this.row > numberOfRows) {
-      this.toolboxRow.style.opacity = '0';
+      this.element.style.opacity = '0';
     } else {
       const hoveredRowElement = table.querySelector(`.tc-row:nth-child(${this.row})`);
       const { fromTopBorder } = getRelativeCoordsOfTwoElems(table, hoveredRowElement);
       const { height } = hoveredRowElement.getBoundingClientRect();
 
-      this.toolboxRow.style.opacity = '1';
-      this.toolboxRow.style.top = `${fromTopBorder + height / 2}px`;
+      this.element.style.opacity = '1';
+      this.element.style.top = `${fromTopBorder + height / 2}px`;
     }
 
     if (numberOfRows == 1) {

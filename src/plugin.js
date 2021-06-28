@@ -58,8 +58,8 @@ export default class Table {
     this.api = api;
     this.readOnly = readOnly;
     this.data = {
-      withHeadings: data && data.withHeadings || false,
-      content: data && data.content || []
+      withHeadings: data && data.withHeadings ? data.withHeadings : false,
+      content: data && data.content ? data.content : []
     };
 
     this.tableConstructor = new TableConstructor(data, config, api, readOnly);
@@ -100,12 +100,16 @@ export default class Table {
       name: this.api.i18n.t('With headings'),
       icon: withHeadings,
       isActive: this.data.withHeadings,
-      setTune: () => this.data.withHeadings = true
+      setTune: () => {
+        this.data.withHeadings = true;
+      }
     }, {
       name: this.api.i18n.t('Without headings'),
       icon: withoutHeadings,
       isActive: !this.data.withHeadings,
-      setTune: () => this.data.withHeadings = false
+      setTune: () => {
+        this.data.withHeadings = false;
+      }
     } ];
 
     tunes.forEach((tune) => {

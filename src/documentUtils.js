@@ -5,9 +5,10 @@
  * @param {string[]} cssClasses - Css classes that must be applied to an element
  * @param {object} attrs - Attributes that must be applied to the element
  * @param {Element[]} children - child elements of creating element
+ * @param {string} innerHTML - string with html elements to set before adding childs
  * @returns {HTMLElement} the new element
  */
-export function create(tagName, cssClasses = null, attrs = null, children = null) {
+export function create(tagName, cssClasses = null, attrs = null, children = null, innerHTML = null) {
   const elem = document.createElement(tagName);
 
   if (cssClasses) {
@@ -22,10 +23,65 @@ export function create(tagName, cssClasses = null, attrs = null, children = null
       elem.setAttribute(key, attrs[key]);
     }
   }
+  if (innerHTML) {
+    elem.innerHTML = innerHTML;
+  }
   if (children) {
     for (let i = 0; i < children.length; i++) {
       if (children[i]) {
-        elem.appendChild(children[i]);
+        elem.append(children[i]);
+      }
+    }
+  }
+
+  return elem;
+}
+
+/**
+ * Create DOM element with set parameters
+ *
+ * @param {Object} element - element params to create an HTML element
+ * @param {string} element.tagName - Html tag of the element to be created
+ * @param {string[]} element.cssClasses - Css classes that must be applied to an element
+ * @param {object} element.attrs - Attributes that must be applied to the element
+ * @param {Element[]} element.children - child elements of creating element
+ * @param {string} element.innerHTML - string with html elements to set before adding childs
+ * @param {string} element.textContent - text content to set
+ *
+ * @returns {HTMLElement} the new element
+ */
+export function createElem({
+  tagName = 'div',
+  cssClasses,
+  attrs,
+  children,
+  innerHTML,
+  textContent
+}) {
+  const elem = document.createElement(tagName);
+
+  if (cssClasses) {
+    for (let i = 0; i < cssClasses.length; i++) {
+      if (cssClasses[i]) {
+        elem.classList.add(cssClasses[i]);
+      }
+    }
+  }
+  if (attrs) {
+    for (let key in attrs) {
+      elem.setAttribute(key, attrs[key]);
+    }
+  }
+  if (textContent) {
+    elem.textContent = textContent;
+  }
+  if (innerHTML) {
+    elem.innerHTML = innerHTML;
+  }
+  if (children) {
+    for (let i = 0; i < children.length; i++) {
+      if (children[i]) {
+        elem.append(children[i]);
       }
     }
   }

@@ -4,12 +4,15 @@
   --color-placeholder: #7b7e89;
   --color-border: #e8e8eb;
   --cell-size: 34px;
+  --toolbox-icon-size: 18px;
+  --toolbox-padding: 6px;
+  --toolbox-aiming-field-size: calc(var(--toolbox-icon-size) + 2 * var(--toolbox-padding));
 
   border-left: 0px;
   position: relative;
   height: 100%;
   width: 100%;
-  margin-top: 18px;
+  margin-top: var(--toolbox-icon-size);
   box-sizing: border-box;
   display: grid;
   grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
@@ -31,9 +34,9 @@
   &::after {
     position: absolute;
     content: "";
-    width: 33px;
+    width: calc(var(--cell-size));
     height: 100%;
-    left: -33px;
+    left: calc(-1 * var(--cell-size));
     top: 0;
   }
 
@@ -41,8 +44,8 @@
     position: absolute;
     content: "";
     width: 100%;
-    height: 30px;
-    top: -30px;
+    height: var(--toolbox-aiming-field-size);
+    top: calc(-1 * var(--toolbox-aiming-field-size));
     left: 0;
   }
 
@@ -51,7 +54,7 @@
       font-weight: 500;
       border-bottom: 2px solid var(--color-border);
 
-      & [contenteditable]:empty:before {
+      & [contenteditable]:empty::before {
         content: "Heading";
         color: var(--color-placeholder);
       }
@@ -72,17 +75,17 @@
 }
 
 .tc-add-row {
-  height: 34px;
+  height: var(--cell-size);
   display: flex;
   align-items: center;
-  padding-left: 0.6em;
+  padding-left: 12px;
   position: relative;
 
   &::before {
     content: '';
     position: absolute;
-    right: -34px;
-    width: 34px;
+    right: calc(-1 * var(--cell-size));
+    width: var(--cell-size);
     height: 100%;
   }
 }
@@ -91,17 +94,18 @@
   &-column, &-row {
     transition: 0s;
     cursor: pointer;
+    will-change: background-color;
   
     &:hover {
-      transition: 0.1s;
-      background: var(--color-background);
+      transition: background-color 0.1s ease;
+      background-color: var(--color-background);
     }
   }
 
   &-row {
-    &:hover:before {
+    &:hover::before {
       transition: 0.1s;
-      background: var(--color-background);
+      background-color: var(--color-background);
     }
   }
 }
@@ -116,10 +120,10 @@
     content: '';
     pointer-events: none;
     position: absolute;
-    width: 34px;
+    width: var(--cell-size);
     height: 100%;
     bottom: -1px;
-    right: -34px;
+    right: calc(-1 * var(--cell-size));
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -129,13 +133,12 @@
 }
 
 .tc-row--selected {
-  &:after {
+  &::after {
     background: var(--color-background);
   }
 }
 
 .tc-cell {
-  min-height: 21px;
   border-right: 1px solid var(--color-border);
   clear: both;
   padding: 6px 2px 6px 12px;

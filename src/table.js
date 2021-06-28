@@ -5,6 +5,8 @@ import './styles/utils.pcss';
 import './styles/settings.pcss';
 import svgPlusButton from './img/plus.svg';
 import { Toolbox } from './toolbox';
+import { ToolboxColumn } from './toolbox/toolboxColumn';
+import { ToolboxRow } from './toolbox/toolboxRow';
 
 const CSS = {
   table: 'tc-table',
@@ -48,7 +50,9 @@ export class Table {
     this.numberOfRows = 0;
 
     // Table toolboxes
-    this.toolbox = new Toolbox();
+    this.toolboxRow = new Toolbox();
+    this.toolboxColumn = new ToolboxColumn();
+    this.toolboxRow = new ToolboxRow();
 
     // Table wrapper element
     this.wrapper = this.createTableWrapper();
@@ -223,8 +227,8 @@ export class Table {
    */
   createTableWrapper() {
     return create('div', [ CSS.wrapper ], null, [
-      this.toolbox.toolboxRow,
-      this.toolbox.toolboxColumn,
+      this.toolboxRow.element,
+      this.toolboxColumn.element,
       create('div', [ CSS.table ]),
       create('div', [ CSS.addColumn ]),
       create('div', [ CSS.addRow ])
@@ -284,7 +288,7 @@ export class Table {
     });
 
     // Controls toolbox with adding and deleting columns
-    this.toolbox.toolboxColumn.addEventListener('click', (event) => {
+    this.toolboxColumn.element.addEventListener('click', (event) => {
       event.stopPropagation();
 
       const toolboxColumnIconClicked = event.target.closest('svg');
@@ -308,7 +312,7 @@ export class Table {
           this.hideEverything();
           this.showDeleteColumnConfirmation = false;
         } else {
-          this.toolbox.setDeleteColumnConfirmation();
+          this.toolboxColumn.setDeleteConfirmation();
           this.showDeleteColumnConfirmation = true;
         }
       }
@@ -329,7 +333,7 @@ export class Table {
     });
 
     // Controls toolbox with adding and deleting rows
-    this.toolbox.toolboxRow.addEventListener('click', (event) => {
+    this.toolboxRow.element.addEventListener('click', (event) => {
       event.stopPropagation();
 
       const toolboxRowIconClicked = event.target.closest('svg');
@@ -353,7 +357,7 @@ export class Table {
           this.hideEverything();
           this.showDeleteRowConfirmation = false;
         } else {
-          this.toolbox.setDeleteRowConfirmation();
+          this.toolboxRow.setDeleteConfirmation();
           this.showDeleteRowConfirmation = true;
         }
       }
@@ -452,12 +456,12 @@ export class Table {
   clickOutsideMenus(event) {
     if (event.target.closest(`.${CSS.toolboxColumnMenu}`) === null) {
       this.unselectColumn();
-      this.toolbox.closeToolboxColumnMenu();
+      this.toolboxColumn.closeToolboxMenu();
     }
 
     if (event.target.closest(`.${CSS.toolboxRowMenu}`) === null) {
       this.unselectRow();
-      this.toolbox.closeToolboxRowMenu();
+      this.toolboxRow.closeMenu();
     }
 
     this.wrapper.removeEventListener('click', this.clickOutsideMenuListener);
@@ -470,8 +474,8 @@ export class Table {
   hideEverything() {
     this.unselectRow();
     this.unselectColumn();
-    this.toolbox.closeToolboxRowMenu();
-    this.toolbox.closeToolboxColumnMenu();
+    this.toolboxRow.closeMenu();
+    this.toolboxColumn.closeToolboxMenu();
     this.updateToolboxesPosition(0, 0);
   }
 
@@ -483,8 +487,8 @@ export class Table {
   hideAndUnselect() {
     this.unselectRow();
     this.unselectColumn();
-    this.toolbox.closeToolboxRowMenu();
-    this.toolbox.closeToolboxColumnMenu();
+    this.toolboxRow.closeMenu();
+    this.toolboxColumn.closeToolboxMenu();
     this.updateToolboxesPosition();
   }
 
@@ -515,12 +519,12 @@ export class Table {
   updateToolboxesPosition(row = this.hoveredRow, column = this.hoveredColumn) {
     if (!this.isColumnMenuShowing) {
       this.hoveredColumn = column;
-      this.toolbox.updateToolboxColumnPosition(this.numberOfColumns, column);
+      this.toolboxColumn.updateToolboxIconPosition(this.numberOfColumns, column);
     }
 
     if (!this.isRowMenuShowing) {
       this.hoveredRow = row;
-      this.toolbox.updateToolboxRowPosition(this.numberOfRows, row, this.table);
+      this.toolboxRow.updateToolboxIconPosition(this.numberOfRows, row, this.table);
     }
   }
 
@@ -709,7 +713,7 @@ export class Table {
    */
   selectRowAndOpenMenu() {
     this.selectRow(this.hoveredRow);
-    this.toolbox.openToolboxRowMenu();
+    this.toolboxRow.openMenu();
     this.wrapper.addEventListener('click', this.clickOutsideMenuListener, true);
   }
 
@@ -719,7 +723,7 @@ export class Table {
    */
   selectColumnAndOpenMenu() {
     this.selectColumn(this.hoveredColumn);
-    this.toolbox.openToolboxColumnMenu();
+    this.toolboxColumn.openToolboxMenu();
     this.wrapper.addEventListener('click', this.clickOutsideMenuListener);
   }
 
@@ -729,7 +733,7 @@ export class Table {
    */
   unselectColumnAndHideMenu() {
     this.unselectColumn();
-    this.toolbox.closeToolboxColumnMenu();
+    this.toolboxColumn.closeToolboxMenu();
     this.wrapper.removeEventListener('click', this.clickOutsideMenuListener);
   }
 
@@ -739,7 +743,7 @@ export class Table {
    */
   unselectRowAndHideMenu() {
     this.unselectRow();
-    this.toolbox.closeToolboxRowMenu();
+    this.toolboxRow.closeMenu();
     this.wrapper.removeEventListener('click', this.clickOutsideMenuListener, true);
   }
 }
