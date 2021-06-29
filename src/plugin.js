@@ -170,5 +170,8 @@ export default class Table {
   /**
    * Plugin destroyer
    */
-  destroy() {}
+  destroy() {
+    console.log('destroy please :3');
+    this.tableConstructor.tableInstance.destroy();
+  }
 }

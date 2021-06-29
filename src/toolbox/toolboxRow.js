@@ -9,13 +9,21 @@ const CSS = {
   displayNone: 'tc-display-none',
   toolboxRow: 'tc-toolbox-row',
   toolboxRowMenu: 'tc-toolbox-row__menu',
-  toolboxAddRowAbove: 'tc-toolbox-add-row-above',
-  toolboxAddRowBelow: 'tc-toolbox-add-row-below',
   toolboxDelete: 'tc-toolbox-delete',
   toolboxDeleteRow: 'tc-toolbox-delete--row',
   toolboxOption: 'tc-toolbox-row__option',
   menuAnimation: 'tc-menu-animation',
   deleteConfirm: 'tc-toolbox-delete--confirm'
+};
+
+/**
+ * Attributes to some elements that don't need separate styles
+ * but we want to access them through the DOM
+ */
+const ATTRS = {
+  addRowAbove: { 'add-row-above': '' },
+  addRowBelow: { 'add-row-below': '' },
+  deleteRow: { 'delete-row': '' }
 };
 
 /**
@@ -69,19 +77,22 @@ export class ToolboxRow {
     let addRowAbove = createElem({
       tagName: 'div',
       innerHTML: newToUp,
-      cssClasses: [CSS.toolboxAddRowAbove, CSS.toolboxOption],
+      cssClasses: [ CSS.toolboxOption ],
+      attrs: ATTRS.addRowAbove,
       children: [ addRowAboveText ]
     });
     let addRowBelow = createElem({
       tagName: 'div',
       innerHTML: newToDown,
-      cssClasses: [CSS.toolboxAddRowBelow, CSS.toolboxOption],
+      cssClasses: [ CSS.toolboxOption ],
+      attrs: ATTRS.addRowBelow,
       children: [ addRowBelowText ]
     });
     let deleteRow = createElem({
       tagName: 'div',
       innerHTML: closeIcon,
       cssClasses: [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteRow],
+      attrs: ATTRS.deleteRow,
       children: [ deleteRowText ]
     });
 
@@ -138,7 +149,7 @@ export class ToolboxRow {
   }
 
   /**
-   * Change row toolbox position
+   * Change toolbox icon position
    *
    * @param {number} numberOfRows - number of rows
    * @param {number} row - hovered row

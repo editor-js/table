@@ -9,13 +9,21 @@ const CSS = {
   displayNone: 'tc-display-none',
   toolboxColumn: 'tc-toolbox-column',
   toolboxColumnMenu: 'tc-toolbox-column__menu',
-  toolboxAddColumnRight: 'tc-toolbox-add-column-right',
-  toolboxAddColumnLeft: 'tc-toolbox-add-column-left',
   toolboxDelete: 'tc-toolbox-delete',
   toolboxDeleteColumn: 'tc-toolbox-delete--column',
   toolboxOption: 'tc-toolbox-row__option',
   menuAnimation: 'tc-menu-animation',
   deleteConfirm: 'tc-toolbox-delete--confirm'
+};
+
+/**
+ * Attributes to some elements that don't need separate styles
+ * but we want to access them through the DOM
+ */
+const ATTRS = {
+  addColumnRight: { 'add-column-right': '' },
+  addColumnLeft: { 'add-column-left': '' },
+  deleteColumn: { 'delete-column': '' }
 };
 
 /**
@@ -69,19 +77,22 @@ export class ToolboxColumn {
     let addColumnRight = createElem({
       tagName: 'div',
       innerHTML: newToRightIcon,
-      cssClasses: [CSS.toolboxAddColumnRight, CSS.toolboxOption],
+      cssClasses: [ CSS.toolboxOption ],
+      attrs: ATTRS.addColumnRight,
       children: [ addColumnRightText ]
     });
     let addColumnLeft = createElem({
       tagName: 'div',
       innerHTML: newToLeftIcon,
-      cssClasses: [CSS.toolboxAddColumnLeft, CSS.toolboxOption],
+      cssClasses: [ CSS.toolboxOption ],
+      attrs: ATTRS.addColumnLeft,
       children: [ addColumnLeftText ]
     });
     let deleteColumn = createElem({
       tagName: 'div',
       innerHTML: closeIcon,
       cssClasses: [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn],
+      attrs: ATTRS.deleteColumn,
       children: [ deleteColumnText ]
     });
 
@@ -138,7 +149,7 @@ export class ToolboxColumn {
   }
 
   /**
-   * Change column toolbox position
+   * Change toolbox icon position
    *
    * @param {number} numberOfColumns - number of columns in the table
    * @param {number} column - current column, if 0 then hide toolbox
@@ -149,7 +160,8 @@ export class ToolboxColumn {
     if (this.column <= 0 || this.column > numberOfColumns) {
       this.element.style.opacity = '0';
     } else {
-      this.element.style.cssText = 'opacity: 1; ' + `left: calc((100% - 35px) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
+      // calculate padding for the icon
+      this.element.style.cssText = 'opacity: 1; ' + `left: calc((100% - var(--cell-size)) / (${numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`;
     }
 
     if (numberOfColumns == 1) {
