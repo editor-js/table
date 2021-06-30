@@ -17,7 +17,6 @@ const CSS = {
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
   addColumn: 'tc-add-column',
-  wrapper: 'tc-wrap',
   toolboxColumnMenu: 'tc-toolbox-column__menu',
   toolboxRowMenu: 'tc-toolbox-row__menu'
 };
@@ -125,21 +124,17 @@ export class Table {
           return true;
         }
 
-        if (this.focusedCell.row != this.numberOfRows) {
-          this.focusedCell.row += 1;
-          this.focusCell(this.focusedCell);
-        } else {
-          this.addRow();
-          this.focusedCell.row += 1;
-          this.focusCell(this.focusedCell);
-          this.updateToolboxesPosition(0, 0);
-        }
+        this.moveCursorToNextRow();
       }
 
+      // Prevents the default behavior of Enter
       return event.key != 'Enter';
     };
 
-    // Controls some of the keyboard buttons inside the table
+    /**
+     * Controls some of the keyboard buttons inside the table
+     * Tab is executed by default before keypress, so it must be intercepted on keydown
+     */
     this.table.addEventListener('keydown', (event) => {
       if (event.key == 'Tab') {
         event.stopPropagation();
@@ -149,13 +144,29 @@ export class Table {
     // Determine the position of the cell in focus
     this.table.addEventListener('focusin', event => {
       const cell = event.target;
-      const row = cell.parentElement;
+      const row = this.getRowByCell(cell);
 
       this.focusedCell = {
         row: Array.from(this.table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
         column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
       };
     }, { passive: true });
+  }
+
+  /**
+   * When you press enter it moves the cursor down to the next row
+   * or creates it if the click occurred on the last one
+   */
+  moveCursorToNextRow() {
+    if (this.focusedCell.row != this.numberOfRows) {
+      this.focusedCell.row += 1;
+      this.focusCell(this.focusedCell);
+    } else {
+      this.addRow();
+      this.focusedCell.row += 1;
+      this.focusCell(this.focusedCell);
+      this.updateToolboxesPosition(0, 0);
+    }
   }
 
   /**
@@ -177,6 +188,16 @@ export class Table {
    */
   getRow(row) {
     return this.table.querySelector(`.${CSS.row}:nth-child(${row})`);
+  }
+
+  /**
+   * The parent of the cell which is the row
+   *
+   * @param {HTMLElement} cell - cell element
+   * @returns {HTMLElement}
+   */
+  getRowByCell(cell) {
+    return cell.parentElement;
   }
 
   /**
@@ -299,10 +320,16 @@ export class Table {
     return create('div', [ CSS.cell ], { contenteditable: !this.readOnly });
   }
 
+  /**
+   * Get number of rown in the table
+   */
   get numberOfRows() {
     return this.table.childElementCount;
   }
 
+  /**
+   * Get number of columns in the table
+   */
   get numberOfColumns() {
     if (this.numberOfRows) {
       return this.table.querySelector(`.${CSS.row}:first-child`).childElementCount;
@@ -546,7 +573,7 @@ export class Table {
    *
    * @param {boolean} withHeadings - use headings row or not
    */
-  useHeadings(withHeadings) {
+  setHeadingsSetting(withHeadings) {
     if (withHeadings) {
       this.table.classList.add(CSS.withHeadings);
     } else {
@@ -621,6 +648,7 @@ export class Table {
 
   /**
    * Calculates the row and column that the cursor is currently hovering over
+   * The search was optimized from O(n) to O (log n) via bin search to reduce the number of calculations
    *
    * @param {Event} event - mousemove event
    * @returns hovered cell coordinates as an integer row and column

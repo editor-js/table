@@ -143,6 +143,6 @@ export class TableConstructor {
    * @param {boolean} withHeadings
    */
   useHeadings(withHeadings) {
-    this.tableInstance.useHeadings(withHeadings);
+    this.tableInstance.setHeadingsSetting(withHeadings);
   }
 }
