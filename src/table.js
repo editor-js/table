@@ -654,56 +654,28 @@ export class Table {
    * @returns hovered cell coordinates as an integer row and column
    */
   hoveredCell(event) {
-    let hoveredRow = this.isHoveredRowIsCurrent(event) ? this.hoveredRow : 0;
-    let hoveredColumn = this.isHoveredColumnIsCurrent(event) ? this.hoveredColumn : 0;
-    let leftBorder = 0; let rightBorder = this.numberOfColumns;
-    let topBorder = 0; let bottomBorder = this.numberOfRows;
+    let hoveredRow = this.hoveredRow;
+    let hoveredColumn = this.hoveredColumn;
     const { width, height, x, y } = getCursorPositionRelativeToElement(this.table, event);
 
-    // Looking for hovered column using binsearch
-    if (x >= 0 && !hoveredColumn) {
-      let totalIterations = 0;
-
-      while (leftBorder < rightBorder && totalIterations < 10) {
-        const mid = Math.ceil((leftBorder + rightBorder) / 2);
-        const cell = this.getCell(1, mid);
-        const { fromRightBorder, fromLeftBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
-
-        if (x < fromLeftBorder) {
-          rightBorder = mid;
-        } else if (x > width - fromRightBorder) {
-          leftBorder = mid;
-        } else {
-          hoveredColumn = mid;
-
-          break;
-        }
-
-        totalIterations++;
-      }
+    // Looking for hovered column
+    if (x >= 0) {
+      hoveredColumn = this.binSearch(
+        this.numberOfColumns,
+        (mid) => this.getCell(1, mid),
+        ({ fromLeftBorder }) => x < fromLeftBorder,
+        ({ fromRightBorder }) => x > (width - fromRightBorder)
+      );
     }
 
-    // Looking for hovered row using binsearch
-    if (y >= 0 && !hoveredRow) {
-      let totalIterations = 0;
-
-      while (topBorder < bottomBorder && totalIterations < 10) {
-        const mid = Math.ceil((topBorder + bottomBorder) / 2);
-        const cell = this.getCell(mid, 1);
-        const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
-
-        if (y < fromTopBorder) {
-          bottomBorder = mid;
-        } else if (y > height - fromBottomBorder) {
-          topBorder = mid;
-        } else {
-          hoveredRow = mid;
-
-          break;
-        }
-
-        totalIterations++;
-      }
+    // Looking for hovered row
+    if (y >= 0) {
+      hoveredRow = this.binSearch(
+        this.numberOfRows,
+        (mid) => this.getCell(mid, 1),
+        ({ fromTopBorder }) => y < fromTopBorder,
+        ({ fromBottomBorder }) => y > (height - fromBottomBorder)
+      );
     }
 
     return {
@@ -713,39 +685,40 @@ export class Table {
   }
 
   /**
-   * Quick check to optimise the search of hovered row
+   * Looks for the index of the cell the mouse is hovering over.
+   * Cells can be represented as ordered intervals with left and
+   * right (upper and lower for rows) borders inside the table, if the mouse enters it, then this is our index
    *
-   * @param {MouseEvent} event
-   * @returns {boolean}
+   * @param {number} numberOfCells - upper bound of binary search
+   * @param {function} getCell - function to take the currently viewed cell
+   * @param {function} beforeTheLeftBorder - determines the cursor position, to the left of the cell or not
+   * @param {function} afterTheRightBorder - determines the cursor position, to the right of the cell or not
+   * @returns {number}
    */
-  isHoveredRowIsCurrent(event) {
-    if (!this.hoveredRow) {
-      return false;
+  binSearch(numberOfCells, getCell, beforeTheLeftBorder, afterTheRightBorder) {
+    let leftBorder = 0;
+    let rightBorder = numberOfCells + 1;
+    let totalIterations = 0;
+    let mid;
+
+    while (leftBorder < rightBorder - 1 && totalIterations < 10) {
+      mid = Math.ceil((leftBorder + rightBorder) / 2);
+
+      const cell = getCell(mid);
+      const relativeCoords = getRelativeCoordsOfTwoElems(this.table, cell);
+
+      if (beforeTheLeftBorder(relativeCoords)) {
+        rightBorder = mid;
+      } else if (afterTheRightBorder(relativeCoords)) {
+        leftBorder = mid;
+      } else {
+        break;
+      }
+
+      totalIterations++;
     }
 
-    const { height, y } = getCursorPositionRelativeToElement(this.table, event);
-    const cell = this.getCell(this.hoveredRow, 1);
-    const { fromTopBorder, fromBottomBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
-
-    return fromTopBorder <= y && y <= height - fromBottomBorder;
-  }
-
-  /**
-   * Quick check to optimise the search of hovered column
-   *
-   * @param {MouseEvent} event
-   * @returns {boolean}
-   */
-  isHoveredColumnIsCurrent(event) {
-    if (!this.hoveredColumn) {
-      return false;
-    }
-
-    const { width, x } = getCursorPositionRelativeToElement(this.table, event);
-    const cell = this.getCell(1, this.hoveredColumn);
-    const { fromLeftBorder, fromRightBorder } = getRelativeCoordsOfTwoElems(this.table, cell);
-
-    return fromLeftBorder <= x && x <= width - fromRightBorder;
+    return mid;
   }
 
   /**
