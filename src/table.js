@@ -278,7 +278,8 @@ export class Table {
   createTableWrapper() {
     this.wrapper = create('div', [ CSS.wrapper ], null, [
       this.toolboxRow.element,
-      this.toolboxColumn.element]);
+      this.toolboxColumn.element
+    ]);
     this.table = this.wrapper.appendChild(create('div', [ CSS.table ]));
     this.wrapper.append(
       createElem({
@@ -312,7 +313,10 @@ export class Table {
    * @return {HTMLElement}
    */
   createCell() {
-    return create('div', [ CSS.cell ], { contenteditable: !this.readOnly, heading: this.api.i18n.t('Heading') });
+    return create('div', [ CSS.cell ], {
+      contenteditable: !this.readOnly,
+      heading: this.api.i18n.t('Heading')
+    });
   }
 
   /**

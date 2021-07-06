@@ -67,8 +67,17 @@
   }
 }
 
+.tc-add {
+  &-column, &-row {
+    display: flex;
+
+    svg path {
+      fill: #7b7e89;
+    }
+  }
+}
+
 .tc-add-column {
-  display: flex;
   padding: 9px 0;
   justify-content: center;
   border-top: 1px solid var(--color-border);
@@ -76,7 +85,6 @@
 
 .tc-add-row {
   height: var(--cell-size);
-  display: flex;
   align-items: center;
   padding-left: 12px;
   position: relative;
