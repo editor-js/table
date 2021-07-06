@@ -51,10 +51,10 @@ export class Table {
     this.toolboxRow = new ToolboxRow();
 
     // Table wrapper element
-    this.wrapper = this.createTableWrapper();
+    this.wrapper;
 
     // Table element
-    this.table = this.wrapper.querySelector(`.${CSS.table}`);
+    this.table;
 
     // Current hovered row index
     this.hoveredRow = 0;
@@ -81,15 +81,16 @@ export class Table {
       column: 0
     };
 
+    this.createTableWrapper();
+
     this.clickOutsideListener = (event) => {
-      console.log('document on click');
       const outsideMenusClicked = event.target.closest(`.${CSS.table}`);
       const ousideTableClicked = event.target.closest(`.${CSS.wrapper}`) === null;
 
       if (outsideMenusClicked) {
         this.clickOutsideMenus();
       } else if (ousideTableClicked) {
-        this.hideEverything();
+        this.hideToolboxIconsAndMenus();
       }
     };
 
@@ -233,7 +234,6 @@ export class Table {
   addRow(index = -1) {
     let insertedRow;
     let rowElem = create('div', [ CSS.row ]);
-    const numberOfColumns = this.numberOfColumns;
 
     if (index > 0 && index < this.numberOfRows) {
       let row = this.getRow(index);
@@ -243,7 +243,7 @@ export class Table {
       insertedRow = this.table.appendChild(rowElem);
     }
 
-    this.fillRow(insertedRow, numberOfColumns);
+    this.fillRow(insertedRow);
 
     return insertedRow;
   };
@@ -281,10 +281,11 @@ export class Table {
    * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   createTableWrapper() {
-    return create('div', [ CSS.wrapper ], null, [
+    this.wrapper = create('div', [ CSS.wrapper ], null, [
       this.toolboxRow.element,
-      this.toolboxColumn.element,
-      create('div', [ CSS.table ]),
+      this.toolboxColumn.element]);
+    this.table = this.wrapper.appendChild(create('div', [ CSS.table ]));
+    this.wrapper.append(
       createElem({
         tagName: 'div',
         innerHTML: svgPlusButton,
@@ -294,17 +295,16 @@ export class Table {
         tagName: 'div',
         innerHTML: svgPlusButton,
         cssClasses: [ CSS.addRow ]
-      })
-    ]);
+      }));
   }
 
   /**
-   * Add cells to a row
+   * Fills a row with cells
    *
    * @param {HTMLElement} row
    */
-  fillRow(row, numberOfColumns) {
-    for (let i = 1; i <= numberOfColumns; i++) {
+  fillRow(row) {
+    for (let i = 1; i <= this.numberOfColumns; i++) {
       const newCell = this.createCell();
 
       row.appendChild(newCell);
@@ -358,6 +358,7 @@ export class Table {
 
   /**
    * Recaculate position of toolbox icons
+   *
    * @param {Event} event - mouse move event
    */
   onMouseMoveInTable(event) {
@@ -377,12 +378,12 @@ export class Table {
 
     if (addRowClicked) {
       this.addRow();
-      this.hideEverything();
+      this.hideToolboxIconsAndMenus();
     }
 
     if (addColumnClicked) {
       this.addColumn();
-      this.hideEverything();
+      this.hideToolboxIconsAndMenus();
     }
   }
 
@@ -414,13 +415,11 @@ export class Table {
     }
 
     if (deleteColumnClicked) {
-      if (this.showDeleteColumnConfirmation) {
+      if (this.toolboxColumn.showDeleteConfirmation) {
         this.deleteColumn(this.hoveredColumn);
-        this.hideEverything();
-        this.showDeleteColumnConfirmation = false;
+        this.hideToolboxIconsAndMenus();
       } else {
         this.toolboxColumn.setDeleteConfirmation();
-        this.showDeleteColumnConfirmation = true;
       }
 
       return;
@@ -469,13 +468,12 @@ export class Table {
     }
 
     if (deleteRowClicked) {
-      if (this.showDeleteRowConfirmation) {
+      if (this.toolboxRow.showDeleteConfirmation) {
         this.deleteRow(this.hoveredRow);
-        this.hideEverything();
+        this.hideToolboxIconsAndMenus();
         this.showDeleteRowConfirmation = false;
       } else {
         this.toolboxRow.setDeleteConfirmation();
-        this.showDeleteRowConfirmation = true;
       }
 
       return;
@@ -511,7 +509,7 @@ export class Table {
    * Close toolbox menu
    * Hide toolboxes
    */
-  hideEverything() {
+  hideToolboxIconsAndMenus() {
     this.unselectRow();
     this.unselectColumn();
     this.toolboxRow.closeMenu();

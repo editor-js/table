@@ -38,6 +38,9 @@ export class ToolboxRow {
 
     // row index to the left of which the toolbox icon should be displayed, 0 means hide
     this.row = 0;
+
+    // Confirmation for deleting a column
+    this.showDeleteConfirmation = false;
   }
 
   /**
@@ -121,6 +124,7 @@ export class ToolboxRow {
    * Show toolbox row menu when the toolbox was clicked
    */
   openMenu() {
+    this.showDeleteConfirmation = false;
     this.menu.classList.add(CSS.menuAnimation);
     this.menu.classList.remove(CSS.hidden);
   }
@@ -138,6 +142,7 @@ export class ToolboxRow {
    * Set the class to confirm deletion for the row menu
    */
   setDeleteConfirmation() {
+    this.showDeleteConfirmation = true;
     this.menu.querySelector(`.${CSS.toolboxDelete}`).classList.add(CSS.deleteConfirm);
   }
 
