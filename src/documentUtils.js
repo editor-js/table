@@ -56,16 +56,12 @@ export function createElem({
   attrs,
   children,
   innerHTML,
-  textContent
+  textContent,
 }) {
   const elem = document.createElement(tagName);
 
   if (cssClasses) {
-    for (let i = 0; i < cssClasses.length; i++) {
-      if (cssClasses[i]) {
-        elem.classList.add(cssClasses[i]);
-      }
-    }
+    elem.classList.add(...cssClasses);
   }
   if (attrs) {
     for (let key in attrs) {

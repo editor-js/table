@@ -230,6 +230,13 @@ export class Table {
     let insertedRow;
     let rowElem = create('div', [ CSS.row ]);
 
+    /**
+     * We remember the number of columns, because it is calculated 
+     * by the number of cells in the first row
+     * It is necessary that the first line is filled in correctly
+     */
+    let numberOfColumns = this.numberOfColumns;
+
     if (index > 0 && index < this.numberOfRows) {
       let row = this.getRow(index);
 
@@ -238,7 +245,7 @@ export class Table {
       insertedRow = this.table.appendChild(rowElem);
     }
 
-    this.fillRow(insertedRow);
+    this.fillRow(insertedRow, numberOfColumns);
 
     return insertedRow;
   };
@@ -299,8 +306,8 @@ export class Table {
    *
    * @param {HTMLElement} row
    */
-  fillRow(row) {
-    for (let i = 1; i <= this.numberOfColumns; i++) {
+  fillRow(row, numberOfColumns) {
+    for (let i = 1; i <= numberOfColumns; i++) {
       const newCell = this.createCell();
 
       row.appendChild(newCell);
@@ -400,14 +407,14 @@ export class Table {
     const deleteColumnClicked = event.target.closest(`[${ATTRS.deleteColumn}]`);
 
     if (addColumnRightClicked) {
-      this.addColumn(this.hoveredColumn + 1);
+      this.addColumn(this.lastSelectedColumn + 1);
       this.hideAndUnselect();
 
       return;
     }
 
     if (addColumnLeftClicked) {
-      this.addColumn(this.hoveredColumn);
+      this.addColumn(this.lastSelectedColumn);
       this.hideAndUnselect();
 
       return;
@@ -415,7 +422,7 @@ export class Table {
 
     if (deleteColumnClicked) {
       if (this.toolboxColumn.showDeleteConfirmation) {
-        this.deleteColumn(this.hoveredColumn);
+        this.deleteColumn(this.lastSelectedColumn);
         this.hideToolboxIconsAndMenus();
       } else {
         this.toolboxColumn.setDeleteConfirmation();
@@ -453,14 +460,14 @@ export class Table {
     const deleteRowClicked = event.target.closest(`[${ATTRS.deleteRow}]`);
 
     if (addRowAboveClicked) {
-      this.addRow(this.hoveredRow);
+      this.addRow(this.lastSelectedRow);
       this.hideAndUnselect();
 
       return;
     }
 
     if (addRowBelowClicked) {
-      this.addRow(this.hoveredRow + 1);
+      this.addRow(this.lastSelectedRow + 1);
       this.hideAndUnselect();
 
       return;
@@ -468,7 +475,7 @@ export class Table {
 
     if (deleteRowClicked) {
       if (this.toolboxRow.showDeleteConfirmation) {
-        this.deleteRow(this.hoveredRow);
+        this.deleteRow(this.lastSelectedRow);
         this.hideToolboxIconsAndMenus();
         this.showDeleteRowConfirmation = false;
       } else {

@@ -34,12 +34,10 @@
 <body>
 
   <div class="block"></div>
-
-
   <div id="editorjs"></div>
 
-  <button id="save-button">Save</button>
-  <pre id="output"></pre>
+  <button class="save-button">Save</button>
+  <pre class="output"></pre>
 
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
   <script src="dist/bundle.js"></script>
@@ -73,8 +71,8 @@
       }
     });
 
-    const saveButton = document.getElementById('save-button');
-    const output = document.getElementById('output');
+    const saveButton = document.querySelector('.save-button');
+    const output = document.querySelector('.output');
 
     saveButton.addEventListener('click', () => {
       editor.save().then(savedData => {
