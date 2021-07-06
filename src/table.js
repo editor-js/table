@@ -47,14 +47,11 @@ export class Table {
     this.api = api;
 
     // Toolboxes for managing rows and columns
-    this.toolboxColumn = new ToolboxColumn();
-    this.toolboxRow = new ToolboxRow();
+    this.toolboxColumn = new ToolboxColumn(api);
+    this.toolboxRow = new ToolboxRow(api);
 
-    // Table wrapper element
-    this.wrapper;
-
-    // Table element
-    this.table;
+    // Create table and wrapper elements
+    this.createTableWrapper();
 
     // Current hovered row index
     this.hoveredRow = 0;
@@ -80,8 +77,6 @@ export class Table {
       row: 0,
       column: 0
     };
-
-    this.createTableWrapper();
 
     this.clickOutsideListener = (event) => {
       const outsideMenusClicked = event.target.closest(`.${CSS.table}`);
@@ -317,7 +312,7 @@ export class Table {
    * @return {HTMLElement}
    */
   createCell() {
-    return create('div', [ CSS.cell ], { contenteditable: !this.readOnly });
+    return create('div', [ CSS.cell ], { contenteditable: !this.readOnly, heading: this.api.i18n.t('Heading') });
   }
 
   /**

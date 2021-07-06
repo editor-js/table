@@ -32,8 +32,12 @@ const ATTRS = {
 export class ToolboxRow {
   /**
    * Creates toolbox buttons and toolbox menus
+   *
+   * @param {object} api - Editor.js api
    */
-  constructor() {
+  constructor(api) {
+    this.api = api;
+
     this.element = this.createToolboxRow();
 
     // row index to the left of which the toolbox icon should be displayed, 0 means hide
@@ -66,15 +70,15 @@ export class ToolboxRow {
   createMenu() {
     let addRowAboveText = createElem({
       tagName: 'span',
-      textContent: 'Add row above'
+      textContent: this.api.i18n.t('Add row above')
     });
     let addRowBelowText = createElem({
       tagName: 'span',
-      textContent: 'Add row below'
+      textContent: this.api.i18n.t('Add row below')
     });
     let deleteRowText = createElem({
       tagName: 'span',
-      textContent: 'Delete row'
+      textContent: this.api.i18n.t('Delete row')
     });
 
     let addRowAbove = createElem({

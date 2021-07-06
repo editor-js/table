@@ -32,8 +32,12 @@ const ATTRS = {
 export class ToolboxColumn {
   /**
    * Creates toolbox buttons and toolbox menus
+   *
+   * @param {object} api - Editor.js api
    */
-  constructor() {
+  constructor(api) {
+    this.api = api;
+
     this.element = this.createToolboxColumn();
 
     // column above which the toolbox icon should be displayed, 0 means hide
@@ -66,15 +70,15 @@ export class ToolboxColumn {
   createMenu() {
     let addColumnLeftText = createElem({
       tagName: 'span',
-      textContent: 'Add column to left'
+      textContent: this.api.i18n.t('Add column to left')
     });
     let addColumnRightText = createElem({
       tagName: 'span',
-      textContent: 'Add column to right'
+      textContent: this.api.i18n.t('Add column to right')
     });
     let deleteColumnText = createElem({
       tagName: 'span',
-      textContent: 'Delete column'
+      textContent: this.api.i18n.t('Delete column')
     });
 
     let addColumnRight = createElem({
