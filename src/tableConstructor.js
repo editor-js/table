@@ -1,6 +1,6 @@
 import './styles/table-constructor.pcss';
-import {create} from './documentUtils';
-import {Table} from './table';
+import { create } from './documentUtils';
+import { Table } from './table';
 
 const CSS = {
   editor: 'tc-editor',
@@ -38,7 +38,10 @@ export class TableConstructor {
     }
 
     /** creating container around table */
-    this.container = create('div', [CSS.editor, apiStyles], null, [ this.tableInstance.wrapper ]);
+    this.container = create({
+      cssClasses: [CSS.editor, apiStyles],
+      children: [ this.tableInstance.wrapper ],
+    })
 
     this.fillTable(data, size);
 

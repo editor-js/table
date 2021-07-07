@@ -113,7 +113,9 @@ export default class Table {
     } ];
 
     tunes.forEach((tune) => {
-      let tuneButton = create('div', [CSS.setting, tune.isActive ? CSS.settingActive : '']);
+      let tuneButton = create({
+        cssClasses: [CSS.setting, tune.isActive ? CSS.settingActive : '']
+      })
 
       tuneButton.innerHTML = tune.icon;
       tuneButton.addEventListener('click', () => this.toggleTune(tune, tuneButton));

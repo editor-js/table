@@ -1,4 +1,4 @@
-import { create, createElem, getCursorPositionRelativeToElement, getRelativeCoordsOfTwoElems, throttled, insertBefore } from './documentUtils';
+import { create, getCursorPositionRelativeToElement, getRelativeCoordsOfTwoElems, throttled, insertBefore } from './documentUtils';
 import './styles/table.pcss';
 import './styles/toolboxes.pcss';
 import './styles/utils.pcss';
@@ -203,6 +203,7 @@ export class Table {
    * @param {number} columnIndex - number in the array of columns, where new column to insert, -1 if insert at the end
    */
   addColumn(columnIndex = -1) {
+    let numberOfColumns = this.numberOfColumns;
     /**
      * Iterate all rows and add a new cell to them for creating a column
      */
@@ -210,7 +211,7 @@ export class Table {
       let cell;
       const cellElem = this.createCell();
 
-      if (columnIndex > 0 && columnIndex < this.numberOfColumns) {
+      if (columnIndex > 0 && columnIndex <= numberOfColumns) {
         cell = this.getCell(rowIndex, columnIndex);
 
         insertBefore(cellElem, cell);
@@ -228,7 +229,9 @@ export class Table {
    */
   addRow(index = -1) {
     let insertedRow;
-    let rowElem = create('div', [ CSS.row ]);
+    let rowElem = create({
+      cssClasses: [ CSS.row ],
+    })
 
     /**
      * We remember the number of columns, because it is calculated 
@@ -237,7 +240,7 @@ export class Table {
      */
     let numberOfColumns = this.numberOfColumns;
 
-    if (index > 0 && index < this.numberOfRows) {
+    if (index > 0 && index <= this.numberOfRows) {
       let row = this.getRow(index);
 
       insertedRow = insertBefore(rowElem, row);
@@ -283,19 +286,20 @@ export class Table {
    * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   createTableWrapper() {
-    this.wrapper = create('div', [ CSS.wrapper ], null, [
-      this.toolboxRow.element,
-      this.toolboxColumn.element
-    ]);
-    this.table = this.wrapper.appendChild(create('div', [ CSS.table ]));
+    this.wrapper = create({
+      cssClasses: [ CSS.wrapper ],
+      children: [ this.toolboxRow.element, this.toolboxColumn.element ]
+    })
+
+    this.table = this.wrapper.appendChild(create({
+      cssClasses: [ CSS.table ],
+    }));
     this.wrapper.append(
-      createElem({
-        tagName: 'div',
+      create({
         innerHTML: svgPlusButton,
         cssClasses: [ CSS.addColumn ]
       }),
-      createElem({
-        tagName: 'div',
+      create({
         innerHTML: svgPlusButton,
         cssClasses: [ CSS.addRow ]
       }));
@@ -320,10 +324,13 @@ export class Table {
    * @return {HTMLElement}
    */
   createCell() {
-    return create('div', [ CSS.cell ], {
-      contenteditable: !this.readOnly,
-      heading: this.api.i18n.t('Heading')
-    });
+    return create({
+      cssClasses: [ CSS.cell ],
+      attrs: {
+        contenteditable: !this.readOnly,
+        heading: this.api.i18n.t('Heading')
+      }
+    })
   }
 
   /**

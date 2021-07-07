@@ -1,4 +1,4 @@
-import { create, createElem } from '../documentUtils';
+import { create } from '../documentUtils';
 import toolboxIcon from '../img/toolboxIcon.svg';
 import newToLeftIcon from '../img/new-to-left.svg';
 import newToRightIcon from '../img/new-to-right.svg';
@@ -54,7 +54,9 @@ export class ToolboxColumn {
    */
   createToolboxColumn() {
     let toolboxColumnMenu = this.createMenu();
-    let toolboxColumnElem = create('div', [ CSS.toolboxColumn ]);
+    let toolboxColumnElem = create({
+      cssClasses: [ CSS.toolboxColumn ],
+    });
 
     toolboxColumnElem.innerHTML = toolboxIcon;
     this.menu = toolboxColumnElem.appendChild(toolboxColumnMenu);
@@ -68,43 +70,39 @@ export class ToolboxColumn {
    * @returns {HTMLElement} - column menu
    */
   createMenu() {
-    let addColumnLeftText = createElem({
+    let addColumnLeftText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Add column to left')
     });
-    let addColumnRightText = createElem({
+    let addColumnRightText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Add column to right')
     });
-    let deleteColumnText = createElem({
+    let deleteColumnText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Delete column')
     });
 
-    let addColumnRight = createElem({
-      tagName: 'div',
+    let addColumnRight = create({
       innerHTML: newToRightIcon,
       cssClasses: [ CSS.toolboxOption ],
       attrs: ATTRS.addColumnRight,
       children: [ addColumnRightText ]
     });
-    let addColumnLeft = createElem({
-      tagName: 'div',
+    let addColumnLeft = create({
       innerHTML: newToLeftIcon,
       cssClasses: [ CSS.toolboxOption ],
       attrs: ATTRS.addColumnLeft,
       children: [ addColumnLeftText ]
     });
-    let deleteColumn = createElem({
-      tagName: 'div',
+    let deleteColumn = create({
       innerHTML: closeIcon,
       cssClasses: [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteColumn],
       attrs: ATTRS.deleteColumn,
       children: [ deleteColumnText ]
     });
 
-    return createElem({
-      tagName: 'div',
+    return create({
       cssClasses: [CSS.toolboxColumnMenu, CSS.hidden],
       children: [addColumnLeft, addColumnRight, deleteColumn]
     });

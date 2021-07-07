@@ -1,4 +1,4 @@
-import { create, getRelativeCoordsOfTwoElems, createElem } from '../documentUtils';
+import { getRelativeCoordsOfTwoElems, create } from '../documentUtils';
 import toolboxIcon from '../img/toolboxIcon.svg';
 import newToUp from '../img/new-to-up.svg';
 import newToDown from '../img/new-to-down.svg';
@@ -54,7 +54,9 @@ export class ToolboxRow {
    */
   createToolboxRow() {
     let toolboxRowMenu = this.createMenu();
-    let toolboxRowElem = create('div', [ CSS.toolboxRow ]);
+    let toolboxRowElem = create({
+      cssClasses: [ CSS.toolboxRow ],
+    });
 
     toolboxRowElem.innerHTML = toolboxIcon;
     this.menu = toolboxRowElem.appendChild(toolboxRowMenu);
@@ -68,43 +70,39 @@ export class ToolboxRow {
    * @returns {HTMLElement} - row menu
    */
   createMenu() {
-    let addRowAboveText = createElem({
+    let addRowAboveText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Add row above')
     });
-    let addRowBelowText = createElem({
+    let addRowBelowText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Add row below')
     });
-    let deleteRowText = createElem({
+    let deleteRowText = create({
       tagName: 'span',
       textContent: this.api.i18n.t('Delete row')
     });
 
-    let addRowAbove = createElem({
-      tagName: 'div',
+    let addRowAbove = create({
       innerHTML: newToUp,
       cssClasses: [ CSS.toolboxOption ],
       attrs: ATTRS.addRowAbove,
       children: [ addRowAboveText ]
     });
-    let addRowBelow = createElem({
-      tagName: 'div',
+    let addRowBelow = create({
       innerHTML: newToDown,
       cssClasses: [ CSS.toolboxOption ],
       attrs: ATTRS.addRowBelow,
       children: [ addRowBelowText ]
     });
-    let deleteRow = createElem({
-      tagName: 'div',
+    let deleteRow = create({
       innerHTML: closeIcon,
       cssClasses: [CSS.toolboxDelete, CSS.toolboxOption, CSS.toolboxDeleteRow],
       attrs: ATTRS.deleteRow,
       children: [ deleteRowText ]
     });
 
-    return createElem({
-      tagName: 'div',
+    return create({
       cssClasses: [CSS.toolboxRowMenu, CSS.hidden],
       children: [addRowAbove, addRowBelow, deleteRow]
     });
