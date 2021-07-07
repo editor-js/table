@@ -69,6 +69,11 @@ export class Table {
     this.showDeleteRowConfirmation = false;
     this.showDeleteColumnConfirmation = false;
 
+    // Additional settings for the table
+    this.tunes = {
+      withHeadings: false
+    }
+
     /**
      * The cell in which the focus is currently located, if 0 and 0 then there is no focus
      * Uses to switch between cells with buttons
@@ -178,6 +183,7 @@ export class Table {
    */
   addColumn(columnIndex = -1) {
     let numberOfColumns = this.numberOfColumns;
+    
     /**
      * Iterate all rows and add a new cell to them for creating a column
      */
@@ -193,6 +199,8 @@ export class Table {
         cell = this.getRow(rowIndex).appendChild(cellElem);
       }
     }
+
+    this.addHeadingAttrToFirstRow();
   };
 
   /**
@@ -206,6 +214,10 @@ export class Table {
     let rowElem = create({
       cssClasses: [ CSS.row ],
     });
+
+    if (this.tunes.withHeadings) {
+      this.removeHeadingAttrFromFirstRow();
+    }
 
     /**
      * We remember the number of columns, because it is calculated 
@@ -223,6 +235,10 @@ export class Table {
     }
 
     this.fillRow(insertedRow, numberOfColumns);
+
+    if (this.tunes.withHeadings) {
+      this.addHeadingAttrToFirstRow();
+    }
 
     return insertedRow;
   };
@@ -251,6 +267,8 @@ export class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
+
+    this.addHeadingAttrToFirstRow();
   }
 
   /**
@@ -310,7 +328,6 @@ export class Table {
    * Get number of rown in the table
    */
   get numberOfRows() {
-    console.log('Changed!');
     return this.table.childElementCount;
   }
 
@@ -604,19 +621,41 @@ export class Table {
    * @param {boolean} withHeadings - use headings row or not
    */
   setHeadingsSetting(withHeadings) {
+    this.tunes.withHeadings = withHeadings;
+
     if (withHeadings) {
       this.table.classList.add(CSS.withHeadings);
+      this.addHeadingAttrToFirstRow();
     } else {
       this.table.classList.remove(CSS.withHeadings);
+      this.removeHeadingAttrFromFirstRow();
     }
   }
 
+  /**
+   * Adds an attribute for displaying the placeholder in the cell
+   */
   addHeadingAttrToFirstRow() {
-    this.getRow(1).setAttribute('heading', this.api.i18n.t('Heading'));
+    for (let cellIndex = 1; cellIndex <= this.numberOfColumns; cellIndex++) {
+      let cell = this.getCell(1, cellIndex);
+      
+      if (cell) {
+        cell.setAttribute('heading', this.api.i18n.t('Heading'));
+      }
+    }
   }
 
+  /**
+   * Removes an attribute for displaying the placeholder in the cell
+   */
   removeHeadingAttrFromFirstRow() {
-    this.getRow(1).removeAttribute('heading');
+    for (let cellIndex = 1; cellIndex <= this.numberOfColumns; cellIndex++) {
+      let cell = this.getCell(1, cellIndex);
+      
+      if (cell) {
+        cell.removeAttribute('heading');
+      }
+    }
   }
 
   /**
