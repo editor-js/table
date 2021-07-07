@@ -114,39 +114,13 @@ export class Table {
     this.toolboxRow.element.addEventListener('click', (event) => this.onClickRowToolbox(event));
 
     // Controls some of the keyboard buttons inside the table
-    this.table.onkeypress = (event) => {
-      if (event.key == 'Enter' && event.shiftKey) {
-        if (event.shiftKey) {
-          return true;
-        }
+    this.table.onkeypress = (event) => this.onKeyPressListener(event);
 
-        this.moveCursorToNextRow();
-      }
-
-      // Prevents the default behavior of Enter
-      return event.key != 'Enter';
-    };
-
-    /**
-     * Controls some of the keyboard buttons inside the table
-     * Tab is executed by default before keypress, so it must be intercepted on keydown
-     */
-    this.table.addEventListener('keydown', (event) => {
-      if (event.key == 'Tab') {
-        event.stopPropagation();
-      }
-    });
+    // Tab is executed by default before keypress, so it must be intercepted on keydown
+    this.table.addEventListener('keydown', (event) => this.onKeyDownListener(event));
 
     // Determine the position of the cell in focus
-    this.table.addEventListener('focusin', event => {
-      const cell = event.target;
-      const row = this.getRowByCell(cell);
-
-      this.focusedCell = {
-        row: Array.from(this.table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
-        column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
-      };
-    }, { passive: true });
+    this.table.addEventListener('focusin', event => this.focusInTableListener(event));
   }
 
   /**
@@ -231,7 +205,7 @@ export class Table {
     let insertedRow;
     let rowElem = create({
       cssClasses: [ CSS.row ],
-    })
+    });
 
     /**
      * We remember the number of columns, because it is calculated 
@@ -328,7 +302,6 @@ export class Table {
       cssClasses: [ CSS.cell ],
       attrs: {
         contenteditable: !this.readOnly,
-        heading: this.api.i18n.t('Heading')
       }
     })
   }
@@ -337,6 +310,7 @@ export class Table {
    * Get number of rown in the table
    */
   get numberOfRows() {
+    console.log('Changed!');
     return this.table.childElementCount;
   }
 
@@ -508,6 +482,50 @@ export class Table {
   }
 
   /**
+   * Prevents default Enter behaviors
+   * Adds Shift+Enter processing
+   * 
+   * @param {KeyboardEvent} event - keypress event
+   */
+  onKeyPressListener(event){
+    if (event.key == 'Enter') {
+      if (event.shiftKey) {
+        return true;
+      }
+
+      this.moveCursorToNextRow();
+    }
+
+    return event.key != 'Enter';
+  };
+
+  /**
+   * Prevents tab keydown event from bubbling 
+   * so that it only works inside the table 
+   *
+   * @param {KeyboardEvent} event - keydown event
+   */
+  onKeyDownListener(event) {
+    if (event.key == 'Tab') {
+      event.stopPropagation();
+    }
+  }
+  
+  /**
+   * Set the coordinates of the cell that the focus has moved to
+   * 
+   * @param {FocusEvent} event - focusin event
+   */
+  focusInTableListener(event) {
+    const cell = event.target;
+    const row = this.getRowByCell(cell);
+
+    this.focusedCell = {
+      row: Array.from(this.table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
+      column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
+    };
+  }
+  /**
    * Close toolbox menu and unselect a row/column
    * but doesn't hide toolbox button
    */
@@ -517,6 +535,7 @@ export class Table {
     this.unselectRow();
     this.toolboxRow.closeMenu();
   }
+
   /**
    * Unselect row/column
    * Close toolbox menu
@@ -590,6 +609,14 @@ export class Table {
     } else {
       this.table.classList.remove(CSS.withHeadings);
     }
+  }
+
+  addHeadingAttrToFirstRow() {
+    this.getRow(1).setAttribute('heading', this.api.i18n.t('Heading'));
+  }
+
+  removeHeadingAttrFromFirstRow() {
+    this.getRow(1).removeAttribute('heading');
   }
 
   /**
