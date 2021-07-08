@@ -128,10 +128,10 @@ export function insertBefore(newNode, referenceNode) {
 }
 
 /**
- *
- * @param {number} delay
- * @param {function} fn
- * @returns
+ * Limits the frequency of calling a function
+ * 
+ * @param {number} delay - delay between calls in milliseconds
+ * @param {function} fn - function to be throttled
  */
 export function throttled(delay, fn) {
   let lastCall = 0;
