@@ -1,8 +1,4 @@
 import { create, getCursorPositionRelativeToElement, getRelativeCoordsOfTwoElems, throttled, insertBefore } from './documentUtils';
-import './styles/table.pcss';
-import './styles/toolboxes.pcss';
-import './styles/utils.pcss';
-import './styles/settings.pcss';
 import svgPlusButton from './img/plus.svg';
 import { ToolboxColumn } from './toolbox/toolboxColumn';
 import { ToolboxRow } from './toolbox/toolboxRow';
@@ -183,7 +179,7 @@ export class Table {
    */
   addColumn(columnIndex = -1) {
     let numberOfColumns = this.numberOfColumns;
-    
+
     /**
      * Iterate all rows and add a new cell to them for creating a column
      */
@@ -220,7 +216,7 @@ export class Table {
     }
 
     /**
-     * We remember the number of columns, because it is calculated 
+     * We remember the number of columns, because it is calculated
      * by the number of cells in the first row
      * It is necessary that the first line is filled in correctly
      */
@@ -501,7 +497,7 @@ export class Table {
   /**
    * Prevents default Enter behaviors
    * Adds Shift+Enter processing
-   * 
+   *
    * @param {KeyboardEvent} event - keypress event
    */
   onKeyPressListener(event){
@@ -517,8 +513,8 @@ export class Table {
   };
 
   /**
-   * Prevents tab keydown event from bubbling 
-   * so that it only works inside the table 
+   * Prevents tab keydown event from bubbling
+   * so that it only works inside the table
    *
    * @param {KeyboardEvent} event - keydown event
    */
@@ -527,10 +523,10 @@ export class Table {
       event.stopPropagation();
     }
   }
-  
+
   /**
    * Set the coordinates of the cell that the focus has moved to
-   * 
+   *
    * @param {FocusEvent} event - focusin event
    */
   focusInTableListener(event) {
@@ -638,7 +634,7 @@ export class Table {
   addHeadingAttrToFirstRow() {
     for (let cellIndex = 1; cellIndex <= this.numberOfColumns; cellIndex++) {
       let cell = this.getCell(1, cellIndex);
-      
+
       if (cell) {
         cell.setAttribute('heading', this.api.i18n.t('Heading'));
       }
@@ -651,7 +647,7 @@ export class Table {
   removeHeadingAttrFromFirstRow() {
     for (let cellIndex = 1; cellIndex <= this.numberOfColumns; cellIndex++) {
       let cell = this.getCell(1, cellIndex);
-      
+
       if (cell) {
         cell.removeAttribute('heading');
       }

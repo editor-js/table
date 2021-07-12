@@ -1,11 +1,10 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/plugin.js',
   output: {
     path: path.join(__dirname, '/dist'),
     publicPath: '/',
-    filename: 'bundle.js',
+    filename: 'table.js',
     library: 'Table',
     libraryExport: 'default',
     libraryTarget: 'umd'
@@ -14,7 +13,11 @@ module.exports = {
     rules: [
       {
         test: /\.pcss$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: [
+          'style-loader',
+          'css-loader',
+          'postcss-loader'
+        ]
       },
       {
         test: /\.svg$/,

@@ -17,8 +17,9 @@
   display: grid;
   grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
 
-  & svg {
+  svg {
     vertical-align: top;
+    fill: currentColor;
   }
 }
 
@@ -58,7 +59,7 @@
         content: attr(heading);
         color: var(--color-placeholder);
       }
-      
+
       &::after {
         bottom: -2px;
         border-bottom: 2px solid var(--color-border);
@@ -103,7 +104,7 @@
     transition: 0s;
     cursor: pointer;
     will-change: background-color;
-  
+
     &:hover {
       transition: background-color 0.1s ease;
       background-color: var(--color-background);

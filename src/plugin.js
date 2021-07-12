@@ -2,12 +2,7 @@ import { TableConstructor } from './tableConstructor';
 import tableIcon from './img/tableIcon.svg';
 import withHeadings from './img/with-headings.svg';
 import withoutHeadings from './img/without-headings.svg';
-import { create } from './documentUtils';
-
-const CSS = {
-  setting: 'tc-setting',
-  settingActive: 'tc-setting--active'
-};
+import * as $ from './utils/dom';
 
 /**
  * Tool for table's creating
@@ -80,6 +75,12 @@ export default class Table {
     };
   }
 
+  static get CSS() {
+    return {
+      settingsWrapper: 'tc-settings'
+    };
+  }
+
   /**
    * Return Tool's view
    *
@@ -95,7 +96,8 @@ export default class Table {
    * @returns {HTMLElement} - wrapper element
    */
   renderSettings() {
-    const wrapper = document.createElement('div');
+    const wrapper = $.make('div', Table.CSS.settingsWrapper);
+
     const tunes = [ {
       name: this.api.i18n.t('With headings'),
       icon: withHeadings,
@@ -113,9 +115,11 @@ export default class Table {
     } ];
 
     tunes.forEach((tune) => {
-      let tuneButton = create({
-        cssClasses: [CSS.setting, tune.isActive ? CSS.settingActive : '']
-      })
+      let tuneButton = $.make('div', this.api.styles.settingsButton);
+
+      if (tune.isActive) {
+        tuneButton.classList.add(this.api.styles.settingsButtonActive);
+      }
 
       tuneButton.innerHTML = tune.icon;
       tuneButton.addEventListener('click', () => this.toggleTune(tune, tuneButton));
@@ -155,15 +159,15 @@ export default class Table {
    * @param {HTMLElement} tuneButton - DOM element of the tune
    */
   toggleTune(tune, tuneButton) {
-    const buttons = tuneButton.parentNode.querySelectorAll('.' + CSS.setting);
+    const buttons = tuneButton.parentNode.querySelectorAll('.' + this.api.styles.settingsButton);
 
     // Clear other buttons
     Array.from(buttons).forEach((button) =>
-      button.classList.remove(CSS.settingActive)
+      button.classList.remove(this.api.styles.settingsButtonActive)
     );
 
     // Mark active button
-    tuneButton.classList.toggle(CSS.settingActive);
+    tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
     tune.setTune();
 
     this.tableConstructor.useHeadings(this.data.withHeadings);

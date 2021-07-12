@@ -1,4 +1,3 @@
-import './styles/table-constructor.pcss';
 import { create } from './documentUtils';
 import { Table } from './table';
 
@@ -21,25 +20,20 @@ export class TableConstructor {
    * Creates
    * @param {TableData} data - previously saved data for insert in table
    * @param {object} config - configuration of table
-   * @param {object} api - Editor.js API
+   * @param {API} api - Editor.js API
    * @param {boolean} readOnly - read-only mode flag
    */
   constructor(data, config, api, readOnly) {
     this.readOnly = readOnly;
+    this.api = api;
 
     /** creating table */
     this.tableInstance = new Table(readOnly, api);
     const size = this.resizeTable(data, config);
 
-    let apiStyles = null;
-
-    if (api && api.styles && api.styles.block) {
-      apiStyles = api.styles.block;
-    }
-
     /** creating container around table */
     this.container = create({
-      cssClasses: [CSS.editor, apiStyles],
+      cssClasses: [ api.styles.block ],
       children: [ this.tableInstance.wrapper ],
     })
 
