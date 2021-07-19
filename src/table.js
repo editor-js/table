@@ -112,10 +112,10 @@ export default class Table {
        * Also, check if clicked in current table, not other (because documentClicked bound to the whole document)
        */
       if (clickedOnAddRowButton && clickedOnAddRowButton.parentNode === this.wrapper) {
-        this.addRow();
+        this.addRow(undefined, true);
         this.hideToolboxes();
       } else if (clickedOnAddColumnButton && clickedOnAddColumnButton.parentNode === this.wrapper) {
-        this.addColumn();
+        this.addColumn(undefined, true);
         this.hideToolboxes();
       }
     };
@@ -168,7 +168,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to left'),
           icon: newToLeftIcon,
           onClick: () => {
-            this.addColumn(this.selectedColumn);
+            this.addColumn(this.selectedColumn, true);
             this.hideToolboxes();
           }
         },
@@ -176,7 +176,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to right'),
           icon: newToRightIcon,
           onClick: () => {
-            this.addColumn(this.selectedColumn + 1);
+            this.addColumn(this.selectedColumn + 1, true);
             this.hideToolboxes();
           }
         },
@@ -216,7 +216,7 @@ export default class Table {
           label: this.api.i18n.t('Add row above'),
           icon: newToUpIcon,
           onClick: () => {
-            this.addRow(this.selectedRow);
+            this.addRow(this.selectedRow, true);
             this.hideToolboxes();
           }
         },
@@ -224,7 +224,7 @@ export default class Table {
           label: this.api.i18n.t('Add row below'),
           icon: newToDownIcon,
           onClick: () => {
-            this.addRow(this.selectedRow + 1);
+            this.addRow(this.selectedRow + 1, true);
             this.hideToolboxes();
           }
         },
@@ -298,6 +298,16 @@ export default class Table {
   }
 
   /**
+   * Ger row's first cell
+   *
+   * @param {Element} row - row to find its first cell
+   * @returns {Element}
+   */
+  getRowFirstCell(row) {
+    return row.querySelector(`.${CSS.cell}:first-child`);
+  }
+
+  /**
    * Set the sell's content by row and column numbers
    *
    * @param {number} row - cell row coordinate
@@ -315,8 +325,9 @@ export default class Table {
    * Add cells in each row
    *
    * @param {number} columnIndex - number in the array of columns, where new column to insert, -1 if insert at the end
+   * @param {boolean} [setFocus] - pass true to focus the first cell
    */
-  addColumn(columnIndex = -1) {
+  addColumn(columnIndex = -1, setFocus = false) {
     let numberOfColumns = this.numberOfColumns;
 
     /**
@@ -333,6 +344,17 @@ export default class Table {
       } else {
         cell = this.getRow(rowIndex).appendChild(cellElem);
       }
+
+      /**
+       * Autofocus first cell
+       */
+      if (rowIndex === 1) {
+        const firstCell = this.getCell(rowIndex, columnIndex > 0 ? columnIndex : numberOfColumns + 1);
+
+        if (firstCell && setFocus) {
+          $.focus(firstCell);
+        }
+      }
     }
 
     this.addHeadingAttrToFirstRow();
@@ -342,9 +364,10 @@ export default class Table {
    * Add row in table on index place
    *
    * @param {number} index - number in the array of rows, where new column to insert, -1 if insert at the end
+   * @param {boolean} [setFocus] - pass true to focus the inserted row
    * @returns {HTMLElement} row
    */
-  addRow(index = -1) {
+  addRow(index = -1, setFocus = false) {
     let insertedRow;
     let rowElem = $.make('div', CSS.row);
 
@@ -371,6 +394,12 @@ export default class Table {
 
     if (this.tunes.withHeadings) {
       this.addHeadingAttrToFirstRow();
+    }
+
+    const insertedRowFirstCell = this.getRowFirstCell(insertedRow);
+
+    if (insertedRowFirstCell && setFocus) {
+      $.focus(insertedRowFirstCell);
     }
 
     return insertedRow;

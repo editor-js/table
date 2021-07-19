@@ -106,3 +106,23 @@ export function insertAfter(newNode, referenceNode) {
 export function insertBefore(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
+
+
+/**
+ * Set focus to contenteditable or native input element
+ *
+ * @param {Element} element - element where to set focus
+ * @param {boolean} atStart - where to set focus: at the start or at the end
+ *
+ * @returns {void}
+ */
+export function focus(element, atStart = true) {
+  const range = document.createRange();
+  const selection = window.getSelection();
+
+  range.selectNodeContents(element);
+  range.collapse(atStart);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
