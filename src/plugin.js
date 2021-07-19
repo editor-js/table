@@ -1,27 +1,31 @@
-import { TableConstructor } from './tableConstructor';
+import Table from './table';
 import tableIcon from './img/tableIcon.svg';
 import withHeadings from './img/with-headings.svg';
 import withoutHeadings from './img/without-headings.svg';
 import * as $ from './utils/dom';
 
 /**
- * Tool for table's creating
- *
- * @typedef {object} Config - configuration that the user can set for the table
+ * @typedef {object} TableConfig - configuration that the user can set for the table
  * @property {number} rows - number of rows in the table
  * @property {number} cols - number of columns in the table
- *
+ */
+/**
  * @typedef {object} Tune - setting for the table
  * @property {string} name - tune name
  * @property {HTMLElement} icon - icon for the tune
  * @property {boolean} isActive - default state of the tune
  * @property {void} setTune - set tune state to the table data
- *
+ */
+/**
  * @typedef {object} TableData - object with the data transferred to form a table
  * @property {boolean} withHeading - setting to use cells of the first row as headings
  * @property {string[][]} content - two-dimensional array which contains table content
  */
-export default class Table {
+
+/**
+ * Table block for Editor.js
+ */
+export default class TableBlock {
   /**
    * Notify core that read-only mode is supported
    *
@@ -45,7 +49,7 @@ export default class Table {
    * Render plugin`s main Element and fill it with saved data
    *
    * @param {TableData} data — previously saved data
-   * @param {Config} config - user config for Tool
+   * @param {TableConfig} config - user config for Tool
    * @param {object} api - Editor.js API
    * @param {boolean} readOnly - read-only mode flag
    */
@@ -56,9 +60,8 @@ export default class Table {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : []
     };
-
-    this.tableConstructor = new TableConstructor(data, config, api, readOnly);
-    this.tableConstructor.useHeadings(this.data.withHeadings);
+    this.config = config;
+    this.table = null;
   }
 
   /**
@@ -87,7 +90,16 @@ export default class Table {
    * @returns {HTMLDivElement}
    */
   render() {
-    return this.tableConstructor.container;
+    /** creating table */
+    this.table = new Table(this.readOnly, this.api, this.data, this.config);
+
+    /** creating container around table */
+    this.container = $.make('div', this.api.styles.block);
+    this.container.appendChild(this.table.getWrapper());
+
+    this.table.setHeadingsSetting(this.data.withHeadings);
+
+    return this.container;
   }
 
   /**
@@ -96,7 +108,7 @@ export default class Table {
    * @returns {HTMLElement} - wrapper element
    */
   renderSettings() {
-    const wrapper = $.make('div', Table.CSS.settingsWrapper);
+    const wrapper = $.make('div', TableBlock.CSS.settingsWrapper);
 
     const tunes = [ {
       name: this.api.i18n.t('With headings'),
@@ -141,7 +153,7 @@ export default class Table {
    * @returns {TableData} - saved data
    */
   save() {
-    const tableContent = this.tableConstructor.getData();
+    const tableContent = this.table.getData();
 
     let result = {
       withHeadings: this.data.withHeadings,
@@ -170,13 +182,13 @@ export default class Table {
     tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
     tune.setTune();
 
-    this.tableConstructor.useHeadings(this.data.withHeadings);
+    this.table.setHeadingsSetting(this.data.withHeadings);
   }
 
   /**
    * Plugin destroyer
    */
   destroy() {
-    this.tableConstructor.tableInstance.destroy();
+    this.table.destroy();
   }
 }

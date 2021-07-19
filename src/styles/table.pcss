@@ -17,6 +17,10 @@
   display: grid;
   grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
 
+  &--readonly {
+    grid-template-columns: 100% var(--cell-size);
+  }
+
   svg {
     vertical-align: top;
     fill: currentColor;
@@ -52,7 +56,7 @@
 
   &--heading {
     & .tc-row:first-child {
-      font-weight: 500;
+      font-weight: 600;
       border-bottom: 2px solid var(--color-border);
 
       & [contenteditable]:empty::before {
@@ -158,4 +162,8 @@
   &--selected {
     background: var(--color-background);
   }
+}
+
+.tc-wrap--readonly .tc-row::after {
+  display: none;
 }
