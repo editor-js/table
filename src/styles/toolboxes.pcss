@@ -22,6 +22,7 @@
   &--row {
     left: calc(-1 * var(--popover-margin));
     transform: translateY(calc(-1 * var(--toggler-click-zone-size) / 2));
+    margin-top: -1px; /* because of top border */
     will-change: top, opacity;
   }
 

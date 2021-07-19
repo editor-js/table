@@ -675,7 +675,7 @@ export default class Table {
           const { height } = hoveredRowElement.getBoundingClientRect();
 
           return {
-            top: `${fromTopBorder + height / 2}px`
+            top: `${Math.ceil(fromTopBorder + height / 2)}px`
           };
         });
       }
