@@ -78,6 +78,11 @@ export default class TableBlock {
     };
   }
 
+  /**
+   * Plugins styles
+   *
+   * @returns {{settingsWrapper: string}}
+   */
   static get CSS() {
     return {
       settingsWrapper: 'tc-settings'
@@ -169,6 +174,7 @@ export default class TableBlock {
    *
    * @param {Tune} tune - one of the table settings
    * @param {HTMLElement} tuneButton - DOM element of the tune
+   * @returns {void}
    */
   toggleTune(tune, tuneButton) {
     const buttons = tuneButton.parentNode.querySelectorAll('.' + this.api.styles.settingsButton);
@@ -187,6 +193,8 @@ export default class TableBlock {
 
   /**
    * Plugin destroyer
+   *
+   * @returns {void}
    */
   destroy() {
     this.table.destroy();

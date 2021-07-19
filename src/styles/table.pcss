@@ -1,7 +1,7 @@
 /* tc- project's prefix*/
 .tc-wrap {
   --color-background: #f9f9fb;
-  --color-placeholder: #7b7e89;
+  --color-text-secondary: #7b7e89;
   --color-border: #e8e8eb;
   --cell-size: 34px;
   --toolbox-icon-size: 18px;
@@ -61,7 +61,7 @@
 
       & [contenteditable]:empty::before {
         content: attr(heading);
-        color: var(--color-placeholder);
+        color: var(--color-text-secondary);
       }
 
       &::after {
@@ -75,10 +75,7 @@
 .tc-add {
   &-column, &-row {
     display: flex;
-
-    svg path {
-      fill: #7b7e89;
-    }
+    color: var(--color-text-secondary);
   }
 }
 
@@ -153,8 +150,7 @@
 
 .tc-cell {
   border-right: 1px solid var(--color-border);
-  clear: both;
-  padding: 6px 2px 6px 12px;
+  padding: 6px 12px 6px 12px;
   overflow: hidden;
   outline: none;
   line-break: normal;

@@ -23,6 +23,11 @@ export default class Popover {
     this.itemEls = [];
   }
 
+  /**
+   * Set of CSS classnames used in popover
+   *
+   * @returns {object}
+   */
   static get CSS() {
     return {
       popover: 'tc-popover',
@@ -35,6 +40,11 @@ export default class Popover {
     };
   }
 
+  /**
+   * Returns the popover element
+   *
+   * @returns {Element}
+   */
   render() {
     this.wrapper = $.make('div', Popover.CSS.popover);
 
@@ -66,6 +76,12 @@ export default class Popover {
     return this.wrapper;
   }
 
+  /**
+   * Popover wrapper click listener
+   * Used to delegate clicks in items
+   *
+   * @returns {void}
+   */
   popoverClicked(event) {
     const clickedItem = event.target.closest(`.${Popover.CSS.item}`);
 
@@ -88,22 +104,47 @@ export default class Popover {
     item.onClick();
   }
 
+  /**
+   * Enable the confirmation state on passed item
+   *
+   * @returns {void}
+   */
   setConfirmationState(itemEl) {
     itemEl.classList.add(Popover.CSS.itemConfirmState);
   }
 
+  /**
+   * Disable the confirmation state on passed item
+   *
+   * @returns {void}
+   */
   clearConfirmationState(itemEl) {
     itemEl.classList.remove(Popover.CSS.itemConfirmState);
   }
 
+  /**
+   * Check if passed item has the confirmation state
+   *
+   * @returns {boolean}
+   */
   hasConfirmationState(itemEl) {
     return itemEl.classList.contains(Popover.CSS.itemConfirmState);
   }
 
+  /**
+   * Return an opening state
+   *
+   * @returns {boolean}
+   */
   get opened() {
     return this.wrapper.classList.contains(Popover.CSS.popoverOpened);
   }
 
+  /**
+   * Opens the popover
+   *
+   * @returns {void}
+   */
   open() {
     /**
      * If item provides 'hideIf()' method that returns true, hide item
@@ -117,6 +158,11 @@ export default class Popover {
     this.wrapper.classList.add(Popover.CSS.popoverOpened);
   }
 
+  /**
+   * Closes the popover
+   *
+   * @returns {void}
+   */
   close() {
     this.wrapper.classList.remove(Popover.CSS.popoverOpened);
     this.itemEls.forEach(el => {
