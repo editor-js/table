@@ -195,6 +195,7 @@ export default class Table {
       ],
       onOpen: () => {
         this.selectColumn(this.hoveredColumn);
+        this.hideRowToolbox();
       },
       onClose: () => {
         this.unselectColumn();
@@ -243,6 +244,7 @@ export default class Table {
       ],
       onOpen: () => {
         this.selectRow(this.hoveredRow);
+        this.hideColumnToolbox();
       },
       onClose: () => {
         this.unselectRow();
@@ -652,17 +654,39 @@ export default class Table {
    * Unselect row/column
    * Close toolbox menu
    * Hide toolboxes
+   *
+   * @returns {void}
    */
   hideToolboxes() {
-    this.unselectRow();
-    this.unselectColumn();
-    this.toolboxRow.hide();
-    this.toolboxColumn.hide();
+    this.hideRowToolbox();
+    this.hideColumnToolbox();
     this.updateToolboxesPosition();
   }
 
   /**
+   * Unselect row, close toolbox
+   *
+   * @returns {void}
+   */
+  hideRowToolbox() {
+    this.unselectRow();
+    this.toolboxRow.hide();
+  }
+  /**
+   * Unselect column, close toolbox
+   *
+   * @returns {void}
+   */
+  hideColumnToolbox() {
+    this.unselectColumn();
+
+    this.toolboxColumn.hide();
+  }
+
+  /**
    * Set the cursor focus to the focused cell
+   *
+   * @returns {void}
    */
   focusCell() {
     this.focusedCellElem.focus();
