@@ -1,7 +1,7 @@
 /* tc- project's prefix*/
 .tc-wrap {
   --color-background: #f9f9fb;
-  --color-placeholder: #7b7e89;
+  --color-text-secondary: #7b7e89;
   --color-border: #e8e8eb;
   --cell-size: 34px;
   --toolbox-icon-size: 18px;
@@ -17,8 +17,13 @@
   display: grid;
   grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
 
-  & svg {
+  &--readonly {
+    grid-template-columns: 100% var(--cell-size);
+  }
+
+  svg {
     vertical-align: top;
+    fill: currentColor;
   }
 }
 
@@ -51,14 +56,14 @@
 
   &--heading {
     & .tc-row:first-child {
-      font-weight: 500;
+      font-weight: 600;
       border-bottom: 2px solid var(--color-border);
 
       & [contenteditable]:empty::before {
         content: attr(heading);
-        color: var(--color-placeholder);
+        color: var(--color-text-secondary);
       }
-      
+
       &::after {
         bottom: -2px;
         border-bottom: 2px solid var(--color-border);
@@ -70,10 +75,7 @@
 .tc-add {
   &-column, &-row {
     display: flex;
-
-    svg path {
-      fill: #7b7e89;
-    }
+    color: var(--color-text-secondary);
   }
 }
 
@@ -103,7 +105,7 @@
     transition: 0s;
     cursor: pointer;
     will-change: background-color;
-  
+
     &:hover {
       transition: background-color 0.1s ease;
       background-color: var(--color-background);
@@ -148,8 +150,7 @@
 
 .tc-cell {
   border-right: 1px solid var(--color-border);
-  clear: both;
-  padding: 6px 2px 6px 12px;
+  padding: 6px 12px 6px 12px;
   overflow: hidden;
   outline: none;
   line-break: normal;
@@ -157,4 +158,8 @@
   &--selected {
     background: var(--color-background);
   }
+}
+
+.tc-wrap--readonly .tc-row::after {
+  display: none;
 }

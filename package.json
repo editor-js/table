@@ -27,6 +27,7 @@
     "cssnano": "^4.1.7",
     "eslint": "^5.8.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
+    "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.0",
     "postcss-nesting": "^7.0.0",

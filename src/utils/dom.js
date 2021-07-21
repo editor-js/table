@@ -1,53 +1,33 @@
 /**
- * Create DOM element with set parameters
+ * Helper for making Elements with attributes
  *
- * @param {Object} element - element params to create an HTML element
- * @param {string} element.tagName - Html tag of the element to be created
- * @param {string[]} element.cssClasses - Css classes that must be applied to an element
- * @param {object} element.attrs - Attributes that must be applied to the element
- * @param {Element[]} element.children - child elements of creating element
- * @param {string} element.innerHTML - string with html elements to set before adding childs
- * @param {string} element.textContent - text content to set
- *
- * @returns {HTMLElement} the new element
+ * @param  {string} tagName           - new Element tag name
+ * @param  {string|string[]} classNames  - list or name of CSS classname(s)
+ * @param  {object} attributes        - any attributes
+ * @returns {Element}
  */
-export function create({
-  tagName = 'div',
-  cssClasses,
-  attrs,
-  children,
-  innerHTML,
-  textContent,
-}) {
-  const elem = document.createElement(tagName);
+export function make(
+  tagName,
+  classNames,
+  attributes = {}
+) {
+  const el = document.createElement(tagName);
 
-  if (cssClasses) {
-    elem.classList.add(...cssClasses.filter(className => !!className));
+  if (Array.isArray(classNames)) {
+    el.classList.add(...classNames);
+  } else if (classNames) {
+    el.classList.add(classNames);
   }
 
-  if (attrs) {
-    for (let key in attrs) {
-      elem.setAttribute(key, attrs[key]);
+  for (const attrName in attributes) {
+    if (!Object.prototype.hasOwnProperty.call(attributes, attrName)) {
+      continue;
     }
+
+    el[attrName] = attributes[attrName];
   }
 
-  if (textContent) {
-    elem.textContent = textContent;
-  }
-
-  if (innerHTML) {
-    elem.innerHTML = innerHTML;
-  }
-
-  if (children) {
-    for (let i = 0; i < children.length; i++) {
-      if (children[i]) {
-        elem.append(children[i]);
-      }
-    }
-  }
-
-  return elem;
+  return el;
 }
 
 /**
@@ -127,24 +107,22 @@ export function insertBefore(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
 
+
 /**
- * Limits the frequency of calling a function
- * 
- * @param {number} delay - delay between calls in milliseconds
- * @param {function} fn - function to be throttled
+ * Set focus to contenteditable or native input element
+ *
+ * @param {Element} element - element where to set focus
+ * @param {boolean} atStart - where to set focus: at the start or at the end
+ *
+ * @returns {void}
  */
-export function throttled(delay, fn) {
-  let lastCall = 0;
+export function focus(element, atStart = true) {
+  const range = document.createRange();
+  const selection = window.getSelection();
 
-  return function (...args) {
-    const now = new Date().getTime();
+  range.selectNodeContents(element);
+  range.collapse(atStart);
 
-    if (now - lastCall < delay) {
-      return;
-    }
-
-    lastCall = now;
-
-    return fn(...args);
-  };
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
