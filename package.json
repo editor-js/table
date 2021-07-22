@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
   "repository": "https://github.com/editor-js/table",
   "author": {
@@ -27,6 +27,7 @@
     "cssnano": "^4.1.7",
     "eslint": "^5.8.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
+    "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.0",
     "postcss-nesting": "^7.0.0",
