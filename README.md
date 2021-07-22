@@ -2,7 +2,7 @@
 
 The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
 
-![](https://capella.pics/db775b1f-f5e8-45e8-b0df-ea18177dd57f.jpg)
+![](https://capella.pics/e0c6e97d-6873-45e8-a69f-21c7ec95981a.jpg)
 
 ## Installation
 
