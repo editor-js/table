@@ -1,9 +1,9 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
-  "main": "./dist/bundle.js",
+  "main": "./dist/table.js",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch",
