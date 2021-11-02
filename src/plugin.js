@@ -235,7 +235,6 @@ export default class TableBlock {
       //get max col of content data
       let maxcol = 0;
       this.data.content.forEach(function (row) {
-        console.log(row);
         if (row.length > maxcol)
           maxcol = row.length;
       });
