@@ -167,4 +167,37 @@ export default class TableBlock {
 
     return this.config && this.config[configName] ? this.config[configName] : defaultValue;
   }
+
+  /**  
+   * Table onPaste configuration
+   *
+   * @public
+   */
+  static get pasteConfig() {
+    return { tags: ['TABLE', 'TR', 'TH', 'TD'] };
+  }
+
+  /**
+   * On paste callback that is fired from Editor
+   *
+   * @param {PasteEvent} event - event with pasted data
+   */
+  onPaste(event) {
+    const table = event.detail.data;
+    // This isn't ideal. Ideally the plugin would allow individual cells to be
+    // headings rather than the first row.
+    const firstRowHeading =
+      table.querySelector(':scope > thead, tr:first-of-type th');
+    const content = Array.from(table.querySelectorAll('tr')).map((row) => (
+      Array.from(row.querySelectorAll('th, td')).map((cell) => cell.innerText)
+    ));
+
+    this.data = {
+      withHeadings: firstRowHeading !== null,
+      content
+    };
+    if (this.table.wrapper) {
+      this.table.wrapper.replaceWith(this.render());
+    }
+  }
 }
