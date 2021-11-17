@@ -2,7 +2,9 @@ import Table from './table';
 import tableIcon from './img/tableIcon.svg';
 import withHeadings from './img/with-headings.svg';
 import withoutHeadings from './img/without-headings.svg';
+import tableProperties from './img/table-properties.svg';
 import * as $ from './utils/dom';
+import TablePropertiesPopover from "./utils/table-properties-popover";
 
 /**
  * @typedef {object} TableConfig - configuration that the user can set for the table
@@ -58,10 +60,16 @@ export default class TableBlock {
     this.readOnly = readOnly;
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
-      content: data && data.content ? data.content : []
+      content: data && data.content ? data.content : [],
+      tableProperties: data && data.tableProperties ? data.tableProperties : {
+        backgroundColor: "#ffffff",
+        borderColor: "#e8e8eb",
+        borderWidth: '1px'
+      }
     };
     this.config = config;
     this.table = null;
+    this.tablePropertiesWrapper = null;
   }
 
   /**
@@ -101,6 +109,8 @@ export default class TableBlock {
     /** creating container around table */
     this.container = $.make('div', this.api.styles.block);
     this.container.appendChild(this.table.getWrapper());
+    this.tablePropertiesWrapper = $.make('div', '');
+    this.container.appendChild(this.tablePropertiesWrapper);
 
     this.table.setHeadingsSetting(this.data.withHeadings);
 
@@ -149,7 +159,67 @@ export default class TableBlock {
       wrapper.append(tuneButton);
     });
 
+    const tablePropertiesButton = this.renderTablePropertiesSettingsButton();
+    wrapper.append(tablePropertiesButton)
+
     return wrapper;
+  }
+
+  /**
+   * Render table properties settings
+   *
+   * @returns {HTMLElement} - settings element
+   */
+  renderTablePropertiesSettingsButton() {
+    const button = $.make('div', this.api.styles.settingsButton);
+
+    button.innerHTML = tableProperties;
+
+    button.addEventListener('click', () => {
+      this.renderTableProperties();
+    })
+
+    this.api.tooltip.onHover(button, 'Table Properties', {
+      placement: 'top',
+      hidingDelay: 500
+    })
+
+    return button;
+  }
+
+  renderTableProperties(){
+    this.tablePropertiesWrapper.innerHTML = '';
+    this.tablePropertiesWrapper.appendChild(this.createTablePropertiesPopover());
+  }
+
+
+  createTablePropertiesPopover() {
+    const tablePropertiesPopover = new TablePropertiesPopover({
+      api: this.api,
+      settings: {
+        backgroundColor: this.data.tableProperties.backgroundColor,
+        borderColor: this.data.tableProperties.borderColor,
+        borderWidth: this.data.tableProperties.borderWidth
+      },
+      onSave: (settings) => this.saveTableProperties(settings),
+      onCancel: () => this.closeTableProperties()
+    });
+
+    return tablePropertiesPopover.render();
+  }
+
+  saveTableProperties(settings){
+    this.data.tableProperties = settings;
+    const tableEl = this.table.getWrapper().querySelector(`.${Table.CSS.table}`)
+    for(const property in this.data.tableProperties){
+      tableEl.style[property] = this.data.tableProperties[property]
+    }
+
+    this.closeTableProperties();
+  }
+
+  closeTableProperties() {
+    this.tablePropertiesWrapper.innerHTML = '';
   }
 
   /**
@@ -160,12 +230,13 @@ export default class TableBlock {
   save() {
     const tableContent = this.table.getData();
 
-    let result = {
+    return {
       withHeadings: this.data.withHeadings,
-      content: tableContent
+      content: tableContent,
+      tableProperties: this.data.tableProperties
     };
 
-    return result;
+
   }
 
   /**

@@ -8,19 +8,6 @@ import closeIcon from './img/cross.svg';
 import * as $ from './utils/dom';
 import throttled from './utils/throttled';
 
-const CSS = {
-  wrapper: 'tc-wrap',
-  wrapperReadOnly: 'tc-wrap--readonly',
-  table: 'tc-table',
-  row: 'tc-row',
-  withHeadings: 'tc-table--heading',
-  rowSelected: 'tc-row--selected',
-  cell: 'tc-cell',
-  cellSelected: 'tc-cell--selected',
-  addRow: 'tc-add-row',
-  addColumn: 'tc-add-column'
-};
-
 /**
  * Generates and manages table contents.
  */
@@ -97,16 +84,16 @@ export default class Table {
      * Global click listener allows to delegate clicks on some elements
      */
     this.documentClicked = (event) => {
-      const clickedInsideTable = event.target.closest(`.${CSS.table}`) !== null;
-      const outsideTableClicked = event.target.closest(`.${CSS.wrapper}`) === null;
+      const clickedInsideTable = event.target.closest(`.${Table.CSS.table}`) !== null;
+      const outsideTableClicked = event.target.closest(`.${Table.CSS.wrapper}`) === null;
       const clickedOutsideToolboxes = clickedInsideTable || outsideTableClicked;
 
       if (clickedOutsideToolboxes) {
         this.hideToolboxes();
       }
 
-      const clickedOnAddRowButton = event.target.closest(`.${CSS.addRow}`);
-      const clickedOnAddColumnButton = event.target.closest(`.${CSS.addColumn}`);
+      const clickedOnAddRowButton = event.target.closest(`.${Table.CSS.addRow}`);
+      const clickedOnAddColumnButton = event.target.closest(`.${Table.CSS.addColumn}`);
 
       /**
        * Also, check if clicked in current table, not other (because documentClicked bound to the whole document)
@@ -125,6 +112,20 @@ export default class Table {
     }
   }
 
+  static get CSS(){
+    return {
+      wrapper: 'tc-wrap',
+      wrapperReadOnly: 'tc-wrap--readonly',
+      table: 'tc-table',
+      row: 'tc-row',
+      withHeadings: 'tc-table--heading',
+      rowSelected: 'tc-row--selected',
+      cell: 'tc-cell',
+      cellSelected: 'tc-cell--selected',
+      addRow: 'tc-add-row',
+      addColumn: 'tc-add-column'
+    }
+  }
   /**
    * Returns the rendered table wrapper
    *
@@ -276,7 +277,7 @@ export default class Table {
    * @returns {HTMLElement}
    */
   getCell(row, column) {
-    return this.table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`);
+    return this.table.querySelector(`.${Table.CSS.row}:nth-child(${row}) .${Table.CSS.cell}:nth-child(${column})`);
   }
 
   /**
@@ -286,7 +287,7 @@ export default class Table {
    * @returns {HTMLElement}
    */
   getRow(row) {
-    return this.table.querySelector(`.${CSS.row}:nth-child(${row})`);
+    return this.table.querySelector(`.${Table.CSS.row}:nth-child(${row})`);
   }
 
   /**
@@ -306,7 +307,7 @@ export default class Table {
    * @returns {Element}
    */
   getRowFirstCell(row) {
-    return row.querySelector(`.${CSS.cell}:first-child`);
+    return row.querySelector(`.${Table.CSS.cell}:first-child`);
   }
 
   /**
@@ -371,7 +372,7 @@ export default class Table {
    */
   addRow(index = -1, setFocus = false) {
     let insertedRow;
-    let rowElem = $.make('div', CSS.row);
+    let rowElem = $.make('div', Table.CSS.row);
 
     if (this.tunes.withHeadings) {
       this.removeHeadingAttrFromFirstRow();
@@ -442,11 +443,11 @@ export default class Table {
    * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   createTableWrapper() {
-    this.wrapper = $.make('div', CSS.wrapper);
-    this.table = $.make('div', CSS.table);
+    this.wrapper = $.make('div', Table.CSS.wrapper);
+    this.table = $.make('div', Table.CSS.table);
 
     if (this.readOnly) {
-      this.wrapper.classList.add(CSS.wrapperReadOnly);
+      this.wrapper.classList.add(Table.CSS.wrapperReadOnly);
     }
 
     this.wrapper.appendChild(this.toolboxRow.element);
@@ -454,10 +455,10 @@ export default class Table {
     this.wrapper.appendChild(this.table);
 
     if (!this.readOnly) {
-      const addColumnButton = $.make('div', CSS.addColumn, {
+      const addColumnButton = $.make('div', Table.CSS.addColumn, {
         innerHTML: svgPlusButton
       });
-      const addRowButton = $.make('div', CSS.addRow, {
+      const addRowButton = $.make('div', Table.CSS.addRow, {
         innerHTML: svgPlusButton
       });
 
@@ -550,7 +551,7 @@ export default class Table {
    * @return {Element}
    */
   createCell() {
-    return $.make('div', CSS.cell, {
+    return $.make('div', Table.CSS.cell, {
       contentEditable: !this.readOnly
     });
   }
@@ -567,7 +568,7 @@ export default class Table {
    */
   get numberOfColumns() {
     if (this.numberOfRows) {
-      return this.table.querySelector(`.${CSS.row}:first-child`).childElementCount;
+      return this.table.querySelector(`.${Table.CSS.row}:first-child`).childElementCount;
     }
 
     return 0;
@@ -645,8 +646,8 @@ export default class Table {
     const row = this.getRowByCell(cell);
 
     this.focusedCell = {
-      row: Array.from(this.table.querySelectorAll(`.${CSS.row}`)).indexOf(row) + 1,
-      column: Array.from(row.querySelectorAll(`.${CSS.cell}`)).indexOf(cell) + 1
+      row: Array.from(this.table.querySelectorAll(`.${Table.CSS.row}`)).indexOf(row) + 1,
+      column: Array.from(row.querySelectorAll(`.${Table.CSS.cell}`)).indexOf(cell) + 1
     };
   }
 
@@ -744,10 +745,10 @@ export default class Table {
     this.tunes.withHeadings = withHeadings;
 
     if (withHeadings) {
-      this.table.classList.add(CSS.withHeadings);
+      this.table.classList.add(Table.CSS.withHeadings);
       this.addHeadingAttrToFirstRow();
     } else {
-      this.table.classList.remove(CSS.withHeadings);
+      this.table.classList.remove(Table.CSS.withHeadings);
       this.removeHeadingAttrFromFirstRow();
     }
   }
@@ -788,7 +789,7 @@ export default class Table {
 
     if (row) {
       this.selectedRow = index;
-      row.classList.add(CSS.rowSelected);
+      row.classList.add(Table.CSS.rowSelected);
     }
   }
 
@@ -800,10 +801,10 @@ export default class Table {
       return;
     }
 
-    const row = this.table.querySelector(`.${CSS.rowSelected}`);
+    const row = this.table.querySelector(`.${Table.CSS.rowSelected}`);
 
     if (row) {
-      row.classList.remove(CSS.rowSelected);
+      row.classList.remove(Table.CSS.rowSelected);
     }
 
     this.selectedRow = 0;
@@ -819,7 +820,7 @@ export default class Table {
       const cell = this.getCell(i, index);
 
       if (cell) {
-        cell.classList.add(CSS.cellSelected);
+        cell.classList.add(Table.CSS.cellSelected);
       }
     }
 
@@ -834,10 +835,10 @@ export default class Table {
       return;
     }
 
-    let cells = this.table.querySelectorAll(`.${CSS.cellSelected}`);
+    let cells = this.table.querySelectorAll(`.${Table.CSS.cellSelected}`);
 
     Array.from(cells).forEach(column => {
-      column.classList.remove(CSS.cellSelected);
+      column.classList.remove(Table.CSS.cellSelected);
     });
 
     this.selectedColumn = 0;
@@ -927,8 +928,8 @@ export default class Table {
     const data = [];
 
     for (let i = 1; i <= this.numberOfRows; i++) {
-      const row = this.table.querySelector(`.${CSS.row}:nth-child(${i})`);
-      const cells = Array.from(row.querySelectorAll(`.${CSS.cell}`));
+      const row = this.table.querySelector(`.${Table.CSS.row}:nth-child(${i})`);
+      const cells = Array.from(row.querySelectorAll(`.${Table.CSS.cell}`));
       const isEmptyRow = cells.every(cell => !cell.textContent.trim());
 
       if (isEmptyRow) {
