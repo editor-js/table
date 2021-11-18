@@ -1,6 +1,6 @@
 # Table tool
 
-The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
+The A Modified Table Block for [Editor.js](https://editorjs.io). Finally improved.
 
 ![](https://capella.pics/41294cec-a2b3-4157-8399-ffefed3d8ffd.jpg)
 
@@ -9,12 +9,12 @@ The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
 Get the package
 
 ```shell
-npm i --save @editorjs/table
+npm i chalkboard-table
 ```
 or
 
 ```shell
-yarn add @editorjs/table
+yarn add chalkboard-table
 ```
 
 ## Usage
@@ -63,13 +63,19 @@ This Tool returns `data` in the following format
 | -------------- | ------------ | ----------------------------------------- |
 | `withHeadings` | `boolean`    | Uses the first line as headings |
 | `content`      | `string[][]` | two-dimensional array with table contents |
+| `tableProperties`      | `object` | object with table style properties  |
 
 ```json
 {
   "type" : "table",
   "data" : {
     "withHeadings": true,
-    "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ]
+    "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ],
+    "tableProperties": {
+      "borderColor": "#fffff",
+      "backgroundColor": "#fffff",
+      "borderWidth": "1px"
+    }
   }
 }
 ```
@@ -82,7 +88,7 @@ If you're using this tool and editor.js in your business, please consider suppor
 
 # About CodeX
 
-<img align="right" width="120" height="120" src="https://codex.so/public/app/img/codex-logo.svg" hspace="50">
+<img alt="codex" align="right" width="120" height="120" src="https://codex.so/public/app/img/codex-logo.svg" hspace="50">
 
 CodeX is a team of digital specialists around the world interested in building high-quality open source products on a global market. We are [open](https://codex.so/join) for young people who want to constantly improve their skills and grow professionally with experiments in leading technologies.
 

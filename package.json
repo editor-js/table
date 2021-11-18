@@ -1,5 +1,5 @@
 {
-  "name": "@editorjs/table",
+  "name": "chalkboard-table",
   "description": "Table for Editor.js",
   "version": "2.0.1",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "build:dev": "webpack --mode development --watch",
     "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
-  "repository": "https://github.com/editor-js/table",
+  "repository": "https://github.com/YoofiBP/table",
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
@@ -26,7 +26,6 @@
     "css-loader": "^1.0.0",
     "cssnano": "^4.1.7",
     "eslint": "^5.8.0",
-    "eslint-config-codex": "github:codex-team/eslint-config",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.0",
