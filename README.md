@@ -64,6 +64,7 @@ This Tool returns `data` in the following format
 | `withHeadings` | `boolean`    | Uses the first line as headings |
 | `content`      | `string[][]` | two-dimensional array with table contents |
 | `tableProperties`      | `object` | object with table style properties  |
+| `textAlignment`             | `string` | Alignnment of all text in table  |
 
 ```json
 {
@@ -75,7 +76,8 @@ This Tool returns `data` in the following format
       "borderColor": "#fffff",
       "backgroundColor": "#fffff",
       "borderWidth": "1px"
-    }
+    },
+    "textAlignment": "center"
   }
 }
 ```
