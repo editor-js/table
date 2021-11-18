@@ -61,7 +61,7 @@ export default class TableBlock {
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
-      textAlignment: data && data.content ? data.content : 'left',
+      textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
       tableProperties: data && data.tableProperties ? data.tableProperties : {
         backgroundColor: "#ffffff",
         borderColor: "#e8e8eb",
