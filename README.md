@@ -102,3 +102,5 @@ CodeX is a team of digital specialists around the world interested in building h
 2.0.2 - Added support for rendering saved properties 
 
 2.0.3 - Adding support for aligning table text
+
+2.0.4 - Fixed bug preventing alignment showing in saved data

@@ -164,6 +164,7 @@ export default class TableBlock {
     const tablePropertiesButton = this.renderTablePropertiesSettingsButton();
     wrapper.append(tablePropertiesButton)
     wrapper.append(...this.createAlignmentSettings())
+    this.toggleTableTextAlignment()
 
     return wrapper;
   }
