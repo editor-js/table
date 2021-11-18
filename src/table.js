@@ -445,6 +445,9 @@ export default class Table {
   createTableWrapper() {
     this.wrapper = $.make('div', Table.CSS.wrapper);
     this.table = $.make('div', Table.CSS.table);
+    for(const prop in this.data.tableProperties){
+      this.table.style[prop] = this.data.tableProperties[prop];
+    }
 
     if (this.readOnly) {
       this.wrapper.classList.add(Table.CSS.wrapperReadOnly);

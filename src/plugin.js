@@ -201,7 +201,11 @@ export default class TableBlock {
         borderColor: this.data.tableProperties.borderColor,
         borderWidth: this.data.tableProperties.borderWidth
       },
-      onSave: (settings) => this.saveTableProperties(settings),
+      onSave: (settings) => {
+        this.saveTableProperties(settings)
+        this.updateTableStyle();
+        this.closeTableProperties();
+      },
       onCancel: () => this.closeTableProperties()
     });
 
@@ -210,12 +214,13 @@ export default class TableBlock {
 
   saveTableProperties(settings){
     this.data.tableProperties = settings;
+  }
+
+  updateTableStyle(){
     const tableEl = this.table.getWrapper().querySelector(`.${Table.CSS.table}`)
     for(const property in this.data.tableProperties){
       tableEl.style[property] = this.data.tableProperties[property]
     }
-
-    this.closeTableProperties();
   }
 
   closeTableProperties() {
