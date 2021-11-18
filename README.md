@@ -95,3 +95,10 @@ CodeX is a team of digital specialists around the world interested in building h
 | 🌐 | Join  👋  | Twitter | Instagram |
 | -- | -- | -- | -- |
 | [codex.so](https://codex.so) | [codex.so/join](https://codex.so/join) |[@codex_team](http://twitter.com/codex_team) | [@codex_team](http://instagram.com/codex_team) |
+
+# Version Log
+2.0.0 - Initial Version with table properties
+
+2.0.1 - Added support for rendering saved properties 
+
+2.0.2 - Adding support for aligning table text
