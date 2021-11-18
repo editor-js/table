@@ -348,7 +348,6 @@ export default class TableBlock {
 
   toggleTableTextAlignment(container, alignment) {
     const cellNodes = container.getElementsByClassName('tc-cell');
-    console.log(cellNodes)
     Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment));
   }
 }
