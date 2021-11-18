@@ -61,6 +61,7 @@ export default class TableBlock {
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
+      textAlignment: data && data.content ? data.content : 'left',
       tableProperties: data && data.tableProperties ? data.tableProperties : {
         backgroundColor: "#ffffff",
         borderColor: "#e8e8eb",
@@ -70,6 +71,8 @@ export default class TableBlock {
     this.config = config;
     this.table = null;
     this.tablePropertiesWrapper = null;
+    this.toggleAlignmentTune = this.toggleAlignmentTune.bind(this)
+    this.createAlignmentButton = this.createAlignmentButton.bind(this)
   }
 
   /**
@@ -86,14 +89,13 @@ export default class TableBlock {
     };
   }
 
-  /**
-   * Plugins styles
-   *
-   * @returns {{settingsWrapper: string}}
-   */
   static get CSS() {
     return {
-      settingsWrapper: 'tc-settings'
+      settingsWrapper: 'tc-settings',
+      textAlignRight: 'text-align-right',
+      textAlignLeft: 'text-align-left',
+      textAlignCenter: 'text-align-center',
+      alignmentButton: 'alignment-button'
     };
   }
 
@@ -161,6 +163,7 @@ export default class TableBlock {
 
     const tablePropertiesButton = this.renderTablePropertiesSettingsButton();
     wrapper.append(tablePropertiesButton)
+    wrapper.append(...this.createAlignmentSettings())
 
     return wrapper;
   }
@@ -238,7 +241,8 @@ export default class TableBlock {
     return {
       withHeadings: this.data.withHeadings,
       content: tableContent,
-      tableProperties: this.data.tableProperties
+      tableProperties: this.data.tableProperties,
+      textAlignment: this.data.textAlignment
     };
 
 
@@ -274,5 +278,73 @@ export default class TableBlock {
    */
   destroy() {
     this.table.destroy();
+  }
+
+  createAlignmentSettings() {
+    const alignmentTunes = [
+      {
+        style: 'center',
+        label: 'Center Text',
+        class: TableBlock.CSS.textAlignCenter,
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer" height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m46 23c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m46 45c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/></svg>`,
+        isActive: this.data.textAlignment === 'center',
+        setTune: () => {
+          return (this.data.textAlignment = 'center')
+        },
+      },
+      {
+        style: 'left',
+        label: 'Left Align Text',
+        class: TableBlock.CSS.textAlignLeft,
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer" height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m10 23h28c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m10 45h28c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/></svg>`,
+        isActive: this.data.textAlignment === 'left',
+        setTune: () => {
+          return (this.data.textAlignment = 'left')
+        },
+      },
+      {
+        style: 'right',
+        label: 'Right Align Text',
+        class: TableBlock.CSS.textAlignRight,
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer"  height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 19h-28c-1.104 0-2 .896-2 2s.896 2 2 2h28c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 41h-28c-1.104 0-2 .896-2 2s.896 2 2 2h28c1.104 0 2-.896 2-2s-.896-2-2-2z"/></svg>`,
+        isActive: this.data.textAlignment === 'right',
+        setTune: () => {
+          return (this.data.textAlignment = 'right')
+        },
+      },
+    ];
+
+    return alignmentTunes.map(this.createAlignmentButton);
+  }
+
+  createAlignmentButton(alignmentTune) {
+    let button = document.createElement('div');
+    button.classList.add(this.api.styles.settingsButton);
+    button.classList.add(TableBlock.CSS.alignmentButton);
+    button.innerHTML = alignmentTune.icon;
+    if (alignmentTune.isActive) {
+      button.classList.add(this.api.styles.settingsButtonActive);
+    }
+    button.addEventListener('click', () => this.toggleAlignmentTune(alignmentTune, button));
+    this.api.tooltip.onHover(button, alignmentTune.label, {
+      placement: 'top',
+      hidingDelay: 500,
+    });
+    return button;
+  };
+
+  toggleAlignmentTune(tune, tuneButton) {
+    const alignmentTunes = tuneButton.parentNode.querySelectorAll(`.${TableBlock.CSS.alignmentButton}`);
+    (Array.from(alignmentTunes)).forEach((tune) => {
+      tune.classList.remove(this.api.styles.settingsButtonActive);
+    });
+    tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
+    tune.setTune();
+    this.toggleTableTextAlignment(this.table.getWrapper(), tune.style);
+  }
+
+  toggleTableTextAlignment(container, alignment) {
+    const cellNodes = container.getElementsByClassName('tc-cell');
+    Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment));
   }
 }
