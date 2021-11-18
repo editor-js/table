@@ -104,3 +104,5 @@ CodeX is a team of digital specialists around the world interested in building h
 2.0.3 - Adding support for aligning table text
 
 2.0.4 - Fixed bug preventing alignment showing in saved data
+
+2.0.5 - Alignment bug

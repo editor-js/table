@@ -116,6 +116,8 @@ export default class TableBlock {
 
     this.table.setHeadingsSetting(this.data.withHeadings);
 
+    this.toggleTableTextAlignment(this.container, this.data.textAlignment)
+
     return this.container;
   }
 
@@ -164,7 +166,6 @@ export default class TableBlock {
     const tablePropertiesButton = this.renderTablePropertiesSettingsButton();
     wrapper.append(tablePropertiesButton)
     wrapper.append(...this.createAlignmentSettings())
-    this.toggleTableTextAlignment()
 
     return wrapper;
   }
