@@ -57,11 +57,11 @@ export default class TableBlock {
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
-    this.readOnly = true;
+    this.readOnly = readOnly;
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
-      textAlignment: data && data.textAlignment ? data.textAlignment : 'center',
+      textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
       tableProperties: data && data.tableProperties ? data.tableProperties : {
         backgroundColor: "#ffffff",
         borderColor: "#e8e8eb",
