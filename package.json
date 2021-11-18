@@ -1,7 +1,7 @@
 {
-  "name": "chalkboard-table",
+  "name": "yoofi-table",
   "description": "Table for Editor.js",
-  "version": "2.0.10",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/table.js",
   "scripts": {

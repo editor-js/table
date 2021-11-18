@@ -14,19 +14,25 @@ const CSS = {
 
 export default class TablePropertiesPopover extends Popover {
 
-    constructor({settings, api, onSave, items = [], onCancel}) {
+    constructor({api, heading = "", items = [], onRevert, properties = []}) {
         super({items});
-        this.settings = settings;
         this.api = api;
-        this.onSave = onSave;
-        this.onCancel = onCancel;
+        this.heading = heading;
+        this.onRevert = onRevert;
+        this.properties = properties;
+    }
+
+    static get CSS(){
+        return {
+            propertiesDialog: 'propertiesDialog'
+        }
     }
 
     render(){
-        this.wrapper = $.make('div', [Popover.CSS.popover, Popover.CSS.popoverOpened, CSS.tablePopover]);
+        this.wrapper = $.make('div', [Popover.CSS.popover, Popover.CSS.popoverOpened, CSS.tablePopover, TablePropertiesPopover.CSS.propertiesDialog]);
 
         const heading = $.make('h3', CSS.heading);
-        heading.textContent = 'Table Properties';
+        heading.textContent = this.heading;
 
         this.wrapper.appendChild(heading);
 
@@ -38,41 +44,9 @@ export default class TablePropertiesPopover extends Popover {
     }
 
     createTablePropertyInputs(){
-        const properties = [
-            {
-                label: 'Background Color',
-                inputType: 'color',
-                id: 'background-color',
-                value: this.settings.backgroundColor,
-                onChange: (value) => {
-                    this.settings.backgroundColor = value
-                },
-                style: CSS.colorInput
-            },
-            {
-                label: 'Border Color',
-                inputType: 'color',
-                id: 'border-color',
-                value: this.settings.borderColor,
-                onChange: (value) => {
-                    this.settings.borderColor = value
-                },
-                style: CSS.colorInput
-            },
-            {
-                label: 'Border Width',
-                inputType: 'number',
-                id: 'border-width',
-                value: Number(this.settings.borderWidth.replace('px', "")),
-                onChange: (value) => {
-                    this.settings.borderWidth = `${value}px`;
-                }
-            }
-        ];
-
         const propertiesWrapper = $.make('div', "");
 
-        properties.forEach(property => {
+        this.properties.forEach(property => {
             const inputWrapper = $.make('div', CSS.inputWrapper);
 
             const label = $.make('label', CSS.inputLabel, {
@@ -102,17 +76,12 @@ export default class TablePropertiesPopover extends Popover {
     }
 
     createDecisionButtons(){
-        const saveButton = $.make('button', [CSS.saveButton, CSS.button]);
-        saveButton.textContent = 'Save';
-        saveButton.addEventListener('click', () => {
-            this.onSave(this.settings)
-        })
-        const cancelButton = $.make('button', [CSS.cancelButton, CSS.button]);
-        cancelButton.textContent = 'Cancel'
-        cancelButton.addEventListener('click', () => {
-            this.onCancel()
+        const revertButton = $.make('button', [CSS.cancelButton, CSS.button]);
+        revertButton.textContent = 'Revert'
+        revertButton.addEventListener('click', () => {
+            this.onRevert()
         })
 
-        return [cancelButton, saveButton]
+        return [revertButton]
     }
 }

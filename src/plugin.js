@@ -73,7 +73,6 @@ export default class TableBlock {
     this.tablePropertiesWrapper = null;
     this.toggleAlignmentTune = this.toggleAlignmentTune.bind(this)
     this.createAlignmentButton = this.createAlignmentButton.bind(this)
-    this.toggleTableTextAlignment = this.toggleTableTextAlignment.bind(this)
   }
 
   /**
@@ -117,7 +116,7 @@ export default class TableBlock {
 
     this.table.setHeadingsSetting(this.data.withHeadings);
 
-    this.toggleTableTextAlignment(this.container, this.data.textAlignment)
+    this.table.toggleTextAlignment(this.data.textAlignment)
 
     return this.container;
   }
@@ -198,28 +197,54 @@ export default class TableBlock {
     this.tablePropertiesWrapper.appendChild(this.createTablePropertiesPopover());
   }
 
-
+//TODO: Move into table class
   createTablePropertiesPopover() {
+    const initialTableProperties = Object.assign({},this.data.tableProperties);
     const tablePropertiesPopover = new TablePropertiesPopover({
       api: this.api,
-      settings: {
-        backgroundColor: this.data.tableProperties.backgroundColor,
-        borderColor: this.data.tableProperties.borderColor,
-        borderWidth: this.data.tableProperties.borderWidth
-      },
-      onSave: (settings) => {
-        this.saveTableProperties(settings)
+      heading: "Table Properties",
+      properties: [
+        {
+          label: 'Background Color',
+          inputType: 'color',
+          id: 'background-color',
+          value: this.data.tableProperties.backgroundColor,
+          onChange: (value) => {
+            this.data.tableProperties.backgroundColor = value;
+            this.updateTableStyle();
+          },
+          style: CSS.colorInput
+        },
+        {
+          label: 'Border Color',
+          inputType: 'color',
+          id: 'border-color',
+          value: this.data.tableProperties.borderColor,
+          onChange: (value) => {
+            this.data.tableProperties.borderColor = value;
+            this.updateTableStyle();
+          },
+          style: CSS.colorInput
+        },
+        {
+          label: 'Border Width',
+          inputType: 'number',
+          id: 'border-width',
+          value: Number(this.data.tableProperties.borderWidth.replace('px', "")),
+          onChange: (value) => {
+            this.data.tableProperties.borderWidth = `${value}px`;
+            this.updateTableStyle();
+          }
+        }
+      ],
+      onRevert: () => {
+        this.data.tableProperties = initialTableProperties;
         this.updateTableStyle();
-        this.closeTableProperties();
-      },
-      onCancel: () => this.closeTableProperties()
+        this.closeTableProperties()
+      }
     });
 
     return tablePropertiesPopover.render();
-  }
-
-  saveTableProperties(settings){
-    this.data.tableProperties = settings;
   }
 
   updateTableStyle(){
@@ -243,9 +268,10 @@ export default class TableBlock {
 
     return {
       withHeadings: this.data.withHeadings,
-      content: tableContent,
+      content: tableContent.content,
       tableProperties: this.data.tableProperties,
-      textAlignment: this.data.textAlignment
+      textAlignment: this.data.textAlignment,
+      cellProperties: tableContent.cellProperties
     };
 
 
@@ -343,11 +369,6 @@ export default class TableBlock {
     });
     tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
     tune.setTune();
-    this.toggleTableTextAlignment(this.table.getWrapper(), tune.style);
-  }
-
-  toggleTableTextAlignment(container, alignment) {
-    const cellNodes = container.getElementsByClassName('tc-cell');
-    Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment));
+    this.table.toggleTextAlignment(tune.style);
   }
 }
