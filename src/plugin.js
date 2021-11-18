@@ -57,11 +57,11 @@ export default class TableBlock {
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
-    this.readOnly = readOnly;
+    this.readOnly = true;
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
-      textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
+      textAlignment: data && data.textAlignment ? data.textAlignment : 'center',
       tableProperties: data && data.tableProperties ? data.tableProperties : {
         backgroundColor: "#ffffff",
         borderColor: "#e8e8eb",
@@ -73,6 +73,7 @@ export default class TableBlock {
     this.tablePropertiesWrapper = null;
     this.toggleAlignmentTune = this.toggleAlignmentTune.bind(this)
     this.createAlignmentButton = this.createAlignmentButton.bind(this)
+    this.toggleTableTextAlignment = this.toggleTableTextAlignment.bind(this)
   }
 
   /**
@@ -347,6 +348,7 @@ export default class TableBlock {
 
   toggleTableTextAlignment(container, alignment) {
     const cellNodes = container.getElementsByClassName('tc-cell');
+    console.log(cellNodes)
     Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment));
   }
 }
