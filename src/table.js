@@ -35,7 +35,8 @@ export default class Table {
         this.api = api;
         this.data = data;
         this.config = config;
-        this.data.tableProperties = this.data.tableProperties || Object.assign({}, defaultCellStyles)
+        this.data.tableProperties = this.data.tableProperties || Object.assign({}, defaultCellStyles);
+        console.log(this.data.tableProperties)
 
         /**
          * DOM nodes
