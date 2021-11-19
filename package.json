@@ -1,7 +1,7 @@
 {
   "name": "yoofi-table",
   "description": "Table for Editor.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "./dist/table.js",
   "scripts": {
