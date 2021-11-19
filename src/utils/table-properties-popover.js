@@ -14,11 +14,11 @@ const CSS = {
 
 export default class TablePropertiesPopover extends Popover {
 
-    constructor({api, heading = "", items = [], onRevert, properties = []}) {
+    constructor({api, heading = "", items = [], onCancel, properties = []}) {
         super({items});
         this.api = api;
         this.heading = heading;
-        this.onRevert = onRevert;
+        this.onCancel = onCancel;
         this.properties = properties;
     }
 
@@ -76,12 +76,12 @@ export default class TablePropertiesPopover extends Popover {
     }
 
     createDecisionButtons(){
-        const revertButton = $.make('button', [CSS.cancelButton, CSS.button]);
-        revertButton.textContent = 'Revert'
-        revertButton.addEventListener('click', () => {
-            this.onRevert()
+        const cancelButton = $.make('button', [CSS.cancelButton, CSS.button]);
+        cancelButton.textContent = 'Cancel'
+        cancelButton.addEventListener('click', () => {
+            this.onCancel();
         })
 
-        return [revertButton]
+        return [cancelButton]
     }
 }

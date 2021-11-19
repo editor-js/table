@@ -35,6 +35,7 @@ export default class Table {
         this.api = api;
         this.data = data;
         this.config = config;
+        this.data.tableProperties = Object.assign({}, defaultCellStyles)
 
         /**
          * DOM nodes
@@ -48,7 +49,7 @@ export default class Table {
         this.toolboxColumn = this.createColumnToolbox();
         this.toolboxRow = this.createRowToolbox();
         this.cellPropertiesPopover = this.createCellPropertiesPopover();
-        this.cellPropertiesDialog = null;
+        this.propertiesDialog = null;
 
         /**
          * Create table and wrapper elements
@@ -98,6 +99,7 @@ export default class Table {
             const clickedInsideTable = event.target.closest(`.${Table.CSS.table}`) !== null;
             const outsideTableClicked = event.target.closest(`.${Table.CSS.wrapper}`) === null;
             const clickedPropertiesDialog = event.target.closest(`.${TablePropertiesPopover.CSS.propertiesDialog}`) !== null;
+            const clickedSettingsZone = event.target.closest(`.${this.api.styles.settingsButton}`) !== null;
             const clickedOutsideToolboxes = clickedInsideTable || outsideTableClicked;
 
             if (clickedOutsideToolboxes) {
@@ -107,10 +109,8 @@ export default class Table {
             const clickedOnAddRowButton = event.target.closest(`.${Table.CSS.addRow}`);
             const clickedOnAddColumnButton = event.target.closest(`.${Table.CSS.addColumn}`);
 
-            if(!clickedPropertiesDialog && (clickedOutsideToolboxes || clickedOnAddRowButton || clickedOnAddColumnButton)){
-                if(this.cellPropertiesDialog){
-                    this.closeOpenPropertiesDialog()
-                }
+            if((!clickedPropertiesDialog && !clickedSettingsZone) && (clickedOutsideToolboxes || clickedOnAddRowButton || clickedOnAddColumnButton)){
+                this.closeOpenPropertiesDialog()
             }
 
             /**
@@ -185,10 +185,15 @@ export default class Table {
             return;
         }
         event.preventDefault();
-        if (!this.cellPropertiesPopover.opened) {
-            //TODO: Fix CSS
-            this.cellPropertiesPopover.open();
+        if (this.cellPropertiesPopover.opened) {
+            this.cellPropertiesPopover.close()
         }
+        this.cellPropertiesPopover.open();
+        const tableCoords = $.getCoords(this.table);
+        const destinationX = event.pageX - tableCoords.x1
+        const destinationY = event.pageY - tableCoords.y1
+        this.cellPropertiesPopover.element.style.left = `${destinationX}px`;
+        this.cellPropertiesPopover.element.style.top = `${destinationY}px`;
 
     }
 
@@ -207,15 +212,16 @@ export default class Table {
     }
 
     renderCellPropertiesDialog(cellTarget) {
-        if (this.cellPropertiesDialog) {
-            this.closeOpenPropertiesDialog();
-        }
-        this.cellPropertiesDialog = this.createCellPropertiesDialog(cellTarget);
-        this.wrapper.insertAdjacentElement('afterend', this.cellPropertiesDialog)
+        this.closeOpenPropertiesDialog();
+        this.propertiesDialog = this.createCellPropertiesDialog(cellTarget);
+        this.wrapper.insertAdjacentElement('afterend', this.propertiesDialog)
     }
 
     closeOpenPropertiesDialog() {
-        this.cellPropertiesDialog.remove();
+        if(this.propertiesDialog){
+            this.propertiesDialog.remove();
+            this.propertiesDialog = null;
+        }
     }
 
     createCellPropertiesDialog(cellTarget) {
@@ -258,7 +264,7 @@ export default class Table {
                     }
                 ],
                 heading: "Cell Properties",
-                onRevert: () => {
+                onCancel: () => {
                     this.data.cellProperties[cellTarget.row - 1][cellTarget.column - 1] = initialCellProperties;
                     this.setCellStyle(cellTarget.row, cellTarget.column);
                     this.closeOpenPropertiesDialog();
@@ -270,6 +276,93 @@ export default class Table {
         return cellPropertiesDialog.render();
     }
 
+    renderTablePropertiesDialog(){
+        this.closeOpenPropertiesDialog();
+        this.propertiesDialog = this.createTablePropertiesDialog();
+        this.wrapper.insertAdjacentElement('afterend', this.propertiesDialog)
+    }
+
+    createTablePropertiesDialog(){
+        const initialTableProperties = Object.assign({}, this.data.tableProperties);
+        const initialCellProperties = this.data.cellProperties.map(row => {
+            return row.map(style => {
+                return Object.assign({}, style)
+            })
+        });
+        const tablePropertiesPopover = new TablePropertiesPopover({
+            api: this.api,
+            heading: "Table Properties",
+            properties: [
+                {
+                    label: 'Background Color',
+                    inputType: 'color',
+                    id: 'background-color',
+                    value: this.data.tableProperties.backgroundColor,
+                    onChange: (value) => {
+                        this.data.tableProperties.backgroundColor = value;
+                        this.data.cellProperties.forEach((row) => {
+                            row.forEach((column) => {
+                                column.backgroundColor = this.data.tableProperties.backgroundColor;
+                            })
+                        })
+                        this.updateTableStyle();
+                    },
+                    style: Table.CSS.colorInput
+                },
+                {
+                    label: 'Border Color',
+                    inputType: 'color',
+                    id: 'border-color',
+                    value: this.data.tableProperties.borderColor,
+                    onChange: (value) => {
+                        this.data.tableProperties.borderColor = value;
+                        this.data.cellProperties.forEach((row) => {
+                            row.forEach((column) => {
+                                column.borderColor = this.data.tableProperties.borderColor;
+                            })
+                        })
+                        this.updateTableStyle();
+                    },
+                    style: Table.CSS.colorInput
+                },
+                {
+                    label: 'Border Width',
+                    inputType: 'number',
+                    id: 'border-width',
+                    value: Number(this.data.tableProperties.borderWidth.replace('px', "")),
+                    onChange: (value) => {
+                        this.data.tableProperties.borderWidth = `${value}px`;
+                        this.data.cellProperties.forEach((row) => {
+                            row.forEach((column) => {
+                                column.borderWidth = this.data.tableProperties.borderWidth;
+                            })
+                        })
+                        this.updateTableStyle();
+                    }
+                }
+            ],
+            onCancel: () => {
+                this.data.tableProperties = initialTableProperties;
+                this.data.cellProperties = initialCellProperties;
+                this.updateTableStyle();
+                this.closeOpenPropertiesDialog()
+            }
+        });
+
+        return tablePropertiesPopover.render();
+    }
+
+
+    updateTableStyle() {
+        for(const property in this.data.tableProperties){
+            this.table.style[property] = this.data.tableProperties[property]
+        }
+        for (let i = 0; i < this.data.content.length; i++) {
+            for (let j = 0; j < this.data.content[i].length; j++) {
+                this.setCellStyle(i + 1, j + 1);
+            }
+        }
+    }
 
     /**
      * Configures and creates the toolbox for manipulating with columns
@@ -475,9 +568,29 @@ export default class Table {
                 }
             }
         }
+        if(columnIndex > 0){
+            this.addCellPropertiesColumn(columnIndex - 1)
+        }
 
         this.addHeadingAttrToFirstRow();
     };
+
+    addCellPropertiesColumn(columnIndex){
+        const getInitialStyle = () => {
+            return Object.assign({}, this.data.tableProperties || defaultCellStyles);
+        }
+        const isLastIndex = columnIndex === this.data.cellProperties[0].length;
+        const isFirstIndex = columnIndex === 0;
+        this.data.cellProperties.forEach((row) => {
+            if(isLastIndex){
+                row.push(getInitialStyle())
+            }else if(isFirstIndex){
+                row.unshift(getInitialStyle())
+            }else {
+                row.splice(columnIndex, 0 ,getInitialStyle())
+            }
+        })
+    }
 
     /**
      * Add row in table on index place
@@ -487,7 +600,6 @@ export default class Table {
      * @returns {HTMLElement} row
      */
     addRow(index = -1, setFocus = false) {
-        //TODO: Add new space in data for default styles
         let insertedRow;
         let rowElem = $.make('div', Table.CSS.row);
 
@@ -511,6 +623,7 @@ export default class Table {
         }
 
         this.fillRow(insertedRow, numberOfColumns);
+        this.addCellPropertiesRow(numberOfColumns);
 
         if (this.tunes.withHeadings) {
             this.addHeadingAttrToFirstRow();
@@ -524,6 +637,17 @@ export default class Table {
 
         return insertedRow;
     };
+
+    addCellPropertiesRow(numberOfColumns){
+        if(numberOfColumns){
+            const newRow = [];
+            for (let i = 0; i < numberOfColumns; i++) {
+                newRow.push(this.data.tableProperties ? Object.assign({}, this.data.tableProperties) : Object.assign({}, defaultCellStyles))
+            }
+            this.data.cellProperties.push(newRow);
+        }
+
+    }
 
     /**
      * Delete a column by index
@@ -540,6 +664,13 @@ export default class Table {
 
             cell.remove();
         }
+        this.deleteCellPropertiesColumn(index -1)
+    }
+
+    deleteCellPropertiesColumn(index){
+        this.data.cellProperties.forEach((row) => {
+            row.splice(index, 1);
+        })
     }
 
     /**
@@ -549,8 +680,13 @@ export default class Table {
      */
     deleteRow(index) {
         this.getRow(index).remove();
+        this.removeCellPropertiesRow(index-1);
 
         this.addHeadingAttrToFirstRow();
+    }
+
+    removeCellPropertiesRow(index){
+        this.data.cellProperties.splice(index, 1);
     }
 
     /**
@@ -1078,6 +1214,7 @@ export default class Table {
     getData() {
         const data = {}
         const contentData = [];
+        const cellProperties = [];
 
         for (let i = 1; i <= this.numberOfRows; i++) {
             const row = this.table.querySelector(`.${Table.CSS.row}:nth-child(${i})`);
@@ -1089,10 +1226,12 @@ export default class Table {
             }
 
             contentData.push(cells.map(cell => cell.innerHTML));
+            cellProperties.push(this.data.cellProperties[i-1])
         }
 
         data.content = contentData;
-        data.cellProperties = this.data.cellProperties;
+        data.cellProperties = cellProperties;
+        data.tableProperties = this.data.tableProperties;
 
         return data;
     }

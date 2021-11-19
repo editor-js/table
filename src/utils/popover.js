@@ -158,6 +158,10 @@ export default class Popover {
     this.wrapper.classList.add(Popover.CSS.popoverOpened);
   }
 
+  get element(){
+    return this.wrapper;
+  }
+
   /**
    * Closes the popover
    *

@@ -4,7 +4,6 @@ import withHeadings from './img/with-headings.svg';
 import withoutHeadings from './img/without-headings.svg';
 import tableProperties from './img/table-properties.svg';
 import * as $ from './utils/dom';
-import TablePropertiesPopover from "./utils/table-properties-popover";
 
 /**
  * @typedef {object} TableConfig - configuration that the user can set for the table
@@ -62,11 +61,6 @@ export default class TableBlock {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
       textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
-      tableProperties: data && data.tableProperties ? data.tableProperties : {
-        backgroundColor: "#ffffff",
-        borderColor: "#e8e8eb",
-        borderWidth: '1px'
-      }
     };
     this.config = config;
     this.table = null;
@@ -181,7 +175,7 @@ export default class TableBlock {
     button.innerHTML = tableProperties;
 
     button.addEventListener('click', () => {
-      this.renderTableProperties();
+      this.table.renderTablePropertiesDialog();
     })
 
     this.api.tooltip.onHover(button, 'Table Properties', {
@@ -190,72 +184,6 @@ export default class TableBlock {
     })
 
     return button;
-  }
-
-  renderTableProperties(){
-    this.tablePropertiesWrapper.innerHTML = '';
-    this.tablePropertiesWrapper.appendChild(this.createTablePropertiesPopover());
-  }
-
-//TODO: Move into table class
-  createTablePropertiesPopover() {
-    const initialTableProperties = Object.assign({},this.data.tableProperties);
-    const tablePropertiesPopover = new TablePropertiesPopover({
-      api: this.api,
-      heading: "Table Properties",
-      properties: [
-        {
-          label: 'Background Color',
-          inputType: 'color',
-          id: 'background-color',
-          value: this.data.tableProperties.backgroundColor,
-          onChange: (value) => {
-            this.data.tableProperties.backgroundColor = value;
-            this.updateTableStyle();
-          },
-          style: CSS.colorInput
-        },
-        {
-          label: 'Border Color',
-          inputType: 'color',
-          id: 'border-color',
-          value: this.data.tableProperties.borderColor,
-          onChange: (value) => {
-            this.data.tableProperties.borderColor = value;
-            this.updateTableStyle();
-          },
-          style: CSS.colorInput
-        },
-        {
-          label: 'Border Width',
-          inputType: 'number',
-          id: 'border-width',
-          value: Number(this.data.tableProperties.borderWidth.replace('px', "")),
-          onChange: (value) => {
-            this.data.tableProperties.borderWidth = `${value}px`;
-            this.updateTableStyle();
-          }
-        }
-      ],
-      onRevert: () => {
-        this.data.tableProperties = initialTableProperties;
-        this.updateTableStyle();
-        this.closeTableProperties()
-      }
-    });
-
-    return tablePropertiesPopover.render();
-  }
-
-  updateTableStyle(){
-    const tableEl = this.table.getWrapper().querySelector(`.${Table.CSS.table}`)
-    for(const property in this.data.tableProperties){
-      tableEl.style[property] = this.data.tableProperties[property]
-    }
-  }
-
-  closeTableProperties() {
-    this.tablePropertiesWrapper.innerHTML = '';
   }
 
   /**
@@ -269,7 +197,7 @@ export default class TableBlock {
     return {
       withHeadings: this.data.withHeadings,
       content: tableContent.content,
-      tableProperties: this.data.tableProperties,
+      tableProperties: tableContent.tableProperties,
       textAlignment: this.data.textAlignment,
       cellProperties: tableContent.cellProperties
     };
