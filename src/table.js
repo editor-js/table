@@ -35,8 +35,7 @@ export default class Table {
         this.api = api;
         this.data = data;
         this.config = config;
-        this.data.tableProperties = this.data.tableProperties || Object.assign({}, defaultCellStyles);
-        console.log(this.data.tableProperties)
+        this.data.tableProperties = this.data?.tableProperties || Object.assign({}, defaultCellStyles);
 
         /**
          * DOM nodes
@@ -781,7 +780,7 @@ export default class Table {
         for (let i = 0; i < rows; i++) {
             styles.push([])
             for (let j = 0; j < cols; j++) {
-                styles[i].push(this.data.hasOwnProperty('cellProperties') ? this.data.cellProperties[i][j] : Object.assign({},defaultCellStyles))
+                styles[i].push(this.data?.cellProperties ? this.data.cellProperties[i][j] : Object.assign({},defaultCellStyles))
             }
         }
         this.data.cellProperties = styles;

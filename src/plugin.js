@@ -61,7 +61,10 @@ export default class TableBlock {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
       textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
-    };
+      cellProperties: data && data.cellProperties ? data.cellProperties : undefined,
+      tableProperties: data && data.tableProperties ? data.tableProperties : undefined
+    }
+    ;
     this.config = config;
     this.table = null;
     this.tablePropertiesWrapper = null;

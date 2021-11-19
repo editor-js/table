@@ -44,6 +44,114 @@
 
   <script>
 
+    const sampleData = {
+      "time": 1637357541154,
+      "blocks": [
+        {
+          "id": "XXVTfnMlcE",
+          "type": "table",
+          "data": {
+            "withHeadings": true,
+            "content": [
+              [
+                "English",
+                "Russian",
+                "Japanese"
+              ],
+              [
+                "Sweet",
+                "Сладкий",
+                "あまい"
+              ],
+              [
+                "Good morning",
+                "Доброе утро",
+                "おはようございます"
+              ]
+            ],
+            "tableProperties": {
+              "backgroundColor": "#c91818",
+              "borderColor": "#e8e8eb",
+              "borderWidth": "1px"
+            },
+            "textAlignment": "left",
+            "cellProperties": [
+              [
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                }
+              ],
+              [
+                {
+                  "backgroundColor": "#32a852",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                }
+              ],
+              [
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                },
+                {
+                  "backgroundColor": "#c91818",
+                  "borderColor": "#e8e8eb",
+                  "borderWidth": "1px"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "version": "2.22.2"
+    }
+
+    const originalData = {
+      time: 1625072989362,
+      blocks: [
+        {
+          id: "XXVTfnMlcE",
+          type: "table",
+          data: {
+            withHeadings: true,
+            content: [
+              ["English", "Russian", "Japanese"],
+              ["Sweet", "Сладкий", "あまい"],
+              ["Good morning", "Доброе утро", "おはようございます"]]
+          }
+        }
+      ],
+      version: "2.22.1"
+    }
+
     const editor = new EditorJS({
       autofocus: true,
       tools: {
@@ -52,23 +160,8 @@
           inlineToolbar: true,
         }
       },
-      data: {
-        time: 1625072989362,
-        blocks: [
-          {
-            id: "XXVTfnMlcE",
-            type: "table",
-            data: {
-              withHeadings: true,
-              content: [
-                ["English", "Russian", "Japanese"], 
-                ["Sweet", "Сладкий", "あまい"], 
-                ["Good morning", "Доброе утро", "おはようございます"]]
-            }
-          }
-        ],
-        version: "2.22.1"
-      }
+      data: sampleData,
+      readOnly: false
     });
 
     const saveButton = document.querySelector('.save-button');
