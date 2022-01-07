@@ -12,22 +12,52 @@ const CSS = {
     colorInput: 'color-input',
 }
 
+
+/**
+ * @typedef {object} TablePopoverItem
+ * @property {string} label - Button label
+ * @property {HTMLInputElement['type']} type - Input type for changing property
+ * @property {string} id - Id for field
+ * @property value - Current value of input
+ * @property {function} onChange - Function that runs when change event on input is fired
+ * @property {string} style - Input style
+ */
+
+/**
+* This class renders a popover for table and cell properties. It takes the properties and creates
+* A popover that allows users to view and change property values. It inherits from the Popover class
+ */
 export default class TablePropertiesPopover extends Popover {
 
-    constructor({api, heading = "", items = [], onCancel, properties = []}) {
+    /**
+     *
+     * @param {string} heading - Heading of Popover
+     * @param {TablePopoverItem[]} properties - Array of items used to build popover
+     * @param {function} onCancel - Function to run when user cancels operation and changes are not to be saved
+     * @param items
+     */
+    constructor({heading = "", items = [], onCancel, properties = []}) {
         super({items});
-        this.api = api;
         this.heading = heading;
         this.onCancel = onCancel;
         this.properties = properties;
     }
 
+    /**
+     * Set of CSS classnames used in popover
+     *
+     * @returns {object}
+     */
     static get CSS(){
         return {
             propertiesDialog: 'propertiesDialog'
         }
     }
 
+    /**
+     * Returns the table popover element
+     * @returns {Element}
+     */
     render(){
         this.wrapper = $.make('div', [Popover.CSS.popover, Popover.CSS.popoverOpened, CSS.tablePopover, TablePropertiesPopover.CSS.propertiesDialog]);
 
@@ -43,6 +73,10 @@ export default class TablePropertiesPopover extends Popover {
         return this.wrapper;
     }
 
+    /**
+     * Creates the property inputs
+     * @returns {Element}
+     */
     createTablePropertyInputs(){
         const propertiesWrapper = $.make('div', "");
 
@@ -75,6 +109,10 @@ export default class TablePropertiesPopover extends Popover {
         return propertiesWrapper;
     }
 
+    /**
+     * Creates buttons used to make a decision.
+     * @returns {Element[]}
+     */
     createDecisionButtons(){
         const cancelButton = $.make('button', [CSS.cancelButton, CSS.button]);
         cancelButton.textContent = 'Cancel'

@@ -48,7 +48,13 @@ export default class Table {
          */
         this.toolboxColumn = this.createColumnToolbox();
         this.toolboxRow = this.createRowToolbox();
+
+        /**
+         * Toolbox for managing modification of cell properties
+         * @type {Popover}
+         */
         this.cellPropertiesPopover = this.createCellPropertiesPopover();
+        //DOM node to hold cell properties
         this.propertiesDialog = null;
 
         /**
@@ -178,6 +184,10 @@ export default class Table {
         this.table.addEventListener('contextmenu', event => this.tableContextMenuListener(event))
     }
 
+    /**
+     * Creates custom contextmenu for when users right-click on table cells
+     */
+
     tableContextMenuListener(event) {
         const element = event.target;
         const elementIsCell = element.classList.contains(Table.CSS.cell);
@@ -197,6 +207,10 @@ export default class Table {
 
     }
 
+    /**
+     * Creates popover containing cell properties
+     */
+
     createCellPropertiesPopover() {
         return new Popover({
             items: [
@@ -211,12 +225,19 @@ export default class Table {
         })
     }
 
+    /**
+     * Closes all open cell properties and creates new cell properties and attaches it to the DOM
+     * @param cellTarget
+     */
     renderCellPropertiesDialog(cellTarget) {
         this.closeOpenPropertiesDialog();
         this.propertiesDialog = this.createCellPropertiesDialog(cellTarget);
         this.wrapper.insertAdjacentElement('afterend', this.propertiesDialog)
     }
 
+    /**
+     * Removes cell properties dialog from DOM
+     */
     closeOpenPropertiesDialog() {
         if(this.propertiesDialog){
             this.propertiesDialog.remove();
@@ -224,8 +245,15 @@ export default class Table {
         }
     }
 
+    /**
+     * Creates Dialog containing cell style properties based on cell position
+     *
+     * @param {{row, column}} cellTarget
+     * @returns {Element}
+     */
     createCellPropertiesDialog(cellTarget) {
         const cellProperties = this.data.cellProperties[cellTarget.row - 1][cellTarget.column - 1];
+        //Store reference to current cellProperties to reset properties when user cancels change
         const initialCellProperties = Object.assign({}, cellProperties);
         const cellPropertiesDialog = new TablePropertiesPopover(
             {
@@ -276,13 +304,22 @@ export default class Table {
         return cellPropertiesDialog.render();
     }
 
+    /**
+     * Creates new table properties dialog and attaches it to the DOM
+     */
     renderTablePropertiesDialog(){
         this.closeOpenPropertiesDialog();
         this.propertiesDialog = this.createTablePropertiesDialog();
         this.wrapper.insertAdjacentElement('afterend', this.propertiesDialog)
     }
 
+    /**
+     * Creates table properties popover element
+     * @returns {Element}
+     */
     createTablePropertiesDialog(){
+        //Store reference to both table and cell properties to "reset" when user cancels
+        //Since a table is a collection of cells if table style properties change individual cell properties must change
         const initialTableProperties = Object.assign({}, this.data.tableProperties);
         const initialCellProperties = this.data.cellProperties.map(row => {
             return row.map(style => {
@@ -341,6 +378,7 @@ export default class Table {
                     }
                 }
             ],
+            //Reset properties on cancel
             onCancel: () => {
                 this.data.tableProperties = initialTableProperties;
                 this.data.cellProperties = initialCellProperties;
@@ -352,7 +390,9 @@ export default class Table {
         return tablePropertiesPopover.render();
     }
 
-
+    /**
+     * Modify table styles
+     */
     updateTableStyle() {
         for(const property in this.data.tableProperties){
             this.table.style[property] = this.data.tableProperties[property]
@@ -568,6 +608,7 @@ export default class Table {
                 }
             }
         }
+        //Add new object to cell properties data structure in table data
         if(columnIndex > 0){
             this.addCellPropertiesColumn(columnIndex - 1)
         }
@@ -575,6 +616,11 @@ export default class Table {
         this.addHeadingAttrToFirstRow();
     };
 
+    /**
+     * Individual cell properties are stored as a two dimensional array of objects hence
+     * when a new column is added a new object needs to be inserted into each "row" (array)
+     * @param {number} columnIndex
+     */
     addCellPropertiesColumn(columnIndex){
         const getInitialStyle = () => {
             return Object.assign({}, this.data.tableProperties || defaultCellStyles);
@@ -623,6 +669,7 @@ export default class Table {
         }
 
         this.fillRow(insertedRow, numberOfColumns);
+        //Create new "row" in data structure holding cell properties
         this.addCellPropertiesRow(numberOfColumns);
 
         if (this.tunes.withHeadings) {
@@ -638,6 +685,11 @@ export default class Table {
         return insertedRow;
     };
 
+    /**
+     * Individual cell properties are stored as a two dimensional array of objects hence
+     * when a new row is added a new array needs to be inserted into the data structure
+     * @param {number} numberOfColumns
+     */
     addCellPropertiesRow(numberOfColumns){
         if(numberOfColumns){
             const newRow = [];
@@ -664,9 +716,14 @@ export default class Table {
 
             cell.remove();
         }
+        //Delete cell property object in table data
         this.deleteCellPropertiesColumn(index -1)
     }
 
+    /**
+     * When a column is deleted all cell property objects at that index in table data need to be removed
+     * @param {number} index
+     */
     deleteCellPropertiesColumn(index){
         this.data.cellProperties.forEach((row) => {
             row.splice(index, 1);
@@ -685,6 +742,10 @@ export default class Table {
         this.addHeadingAttrToFirstRow();
     }
 
+    /**
+     * When a row is deleted the array at the specified index containing cell properties needs to be removed
+     * @param {number} index
+     */
     removeCellPropertiesRow(index){
         this.data.cellProperties.splice(index, 1);
     }
@@ -698,6 +759,7 @@ export default class Table {
     createTableWrapper() {
         this.wrapper = $.make('div', Table.CSS.wrapper);
         this.table = $.make('div', Table.CSS.table);
+        //Set table property styles from data
         for (const prop in this.data.tableProperties) {
             this.table.style[prop] = this.data.tableProperties[prop];
         }
@@ -721,6 +783,7 @@ export default class Table {
             this.wrapper.appendChild(addColumnButton);
             this.wrapper.appendChild(addRowButton);
         }
+        //Create cell options dialog element and attach it to DOM
         const cellOptionsWrapper = this.cellPropertiesPopover.render();
         cellOptionsWrapper.style.position = 'absolute';
         this.wrapper.appendChild(cellOptionsWrapper);
@@ -771,10 +834,18 @@ export default class Table {
         for (let i = 0; i < cols; i++) {
             this.addColumn();
         }
-
+        //Load cell styles from data
         this.initCellStyles(rows, cols);
     }
 
+    /**
+     * We load any cell properties from previous data or use default cell styles
+     * If the table is being created for the first time it creates a two dimensional
+     * array which contains objects with cell styles
+     * Inner arrays are rows and objects at the indexes are columns
+     * @param {number} rows
+     * @param {number} cols
+     */
     initCellStyles(rows, cols) {
         const styles = [];
         for (let i = 0; i < rows; i++) {
@@ -798,12 +869,18 @@ export default class Table {
             for (let i = 0; i < data.content.length; i++) {
                 for (let j = 0; j < data.content[i].length; j++) {
                     this.setCellContent(i + 1, j + 1, data.content[i][j]);
+                    //Apply cell styles from data
                     this.setCellStyle(i + 1, j + 1);
                 }
             }
         }
     }
 
+    /**
+     * We set element style based on cell properties in data
+     * @param {number} row
+     * @param {number} col
+     */
     setCellStyle(row, col) {
         const cell = this.getCell(row, col);
         const cellStyleProperties = this.data.cellProperties[row - 1][col - 1]; //we subtract because array indexes begin from zero hence the 1st rows style is the 0th element in the structure
@@ -968,6 +1045,9 @@ export default class Table {
         this.toolboxColumn.hide();
     }
 
+    /**
+     * Close cell properties
+     */
     hideCellPropertiesPopover() {
         this.cellPropertiesPopover.close();
     }
@@ -1213,8 +1293,8 @@ export default class Table {
      */
     getData() {
         const data = {}
-        const contentData = [];
-        const cellProperties = [];
+        const contentData = []; //holds actual cell data
+        const cellProperties = []; //holds cell style properties
 
         for (let i = 1; i <= this.numberOfRows; i++) {
             const row = this.table.querySelector(`.${Table.CSS.row}:nth-child(${i})`);
@@ -1236,6 +1316,10 @@ export default class Table {
         return data;
     }
 
+    /**
+     * Modifies text alignment style
+     * @param {string} alignment
+     */
     toggleTextAlignment(alignment) {
         const cellNodes = this.table.getElementsByClassName(Table.CSS.cell);
         Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment))

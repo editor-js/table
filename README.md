@@ -3,6 +3,8 @@
 The A Modified Table Block for [Editor.js](https://editorjs.io). Finally improved.
 
 ![](https://capella.pics/41294cec-a2b3-4157-8399-ffefed3d8ffd.jpg)
+![](https://i.postimg.cc/wMgY2jVY/Screenshot-2022-01-07-at-4-46-13-PM.png)
+![](https://i.postimg.cc/V6jcXCXF/Screenshot-2022-01-07-at-4-46-23-PM.png)
 
 ## Installation
 
@@ -64,6 +66,7 @@ This Tool returns `data` in the following format
 | `withHeadings` | `boolean`    | Uses the first line as headings |
 | `content`      | `string[][]` | two-dimensional array with table contents |
 | `tableProperties`      | `object` | object with table style properties  |
+| `cellProperties`      | `array` | two-dimensional array with table style properties corresponding to the `content` data structure |
 | `textAlignment`             | `string` | Alignnment of all text in table  |
 
 ```json
@@ -77,6 +80,49 @@ This Tool returns `data` in the following format
       "backgroundColor": "#fffff",
       "borderWidth": "1px"
     },
+    "cellProperties": [[{
+      "borderColor": "#fffff",
+      "backgroundColor": "#fffff",
+      "borderWidth": "1px"
+    },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      }],[{
+      "borderColor": "#fffff",
+      "backgroundColor": "#fffff",
+      "borderWidth": "1px"
+    },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      }],[{
+      "borderColor": "#fffff",
+      "backgroundColor": "#fffff",
+      "borderWidth": "1px"
+    },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      },
+      {
+        "borderColor": "#fffff",
+        "backgroundColor": "#fffff",
+        "borderWidth": "1px"
+      }]],
     "textAlignment": "center"
   }
 }
@@ -116,3 +162,5 @@ CodeX is a team of digital specialists around the world interested in building h
 2.0.8 - Cleaning
 
 2.0.9 - Still here
+
+2.1.0 - Completed adding cell properties

@@ -240,6 +240,11 @@ export default class TableBlock {
     this.table.destroy();
   }
 
+  /**
+   * Creates the set of buttons used to toggle alignment settings
+   * @returns {HTMLElement[]}
+   * */
+
   createAlignmentSettings() {
     const alignmentTunes = [
       {
@@ -277,6 +282,12 @@ export default class TableBlock {
     return alignmentTunes.map(this.createAlignmentButton);
   }
 
+  /**
+   * Creates button used in align settings
+   *
+   * @param {object} alignmentTune
+   * @returns {HTMLElement}
+   */
   createAlignmentButton(alignmentTune) {
     let button = document.createElement('div');
     button.classList.add(this.api.styles.settingsButton);
@@ -292,6 +303,13 @@ export default class TableBlock {
     });
     return button;
   };
+
+  /**
+   * Toggles alignment styles when user selects alignment setting
+   * @param tune
+   * @param tuneButton
+   * @return {void}
+   */
 
   toggleAlignmentTune(tune, tuneButton) {
     const alignmentTunes = tuneButton.parentNode.querySelectorAll(`.${TableBlock.CSS.alignmentButton}`);
