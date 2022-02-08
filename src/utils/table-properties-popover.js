@@ -59,7 +59,9 @@ export default class TablePropertiesPopover extends Popover {
      * @returns {Element}
      */
     render(){
-        this.wrapper = $.make('div', [Popover.CSS.popover, Popover.CSS.popoverOpened, CSS.tablePopover, TablePropertiesPopover.CSS.propertiesDialog]);
+        this.wrapper = $.make('div', [Popover.CSS.popover, Popover.CSS.popoverOpened, CSS.tablePopover, TablePropertiesPopover.CSS.propertiesDialog], {
+            dir: 'ltr'
+        });
 
         const heading = $.make('h3', CSS.heading);
         heading.textContent = this.heading;

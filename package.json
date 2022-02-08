@@ -6,7 +6,7 @@
   "main": "./dist/table.js",
   "scripts": {
     "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch",
+    "build:dev": "npx webpack --mode development --watch",
     "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
   "repository": "https://github.com/YoofiBP/table",
@@ -36,7 +36,7 @@
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.0",
     "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3",
+    "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.5.0"
   },
   "dependencies": {

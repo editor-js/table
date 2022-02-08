@@ -60,7 +60,6 @@ export default class TableBlock {
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
-      textAlignment: data && data.textAlignment ? data.textAlignment : 'left',
       cellProperties: data && data.cellProperties ? data.cellProperties : undefined,
       tableProperties: data && data.tableProperties ? data.tableProperties : undefined
     }
@@ -68,8 +67,6 @@ export default class TableBlock {
     this.config = config;
     this.table = null;
     this.tablePropertiesWrapper = null;
-    this.toggleAlignmentTune = this.toggleAlignmentTune.bind(this)
-    this.createAlignmentButton = this.createAlignmentButton.bind(this)
   }
 
   /**
@@ -89,10 +86,6 @@ export default class TableBlock {
   static get CSS() {
     return {
       settingsWrapper: 'tc-settings',
-      textAlignRight: 'text-align-right',
-      textAlignLeft: 'text-align-left',
-      textAlignCenter: 'text-align-center',
-      alignmentButton: 'alignment-button'
     };
   }
 
@@ -112,8 +105,6 @@ export default class TableBlock {
     this.container.appendChild(this.tablePropertiesWrapper);
 
     this.table.setHeadingsSetting(this.data.withHeadings);
-
-    this.table.toggleTextAlignment(this.data.textAlignment)
 
     return this.container;
   }
@@ -162,7 +153,6 @@ export default class TableBlock {
 
     const tablePropertiesButton = this.renderTablePropertiesSettingsButton();
     wrapper.append(tablePropertiesButton)
-    wrapper.append(...this.createAlignmentSettings())
 
     return wrapper;
   }
@@ -201,7 +191,6 @@ export default class TableBlock {
       withHeadings: this.data.withHeadings,
       content: tableContent.content,
       tableProperties: tableContent.tableProperties,
-      textAlignment: this.data.textAlignment,
       cellProperties: tableContent.cellProperties
     };
 
@@ -240,84 +229,5 @@ export default class TableBlock {
     this.table.destroy();
   }
 
-  /**
-   * Creates the set of buttons used to toggle alignment settings
-   * @returns {HTMLElement[]}
-   * */
 
-  createAlignmentSettings() {
-    const alignmentTunes = [
-      {
-        style: 'center',
-        label: 'Center Text',
-        class: TableBlock.CSS.textAlignCenter,
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer" height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m46 23c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m46 45c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/></svg>`,
-        isActive: this.data.textAlignment === 'center',
-        setTune: () => {
-          return (this.data.textAlignment = 'center')
-        },
-      },
-      {
-        style: 'left',
-        label: 'Left Align Text',
-        class: TableBlock.CSS.textAlignLeft,
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer" height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m10 23h28c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m10 45h28c1.104 0 2-.896 2-2s-.896-2-2-2h-28c-1.104 0-2 .896-2 2s.896 2 2 2z"/></svg>`,
-        isActive: this.data.textAlignment === 'left',
-        setTune: () => {
-          return (this.data.textAlignment = 'left')
-        },
-      },
-      {
-        style: 'right',
-        label: 'Right Align Text',
-        class: TableBlock.CSS.textAlignRight,
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer"  height="20" viewBox="0 0 64 64" width="20"><path d="m54 8h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 52h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 19h-28c-1.104 0-2 .896-2 2s.896 2 2 2h28c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 30h-44c-1.104 0-2 .896-2 2s.896 2 2 2h44c1.104 0 2-.896 2-2s-.896-2-2-2z"/><path d="m54 41h-28c-1.104 0-2 .896-2 2s.896 2 2 2h28c1.104 0 2-.896 2-2s-.896-2-2-2z"/></svg>`,
-        isActive: this.data.textAlignment === 'right',
-        setTune: () => {
-          return (this.data.textAlignment = 'right')
-        },
-      },
-    ];
-
-    return alignmentTunes.map(this.createAlignmentButton);
-  }
-
-  /**
-   * Creates button used in align settings
-   *
-   * @param {object} alignmentTune
-   * @returns {HTMLElement}
-   */
-  createAlignmentButton(alignmentTune) {
-    let button = document.createElement('div');
-    button.classList.add(this.api.styles.settingsButton);
-    button.classList.add(TableBlock.CSS.alignmentButton);
-    button.innerHTML = alignmentTune.icon;
-    if (alignmentTune.isActive) {
-      button.classList.add(this.api.styles.settingsButtonActive);
-    }
-    button.addEventListener('click', () => this.toggleAlignmentTune(alignmentTune, button));
-    this.api.tooltip.onHover(button, alignmentTune.label, {
-      placement: 'top',
-      hidingDelay: 500,
-    });
-    return button;
-  };
-
-  /**
-   * Toggles alignment styles when user selects alignment setting
-   * @param tune
-   * @param tuneButton
-   * @return {void}
-   */
-
-  toggleAlignmentTune(tune, tuneButton) {
-    const alignmentTunes = tuneButton.parentNode.querySelectorAll(`.${TableBlock.CSS.alignmentButton}`);
-    (Array.from(alignmentTunes)).forEach((tune) => {
-      tune.classList.remove(this.api.styles.settingsButtonActive);
-    });
-    tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
-    tune.setTune();
-    this.table.toggleTextAlignment(tune.style);
-  }
 }

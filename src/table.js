@@ -1317,15 +1317,6 @@ export default class Table {
     }
 
     /**
-     * Modifies text alignment style
-     * @param {string} alignment
-     */
-    toggleTextAlignment(alignment) {
-        const cellNodes = this.table.getElementsByClassName(Table.CSS.cell);
-        Array.prototype.forEach.call(cellNodes, (node) => (node.style.textAlign = alignment))
-    }
-
-    /**
      * Remove listeners on the document
      */
     destroy() {

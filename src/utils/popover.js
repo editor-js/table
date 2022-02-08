@@ -46,7 +46,9 @@ export default class Popover {
    * @returns {Element}
    */
   render() {
-    this.wrapper = $.make('div', Popover.CSS.popover);
+    this.wrapper = $.make('div', Popover.CSS.popover, {
+      dir: 'ltr'
+    });
 
     this.items.forEach((item, index) => {
       const itemEl = $.make('div', Popover.CSS.item);
