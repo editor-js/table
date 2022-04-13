@@ -1,7 +1,7 @@
 {
   "name": "chalkboard-test-table",
   "description": "Table for Editor.js",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "license": "MIT",
   "main": "./dist/table.js",
   "scripts": {
