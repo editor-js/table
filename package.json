@@ -1,7 +1,7 @@
 {
   "name": "chalkboard-test-table",
   "description": "Table for Editor.js",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "license": "MIT",
   "main": "./dist/table.js",
   "scripts": {
@@ -41,6 +41,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.16.3",
-    "core-js": "3"
+    "chalkboard-plugins": "^1.0.9",
+    "core-js": "3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

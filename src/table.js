@@ -611,9 +611,10 @@ export default class Table {
         //Add new object to cell properties data structure in table data
         if(columnIndex > 0){
             this.addCellPropertiesColumn(columnIndex - 1)
+        }else {
+            this.addCellPropertiesColumn(this.data.cellProperties[0].length)
         }
 
-        this.addHeadingAttrToFirstRow();
     };
 
     /**
