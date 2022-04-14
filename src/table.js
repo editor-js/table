@@ -362,21 +362,21 @@ export default class Table {
                     },
                     style: Table.CSS.colorInput
                 },
-                {
+             /*   {
                     label: 'Border Width',
                     inputType: 'number',
                     id: 'border-width',
                     value: Number(this.data.tableProperties.borderWidth.replace('px', "")),
                     onChange: (value) => {
-                        this.data.tableProperties.borderWidth = `${value}px`;
-                        this.data.cellProperties.forEach((row) => {
-                            row.forEach((column) => {
-                                column.borderWidth = this.data.tableProperties.borderWidth;
-                            })
-                        })
+                         this.data.tableProperties.borderWidth = `${value}px`;
+                         this.data.cellProperties.forEach((row) => {
+                             row.forEach((column) => {
+                                 column.borderWidth = this.data.tableProperties.borderWidth;
+                             })
+                         })
                         this.updateTableStyle();
                     }
-                }
+                }*/
             ],
             //Reset properties on cancel
             onCancel: () => {
@@ -397,8 +397,9 @@ export default class Table {
         for(const property in this.data.tableProperties){
             this.table.style[property] = this.data.tableProperties[property]
         }
-        for (let i = 0; i < this.data.content.length; i++) {
-            for (let j = 0; j < this.data.content[i].length; j++) {
+
+        for (let i = 0; i < this.data.cellProperties.length; i++) {
+            for (let j = 0; j < this.data.cellProperties[i].length; j++) {
                 this.setCellStyle(i + 1, j + 1);
             }
         }
@@ -583,7 +584,7 @@ export default class Table {
         let numberOfColumns = this.numberOfColumns;
 
         /**
-         * Iterate all rows and add a new cell to them for creating a column
+         * Iterate all rows and add a new cell to -+them for creating a column
          */
         for (let rowIndex = 1; rowIndex <= this.numberOfRows; rowIndex++) {
             let cell;
@@ -612,9 +613,8 @@ export default class Table {
         if(columnIndex > 0){
             this.addCellPropertiesColumn(columnIndex - 1)
         }else {
-            this.addCellPropertiesColumn(this.data.cellProperties[0].length)
+            this.addCellPropertiesColumn(this.data.cellProperties[0]?.length || 0)
         }
-
     };
 
     /**
@@ -626,7 +626,7 @@ export default class Table {
         const getInitialStyle = () => {
             return Object.assign({}, this.data.tableProperties || defaultCellStyles);
         }
-        const isLastIndex = columnIndex === this.data.cellProperties[0].length;
+        const isLastIndex = this.data.cellProperties.length > 0 ? columnIndex === this.data.cellProperties[0].length : true;
         const isFirstIndex = columnIndex === 0;
         this.data.cellProperties.forEach((row) => {
             if(isLastIndex){
@@ -668,7 +668,6 @@ export default class Table {
         } else {
             insertedRow = this.table.appendChild(rowElem);
         }
-
         this.fillRow(insertedRow, numberOfColumns);
         //Create new "row" in data structure holding cell properties
         this.addCellPropertiesRow(numberOfColumns);
@@ -831,7 +830,6 @@ export default class Table {
         for (let i = 0; i < rows; i++) {
             this.addRow();
         }
-
         for (let i = 0; i < cols; i++) {
             this.addColumn();
         }
@@ -850,9 +848,9 @@ export default class Table {
     initCellStyles(rows, cols) {
         const styles = [];
         for (let i = 0; i < rows; i++) {
-            styles.push([])
+            styles.push([]);
             for (let j = 0; j < cols; j++) {
-                styles[i].push(this.data?.cellProperties ? this.data.cellProperties[i][j] : Object.assign({},defaultCellStyles))
+                styles[i].push(this.data.cellProperties?.[i]?.[j] ? this.data.cellProperties?.[i]?.[j] : Object.assign({},defaultCellStyles))
             }
         }
         this.data.cellProperties = styles;
@@ -959,7 +957,6 @@ export default class Table {
      */
     onMouseMoveInTable(event) {
         const {row, column} = this.getHoveredCell(event);
-
         this.hoveredColumn = column;
         this.hoveredRow = row;
 
@@ -1269,8 +1266,10 @@ export default class Table {
 
         while (leftBorder < rightBorder - 1 && totalIterations < 10) {
             mid = Math.ceil((leftBorder + rightBorder) / 2);
-
-            const cell = getCell(mid);
+            const cell = getCell(mid)
+           /* if(cell === null){
+                break;
+            }*/
             const relativeCoords = $.getRelativeCoordsOfTwoElems(this.table, cell);
 
             if (beforeTheLeftBorder(relativeCoords)) {

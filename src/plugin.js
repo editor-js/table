@@ -60,7 +60,7 @@ export default class TableBlock {
     this.data = {
       withHeadings: data && data.withHeadings ? data.withHeadings : false,
       content: data && data.content ? data.content : [],
-      cellProperties: data && data.cellProperties ? data.cellProperties : undefined,
+      cellProperties: data && data.cellProperties ? data.cellProperties : [],
       tableProperties: data && data.tableProperties ? data.tableProperties : undefined
     }
     ;
