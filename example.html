@@ -35,7 +35,6 @@
     <div id="editorjs"></div>
 
     <button class="save-button">Save</button>
-    <button class="print-button">Print</button>
     <pre class="output"></pre>
 
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
@@ -72,12 +71,6 @@
 
       const saveButton = document.querySelector(".save-button")
       const output = document.querySelector(".output")
-
-      const printButton = document.querySelector(".print-button")
-
-      printButton.addEventListener("click", () => {
-        window.print()
-      })
 
       saveButton.addEventListener("click", () => {
         editor.save().then((savedData) => {
