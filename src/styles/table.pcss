@@ -6,7 +6,9 @@
   --cell-size: 34px;
   --toolbox-icon-size: 18px;
   --toolbox-padding: 6px;
-  --toolbox-aiming-field-size: calc(var(--toolbox-icon-size) + 2 * var(--toolbox-padding));
+  --toolbox-aiming-field-size: calc(
+    var(--toolbox-icon-size) + 2 * var(--toolbox-padding)
+  );
 
   border-left: 0px;
   position: relative;
@@ -24,6 +26,17 @@
   svg {
     vertical-align: top;
     fill: currentColor;
+  }
+
+  @media print {
+    border-left: 1px solid var(--color-border);
+    grid-template-columns: 100% var(--cell-size);
+  }
+
+  .tc-row::after {
+    @media print {
+      display: none;
+    }
   }
 }
 
@@ -73,9 +86,14 @@
 }
 
 .tc-add {
-  &-column, &-row {
+  &-column,
+  &-row {
     display: flex;
     color: var(--color-text-secondary);
+  }
+
+  @media print {
+    display: none;
   }
 }
 
@@ -83,6 +101,10 @@
   padding: 9px 0;
   justify-content: center;
   border-top: 1px solid var(--color-border);
+
+  @media print {
+    display: none;
+  }
 }
 
 .tc-add-row {
@@ -92,16 +114,21 @@
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     right: calc(-1 * var(--cell-size));
     width: var(--cell-size);
     height: 100%;
   }
+
+  @media print {
+    display: none;
+  }
 }
 
 .tc-add {
-  &-column, &-row {
+  &-column,
+  &-row {
     transition: 0s;
     cursor: pointer;
     will-change: background-color;
@@ -129,7 +156,7 @@
   border-bottom: 1px solid var(--color-border);
 
   &::after {
-    content: '';
+    content: "";
     pointer-events: none;
     position: absolute;
     width: var(--cell-size);
