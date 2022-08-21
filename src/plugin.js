@@ -151,6 +151,113 @@ export default class TableBlock {
 
     return wrapper;
   }
+  
+  /**
+   * Table Tool on paste configuration
+   *
+   * @public
+   */
+  static get pasteConfig() {
+    return {
+      tags: ["table", "tr", "td", "th"]
+    };
+  }
+
+  /**
+   * On paste callback that is fired from Editor
+   * ready for word table or html table
+   *
+   * @param {PasteEvent} event - event with pasted data
+   */
+  onPaste(event) {
+    if (event.tag = "table") {
+      //get table body
+      let tbody = event.detail.data.outerHTML;
+      //get trs
+      const trregexp = /<tr[^>]*?>(.*?)<\/tr>/gism;
+      let tr = [...tbody.matchAll(trregexp)];
+      //if first item is th,set withHeadings true
+      if (tr.length > 0 && /<th[^>]*?>.*?<\/th>/gism.test(tr[0]))
+        this.data.withHeadings = true;
+      //ups is rowspan place holder
+      let ups = [];
+      //each tr line
+      for (let i = 0; i < tr.length; i++) {
+        let trmatch = tr[i];
+        let subdata = [];
+        //get tds
+        const tdregexp = /<(t[hd])([^>]*?)>(.*?)<\/\1>/gism;
+        let td = [...trmatch[1].matchAll(tdregexp)];
+        for (let j = 0; j < td.length; j++) {
+          let tdmatch = td[j];
+          //get colspan,rowspan of td
+          let colspan = 0;
+          let rowspan = 0;
+          let colmatch = tdmatch[2].match(/colspan[^\d]*(\d+)/i);
+          if (colmatch)
+            colspan = parseInt(colmatch[1]);
+          let rowmatch = tdmatch[2].match(/rowspan[^\d]*(\d+)/i);
+          if (rowmatch)
+            rowspan = parseInt(rowmatch[1]);
+          subdata.push((tdmatch[3]).trim());
+          //cursor of col
+          let offset = 0;
+          ups.forEach(function (up) {
+            if (up[0] == i && up[1] <= j) {
+              offset++;
+            }
+          });
+          //mark rowspan place holder
+          while (rowspan > 1) {
+            ups.push([i + rowspan - 1, j + offset]);
+            let tmpcol = colspan;
+            while (tmpcol > 1) {
+              ups.push([i + rowspan - 1, j + offset + tmpcol - 1]);
+              tmpcol--;
+            }
+            rowspan--;
+          }
+          //push "<" to colspan place
+          while (colspan > 1) {
+            subdata.push("<");
+            colspan--;
+          }
+        }
+        //push "^" to each rowspan place
+        ups.forEach(function (up) {
+          if (up[0] == i) {
+            subdata.splice(up[1], 0, "^");
+          }
+        });
+        this.data.content.push(subdata);
+      }
+      //some data need standardization, such as "half select tabe" from html
+      //get max col of content data
+      let maxcol = 0;
+      this.data.content.forEach(function (row) {
+        if (row.length > maxcol)
+          maxcol = row.length;
+      });
+      //add missing data,first line to left,other line to right
+      for(let k=0;k<this.data.content.length;k++){
+        while(this.data.content[k].length<maxcol){
+          if(k==0)
+          {
+            this.data.content[k].splice(0,0," ");
+          }
+          else
+          {
+            this.data.content[k].push("");
+          }
+        }
+      }
+      //render table
+      const oldView = this.table.wrapper;
+      if (oldView) {
+        oldView.parentNode.replaceChild(this.render(), oldView);
+      }
+    }
+  }
 
   /**
    * Extract table data from the view
