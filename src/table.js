@@ -935,7 +935,7 @@ export default class Table {
         continue;
       }
 
-      data.push(cells.map(cell => cell.innerHTML));
+      data.push(cells.map(cell => cell.innerText));
     }
 
     return data;
