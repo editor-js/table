@@ -200,6 +200,11 @@ export default class TableBlock {
     this.table.destroy();
   }
 
+  /**
+   * A helper to get config
+   *
+   * @returns {any}
+   */
   getConfig(configName, defaultValue=null) {
     if(this.data){
       return this.data[configName] ? this.data[configName] : defaultValue;
