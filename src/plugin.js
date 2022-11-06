@@ -79,17 +79,6 @@ export default class TableBlock {
   }
 
   /**
-   * Plugins styles
-   *
-   * @returns {{settingsWrapper: string}}
-   */
-  static get CSS() {
-    return {
-      settingsWrapper: 'tc-settings'
-    };
-  }
-
-  /**
    * Return Tool's view
    *
    * @returns {HTMLDivElement}
@@ -108,48 +97,32 @@ export default class TableBlock {
   }
 
   /**
-   * Add plugin settings
+   * Returns plugin settings
    *
-   * @returns {HTMLElement} - wrapper element
+   * @returns {Array}
    */
   renderSettings() {
-    const wrapper = $.make('div', TableBlock.CSS.settingsWrapper);
-
-    const tunes = [ {
-      name: this.api.i18n.t('With headings'),
-      icon: withHeadings,
-      isActive: this.data.withHeadings,
-      setTune: () => {
-        this.data.withHeadings = true;
+    return [
+      {
+        label: this.api.i18n.t('With headings'),
+        icon: withHeadings,
+        isActive: this.data.withHeadings,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.withHeadings = true;
+        }
+      }, {
+        label: this.api.i18n.t('Without headings'),
+        icon: withoutHeadings,
+        isActive: !this.data.withHeadings,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.withHeadings = false;
+        }
       }
-    }, {
-      name: this.api.i18n.t('Without headings'),
-      icon: withoutHeadings,
-      isActive: !this.data.withHeadings,
-      setTune: () => {
-        this.data.withHeadings = false;
-      }
-    } ];
-
-    tunes.forEach((tune) => {
-      let tuneButton = $.make('div', this.api.styles.settingsButton);
-
-      if (tune.isActive) {
-        tuneButton.classList.add(this.api.styles.settingsButtonActive);
-      }
-
-      tuneButton.innerHTML = tune.icon;
-      tuneButton.addEventListener('click', () => this.toggleTune(tune, tuneButton));
-
-      this.api.tooltip.onHover(tuneButton, tune.name, {
-        placement: 'top',
-        hidingDelay: 500
-      });
-
-      wrapper.append(tuneButton);
-    });
-
-    return wrapper;
+    ];
   }
 
   /**
