@@ -56,11 +56,11 @@ export default class TableBlock {
   constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.readOnly = readOnly;
+    this.config = config;
     this.data = {
-      withHeadings: data && data.withHeadings ? data.withHeadings : false,
+      withHeadings: this.getConfig('withHeadings', false),
       content: data && data.content ? data.content : []
     };
-    this.config = config;
     this.table = null;
   }
 
@@ -198,5 +198,18 @@ export default class TableBlock {
    */
   destroy() {
     this.table.destroy();
+  }
+
+  /**
+   * A helper to get config
+   *
+   * @returns {any}
+   */
+  getConfig(configName, defaultValue=null) {
+    if(this.data){
+      return this.data[configName] ? this.data[configName] : defaultValue;
+    }
+
+    return this.config && this.config[configName] ? this.config[configName] : defaultValue;
   }
 }

@@ -54,6 +54,7 @@ var editor = EditorJS({
 | ------------------ | -------- | ---------------------------------------- |
 | `rows`             | `number` | initial number of rows. `2`  by default |
 | `cols`             | `number` | initial number of columns. `2` by default |
+| `withHeadings`             | `boolean` | toggle table headings. `false` by default |
 
 ## Output data
 
