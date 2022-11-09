@@ -1,8 +1,7 @@
 import Table from './table';
-import tableIcon from './img/tableIcon.svg';
-import withHeadings from './img/with-headings.svg';
-import withoutHeadings from './img/without-headings.svg';
 import * as $ from './utils/dom';
+
+import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings } from '@codexteam/icons';
 
 /**
  * @typedef {object} TableConfig - configuration that the user can set for the table
@@ -73,7 +72,7 @@ export default class TableBlock {
    */
   static get toolbox() {
     return {
-      icon: tableIcon,
+      icon: IconTable,
       title: 'Table'
     };
   }
@@ -105,7 +104,7 @@ export default class TableBlock {
     return [
       {
         label: this.api.i18n.t('With headings'),
-        icon: withHeadings,
+        icon: IconTableWithHeadings,
         isActive: this.data.withHeadings,
         closeOnActivate: true,
         toggle: true,
@@ -114,7 +113,7 @@ export default class TableBlock {
         }
       }, {
         label: this.api.i18n.t('Without headings'),
-        icon: withoutHeadings,
+        icon: IconTableWithoutHeadings,
         isActive: !this.data.withHeadings,
         closeOnActivate: true,
         toggle: true,
