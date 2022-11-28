@@ -110,6 +110,7 @@ export default class TableBlock {
         toggle: true,
         onActivate: () => {
           this.data.withHeadings = true;
+          this.table.setHeadingsSetting(this.data.withHeadings);
         }
       }, {
         label: this.api.i18n.t('Without headings'),
@@ -119,6 +120,7 @@ export default class TableBlock {
         toggle: true,
         onActivate: () => {
           this.data.withHeadings = false;
+          this.table.setHeadingsSetting(this.data.withHeadings);
         }
       }
     ];
@@ -138,29 +140,6 @@ export default class TableBlock {
     };
 
     return result;
-  }
-
-  /**
-   * Changes the state of the tune
-   * Updates its representation in the table
-   *
-   * @param {Tune} tune - one of the table settings
-   * @param {HTMLElement} tuneButton - DOM element of the tune
-   * @returns {void}
-   */
-  toggleTune(tune, tuneButton) {
-    const buttons = tuneButton.parentNode.querySelectorAll('.' + this.api.styles.settingsButton);
-
-    // Clear other buttons
-    Array.from(buttons).forEach((button) =>
-      button.classList.remove(this.api.styles.settingsButtonActive)
-    );
-
-    // Mark active button
-    tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
-    tune.setTune();
-
-    this.table.setHeadingsSetting(this.data.withHeadings);
   }
 
   /**
