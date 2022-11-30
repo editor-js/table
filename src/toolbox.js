@@ -1,6 +1,6 @@
-import toolboxIcon from './img/toolboxIcon.svg';
 import Popover from './utils/popover';
 import * as $ from './utils/dom';
+import ToolboxIcon from './img/toolboxIcon.svg'
 
 /**
  * Toolbox is a menu for manipulation of rows/cols
@@ -77,7 +77,7 @@ export default class Toolbox {
    */
   createToggler() {
     const toggler = $.make('div', Toolbox.CSS.toggler, {
-      innerHTML: toolboxIcon
+      innerHTML: ToolboxIcon
     });
 
     toggler.addEventListener('click', () => {
