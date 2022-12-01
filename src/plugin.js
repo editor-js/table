@@ -156,10 +156,10 @@ export default class TableBlock {
    * @returns {any}
    */
   getConfig(configName, defaultValue = undefined, savedData = undefined) {
-    const sd = this.data || savedData;
+    const data = this.data || savedData;
 
-    if (sd) {
-      return sd[configName] ? sd[configName] : defaultValue;
+    if (data) {
+      return data[configName] ? data[configName] : defaultValue;
     }
 
     return this.config && this.config[configName] ? this.config[configName] : defaultValue;
