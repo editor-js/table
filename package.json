@@ -1,7 +1,7 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "main": "./dist/table.js",
   "scripts": {
@@ -35,5 +35,8 @@
     "svg-inline-loader": "^0.8.0",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "@codexteam/icons": "^0.0.6"
   }
 }

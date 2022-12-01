@@ -1,8 +1,7 @@
 import Table from './table';
-import tableIcon from './img/tableIcon.svg';
-import withHeadings from './img/with-headings.svg';
-import withoutHeadings from './img/without-headings.svg';
 import * as $ from './utils/dom';
+
+import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings } from '@codexteam/icons';
 
 /**
  * @typedef {object} TableConfig - configuration that the user can set for the table
@@ -74,19 +73,8 @@ export default class TableBlock {
    */
   static get toolbox() {
     return {
-      icon: tableIcon,
+      icon: IconTable,
       title: 'Table'
-    };
-  }
-
-  /**
-   * Plugins styles
-   *
-   * @returns {{settingsWrapper: string}}
-   */
-  static get CSS() {
-    return {
-      settingsWrapper: 'tc-settings'
     };
   }
 
@@ -108,7 +96,7 @@ export default class TableBlock {
     return this.container;
   }
 
-  /**
+   /**
    * Add plugin settings
    *
    * @returns {HTMLElement} - wrapper element
@@ -116,23 +104,21 @@ export default class TableBlock {
   renderSettings() {
     const wrapper = $.make('div', TableBlock.CSS.settingsWrapper);
 
-    const tunes = [
-      {
-        name: this.api.i18n.t('With headings'),
-        icon: withHeadings,
-        isActive: this.data.withHeadings,
-        setTune: () => {
-          this.data.withHeadings = true;
-        }
-      }, {
-        name: this.api.i18n.t('Without headings'),
-        icon: withoutHeadings,
-        isActive: !this.data.withHeadings,
-        setTune: () => {
-          this.data.withHeadings = false;
-        }
+    const tunes = [ {
+      name: this.api.i18n.t('With headings'),
+      icon: withHeadings,
+      isActive: this.data.withHeadings,
+      setTune: () => {
+        this.data.withHeadings = true;
       }
-    ];
+    }, {
+      name: this.api.i18n.t('Without headings'),
+      icon: withoutHeadings,
+      isActive: !this.data.withHeadings,
+      setTune: () => {
+        this.data.withHeadings = false;
+      }
+    } ];
 
     tunes.forEach((tune) => {
       let tuneButton = $.make('div', this.api.styles.settingsButton);
@@ -169,29 +155,6 @@ export default class TableBlock {
     };
 
     return result;
-  }
-
-  /**
-   * Changes the state of the tune
-   * Updates its representation in the table
-   *
-   * @param {Tune} tune - one of the table settings
-   * @param {HTMLElement} tuneButton - DOM element of the tune
-   * @returns {void}
-   */
-  toggleTune(tune, tuneButton) {
-    const buttons = tuneButton.parentNode.querySelectorAll('.' + this.api.styles.settingsButton);
-
-    // Clear other buttons
-    Array.from(buttons).forEach((button) =>
-      button.classList.remove(this.api.styles.settingsButtonActive)
-    );
-
-    // Mark active button
-    tuneButton.classList.toggle(this.api.styles.settingsButtonActive);
-    tune.setTune();
-
-    this.table.setHeadingsSetting(this.data.withHeadings);
   }
 
   /**
