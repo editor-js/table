@@ -96,51 +96,36 @@ export default class TableBlock {
     return this.container;
   }
 
-   /**
-   * Add plugin settings
+  /**
+   * Returns plugin settings
    *
-   * @returns {HTMLElement} - wrapper element
+   * @returns {Array}
    */
   renderSettings() {
-    const wrapper = $.make('div', TableBlock.CSS.settingsWrapper);
-
-    const tunes = [ {
-      name: this.api.i18n.t('With headings'),
-      icon: withHeadings,
-      isActive: this.data.withHeadings,
-      setTune: () => {
-        this.data.withHeadings = true;
+    return [
+      {
+        label: this.api.i18n.t('With headings'),
+        icon: IconTableWithHeadings,
+        isActive: this.data.withHeadings,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.withHeadings = true;
+          this.table.setHeadingsSetting(this.data.withHeadings);
+        }
+      }, {
+        label: this.api.i18n.t('Without headings'),
+        icon: IconTableWithoutHeadings,
+        isActive: !this.data.withHeadings,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.withHeadings = false;
+          this.table.setHeadingsSetting(this.data.withHeadings);
+        }
       }
-    }, {
-      name: this.api.i18n.t('Without headings'),
-      icon: withoutHeadings,
-      isActive: !this.data.withHeadings,
-      setTune: () => {
-        this.data.withHeadings = false;
-      }
-    } ];
-
-    tunes.forEach((tune) => {
-      let tuneButton = $.make('div', this.api.styles.settingsButton);
-
-      if (tune.isActive) {
-        tuneButton.classList.add(this.api.styles.settingsButtonActive);
-      }
-
-      tuneButton.innerHTML = tune.icon;
-      tuneButton.addEventListener('click', () => this.toggleTune(tune, tuneButton));
-
-      this.api.tooltip.onHover(tuneButton, tune.name, {
-        placement: 'top',
-        hidingDelay: 500
-      });
-
-      wrapper.append(tuneButton);
-    });
-
-    return wrapper;
+    ];
   }
-
   /**
    * Extract table data from the view
    *
