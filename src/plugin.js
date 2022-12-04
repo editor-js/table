@@ -52,12 +52,12 @@ export default class TableBlock {
    * @param {object} api - Editor.js API
    * @param {boolean} readOnly - read-only mode flag
    */
-  constructor({ data, config, api, readOnly }) {
+  constructor({data, config, api, readOnly}) {
     this.api = api;
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
-      withHeadings: this.getConfig('withHeadings', false),
+      withHeadings: this.getConfig('withHeadings', false, data),
       content: data && data.content ? data.content : []
     };
     this.table = null;
@@ -125,7 +125,6 @@ export default class TableBlock {
       }
     ];
   }
-
   /**
    * Extract table data from the view
    *
@@ -134,7 +133,7 @@ export default class TableBlock {
   save() {
     const tableContent = this.table.getData();
 
-    let result = {
+    const result = {
       withHeadings: this.data.withHeadings,
       content: tableContent
     };
@@ -152,13 +151,18 @@ export default class TableBlock {
   }
 
   /**
-   * A helper to get config
-   *
-   * @returns {any}
+   * A helper to get config value.
+   * 
+   * @param {string} configName - the key to get from the config. 
+   * @param {any} defaultValue - default value if config doesn't have passed key
+   * @param {object} savedData - previously saved data. If passed, the key will be got from there, otherwise from the config
+   * @returns {any} - config value.
    */
-  getConfig(configName, defaultValue=null) {
-    if(this.data){
-      return this.data[configName] ? this.data[configName] : defaultValue;
+  getConfig(configName, defaultValue = undefined, savedData = undefined) {
+    const data = this.data || savedData;
+
+    if (data) {
+      return data[configName] ? data[configName] : defaultValue;
     }
 
     return this.config && this.config[configName] ? this.config[configName] : defaultValue;
