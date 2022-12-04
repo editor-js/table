@@ -151,9 +151,12 @@ export default class TableBlock {
   }
 
   /**
-   * A helper to get config
-   *
-   * @returns {any}
+   * A helper to get config value.
+   * 
+   * @param {string} configName - name of the config. 
+   * @param {any} defaultValue - default value if config is not set.
+   * @param {object} savedData - saved data.
+   * @returns {any} - config value.
    */
   getConfig(configName, defaultValue = undefined, savedData = undefined) {
     const data = this.data || savedData;
