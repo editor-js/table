@@ -153,7 +153,7 @@ export default class TableBlock {
   /**
    * A helper to get config value.
    * 
-   * @param {string} configName - name of the config. 
+   * @param {string} configName - the key to get from the config. 
    * @param {any} defaultValue - default value if config is not set.
    * @param {object} savedData - saved data.
    * @returns {any} - config value.
