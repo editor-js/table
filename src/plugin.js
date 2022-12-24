@@ -184,18 +184,29 @@ export default class TableBlock {
    */
   onPaste(event) {
     const table = event.detail.data;
-    // This isn't ideal. Ideally the plugin would allow individual cells to be
-    // headings rather than the first row.
-    const firstRowHeading =
-      table.querySelector(':scope > thead, tr:first-of-type th');
-    const content = Array.from(table.querySelectorAll('tr')).map((row) => (
-      Array.from(row.querySelectorAll('th, td')).map((cell) => cell.innerText)
-    ));
 
+    /** Check if the first row is a header */
+    const firstRowHeading = table.querySelector(':scope > thead, tr:first-of-type th');
+
+    /** Get all rows from the table */
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    /** Generate a content matrix */
+    const content = rows.map((row) => {
+      /** Get cells from row */
+      const cells = Array.from(row.querySelectorAll('th, td'))
+      
+      /** Return cells content */
+      return cells.map((cell) => cell.innerText);
+    });
+
+    /** Update Tool's data */
     this.data = {
       withHeadings: firstRowHeading !== null,
       content
     };
+
+    /** Update table block */
     if (this.table.wrapper) {
       this.table.wrapper.replaceWith(this.render());
     }
