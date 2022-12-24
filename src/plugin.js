@@ -167,4 +167,48 @@ export default class TableBlock {
 
     return this.config && this.config[configName] ? this.config[configName] : defaultValue;
   }
+
+  /**  
+   * Table onPaste configuration
+   *
+   * @public
+   */
+  static get pasteConfig() {
+    return { tags: ['TABLE', 'TR', 'TH', 'TD'] };
+  }
+
+  /**
+   * On paste callback that is fired from Editor
+   *
+   * @param {PasteEvent} event - event with pasted data
+   */
+  onPaste(event) {
+    const table = event.detail.data;
+
+    /** Check if the first row is a header */
+    const firstRowHeading = table.querySelector(':scope > thead, tr:first-of-type th');
+
+    /** Get all rows from the table */
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    /** Generate a content matrix */
+    const content = rows.map((row) => {
+      /** Get cells from row */
+      const cells = Array.from(row.querySelectorAll('th, td'))
+      
+      /** Return cells content */
+      return cells.map((cell) => cell.innerHTML);
+    });
+
+    /** Update Tool's data */
+    this.data = {
+      withHeadings: firstRowHeading !== null,
+      content
+    };
+
+    /** Update table block */
+    if (this.table.wrapper) {
+      this.table.wrapper.replaceWith(this.render());
+    }
+  }
 }
