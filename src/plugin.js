@@ -197,7 +197,7 @@ export default class TableBlock {
       const cells = Array.from(row.querySelectorAll('th, td'))
       
       /** Return cells content */
-      return cells.map((cell) => cell.innerText);
+      return cells.map((cell) => cell.innerHTML);
     });
 
     /** Update Tool's data */
