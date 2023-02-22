@@ -279,7 +279,7 @@ export default class Table {
    * @returns {HTMLElement}
    */
   getCell(row, column) {
-    return this.table.querySelector(`.${CSS.row}:nth-child(${row}) .${CSS.cell}:nth-child(${column})`);
+    return this.table.querySelectorAll(`.${CSS.row}:nth-child(${row}) .${CSS.cell}`)[column - 1];
   }
 
   /**
@@ -570,7 +570,7 @@ export default class Table {
    */
   get numberOfColumns() {
     if (this.numberOfRows) {
-      return this.table.querySelector(`.${CSS.row}:first-child`).childElementCount;
+      return this.table.querySelectorAll(`.${CSS.row}:first-child .${CSS.cell}`).length;
     }
 
     return 0;
