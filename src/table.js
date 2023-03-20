@@ -74,7 +74,7 @@ export default class Table {
 
     // Additional settings for the table
     this.tunes = {
-      withHeadings: false
+      withHeadings: config?.withHeadings ? true : false
     };
 
     /**
