@@ -61,6 +61,8 @@ export default class Toolbox {
       Toolbox.CSS.toolbox,
       (this.cssModifier ? `${Toolbox.CSS.toolbox}--${this.cssModifier}` : '')
     ]);
+
+    wrapper.dataset.mutationFree = 'true';
     const popover = this.createPopover();
     const toggler = this.createToggler();
 
