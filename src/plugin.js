@@ -57,7 +57,7 @@ export default class TableBlock {
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
-      withHeadings: this.getConfig('withHeadings', false, data),
+      withHeadings: this.getConfig('withHeadings', data),
       content: data && data.content ? data.content : []
     };
     this.table = null;
@@ -154,18 +154,17 @@ export default class TableBlock {
    * A helper to get config value.
    * 
    * @param {string} configName - the key to get from the config. 
-   * @param {any} defaultValue - default value if config doesn't have passed key
    * @param {object} savedData - previously saved data. If passed, the key will be got from there, otherwise from the config
    * @returns {any} - config value.
    */
-  getConfig(configName, defaultValue = undefined, savedData = undefined) {
+  getConfig(configName, savedData = undefined) {
     const data = this.data || savedData;
 
-    if (data) {
-      return data[configName] ? data[configName] : defaultValue;
+    if (data && configName in data) {
+      return data[configName]
     }
 
-    return this.config && this.config[configName] ? this.config[configName] : defaultValue;
+    return this.config && this.config[configName] ? this.config[configName] : false;
   }
 
   /**  
