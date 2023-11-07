@@ -4,10 +4,20 @@
   "version": "2.3.0",
   "license": "MIT",
   "repository": "https://github.com/editor-js/table",
-  "main": "./dist/table.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/table.umd.js",
+  "module": "./dist/table.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/table.mjs",
+      "require": "./dist/table.umd.js"
+    }
+  },
   "scripts": {
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch",
+    "dev": "vite",
+    "build": "vite build",
     "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
   "author": {
