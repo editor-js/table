@@ -1,7 +1,6 @@
 import Popover from './utils/popover';
 import * as $ from './utils/dom';
-import ToolboxIcon from './img/toolboxIcon.svg'
-
+import ToolboxIcon from './img/toolboxIcon.svg?raw';
 /**
  * Toolbox is a menu for manipulation of rows/cols
  *
