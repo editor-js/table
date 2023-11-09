@@ -1,6 +1,6 @@
-import Popover from './utils/popover';
-import * as $ from './utils/dom';
-import ToolboxIcon from './img/toolboxIcon.svg?raw';
+import Popover from "./utils/popover";
+import * as $ from "./utils/dom";
+import { IconMenuSmall } from "@codexteam/icons";
 /**
  * Toolbox is a menu for manipulation of rows/cols
  *
@@ -20,7 +20,7 @@ export default class Toolbox {
    * @param {function} onClose - callback fired when the Popover is closing
    * @param {string} [cssModifier] - the modifier for the Toolbox. Allows to add some specific styles.
    */
-  constructor({api, items, onOpen, onClose, cssModifier = ''}) {
+  constructor({ api, items, onOpen, onClose, cssModifier = "" }) {
     this.api = api;
 
     this.items = items;
@@ -37,9 +37,9 @@ export default class Toolbox {
    */
   static get CSS() {
     return {
-      toolbox: 'tc-toolbox',
-      toolboxShowed: 'tc-toolbox--showed',
-      toggler: 'tc-toolbox__toggler'
+      toolbox: "tc-toolbox",
+      toolboxShowed: "tc-toolbox--showed",
+      toggler: "tc-toolbox__toggler",
     };
   }
 
@@ -56,12 +56,12 @@ export default class Toolbox {
    * @returns {Element}
    */
   createToolbox() {
-    const wrapper = $.make('div', [
+    const wrapper = $.make("div", [
       Toolbox.CSS.toolbox,
-      (this.cssModifier ? `${Toolbox.CSS.toolbox}--${this.cssModifier}` : '')
+      this.cssModifier ? `${Toolbox.CSS.toolbox}--${this.cssModifier}` : "",
     ]);
 
-    wrapper.dataset.mutationFree = 'true';
+    wrapper.dataset.mutationFree = "true";
     const popover = this.createPopover();
     const toggler = this.createToggler();
 
@@ -77,11 +77,11 @@ export default class Toolbox {
    * @returns {Element}
    */
   createToggler() {
-    const toggler = $.make('div', Toolbox.CSS.toggler, {
-      innerHTML: ToolboxIcon
+    const toggler = $.make("div", Toolbox.CSS.toggler, {
+      innerHTML: IconMenuSmall,
     });
 
-    toggler.addEventListener('click', () => {
+    toggler.addEventListener("click", () => {
       this.togglerClicked();
     });
 
@@ -95,7 +95,7 @@ export default class Toolbox {
    */
   createPopover() {
     this.popover = new Popover({
-      items: this.items
+      items: this.items,
     });
 
     return this.popover.render();
