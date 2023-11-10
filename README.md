@@ -9,13 +9,18 @@ The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
 Get the package
 
 ```shell
-npm i --save @editorjs/table
-```
-or
-
-```shell
 yarn add @editorjs/table
 ```
+
+Include module at your application
+
+```javascript
+import Table from '@editorjs/table'
+```
+
+Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/table@latest)
+
+
 
 ## Usage
 

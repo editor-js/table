@@ -1,15 +1,25 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "license": "MIT",
-  "main": "./dist/table.js",
+  "repository": "https://github.com/editor-js/table",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/table.umd.js",
+  "module": "./dist/table.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/table.mjs",
+      "require": "./dist/table.umd.js"
+    }
+  },
   "scripts": {
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch",
+    "dev": "vite",
+    "build": "vite build",
     "lint": "eslint -c ./.eslintrc --ext .js --fix ."
   },
-  "repository": "https://github.com/editor-js/table",
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
@@ -28,13 +38,10 @@
     "eslint": "^5.8.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
     "postcss-import": "^12.0.1",
-    "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.0",
     "postcss-nesting": "^7.0.0",
-    "style-loader": "^0.23.1",
-    "svg-inline-loader": "^0.8.0",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "vite": "^4.5.0",
+    "vite-plugin-css-injected-by-js": "^3.3.0"
   },
   "dependencies": {
     "@codexteam/icons": "^0.0.6"
