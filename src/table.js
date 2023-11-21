@@ -169,6 +169,7 @@ export default class Table {
       items: [
         {
           label: this.api.i18n.t('Add column to left'),
+          name: 'column-left',
           icon: IconDirectionLeftDown,
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
@@ -177,6 +178,7 @@ export default class Table {
         },
         {
           label: this.api.i18n.t('Add column to right'),
+          name: 'column-right',
           icon: IconDirectionRightDown,
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
@@ -185,6 +187,7 @@ export default class Table {
         },
         {
           label: this.api.i18n.t('Delete column'),
+          name: 'delete',
           icon: IconCross,
           hideIf: () => {
             return this.numberOfColumns === 1;
@@ -218,6 +221,7 @@ export default class Table {
       items: [
         {
           label: this.api.i18n.t('Add row above'),
+          name: 'row-above',
           icon: IconDirectionUpRight,
           onClick: () => {
             this.addRow(this.selectedRow, true);
@@ -226,6 +230,7 @@ export default class Table {
         },
         {
           label: this.api.i18n.t('Add row below'),
+          name: 'row-below',
           icon: IconDirectionDownRight,
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
@@ -234,6 +239,7 @@ export default class Table {
         },
         {
           label: this.api.i18n.t('Delete row'),
+          name: 'delete',
           icon: IconCross,
           hideIf: () => {
             return this.numberOfRows === 1;
