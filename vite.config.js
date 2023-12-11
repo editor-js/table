@@ -19,5 +19,5 @@ export default {
     VERSION: JSON.stringify(VERSION),
   },
 
-  plugins: [cssInjectedByJsPlugin()],
+  plugins: [cssInjectedByJsPlugin({useStrictCSP: true})],
 };
