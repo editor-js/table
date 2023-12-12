@@ -52,8 +52,13 @@ export default class TableBlock {
    */
   static get sanitize() {
     return {
-      br: {
-      }
+      br: true,
+      u: true,
+      b: true,
+      i: true,
+      del: true,
+      p: true,
+      a: true
     }
   }
 
