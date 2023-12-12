@@ -44,6 +44,11 @@ export default class Table {
     this.config = config;
 
     /**
+     * Config default
+     */
+    this.config.allowEmptyRows = config.allowEmptyRows ? config.allowEmptyRows : false;
+
+    /**
      * DOM nodes
      */
     this.wrapper = null;
@@ -934,8 +939,8 @@ export default class Table {
       const cells = Array.from(row.querySelectorAll(`.${CSS.cell}`));
       const isEmptyRow = cells.every(cell => !cell.textContent.trim());
 
-      if (isEmptyRow) {
-        continue;
+      if(!this.config.allowEmptyRows && isEmptyRow){
+          continue;
       }
 
       data.push(cells.map(cell => cell.innerHTML));
