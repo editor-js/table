@@ -1,7 +1,7 @@
 import Table from './table';
 import * as $ from './utils/dom';
 
-import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings } from '@codexteam/icons';
+import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconAlignCenter } from '@codexteam/icons';
 
 /**
  * @typedef {object} TableConfig - configuration that the user can set for the table
@@ -18,6 +18,7 @@ import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings } from '@cod
 /**
  * @typedef {object} TableData - object with the data transferred to form a table
  * @property {boolean} withHeading - setting to use cells of the first row as headings
+ * @property {boolean} withCaption - setting to caption about table
  * @property {string[][]} content - two-dimensional array which contains table content
  */
 
@@ -58,6 +59,7 @@ export default class TableBlock {
     this.config = config;
     this.data = {
       withHeadings: this.getConfig('withHeadings', false, data),
+      withCaption: this.getConfig('withCaption', false, data),
       content: data && data.content ? data.content : []
     };
     this.table = null;
@@ -88,9 +90,10 @@ export default class TableBlock {
 
     /** creating container around table */
     this.container = $.make('div', this.api.styles.block);
-    this.container.appendChild(this.table.getWrapper());
+    this.container.appendChild(this.table.getTableContainer());
 
     this.table.setHeadingsSetting(this.data.withHeadings);
+    this.table.initCaption(this.data.withCaption);
 
     return this.container;
   }
@@ -112,7 +115,18 @@ export default class TableBlock {
           this.data.withHeadings = true;
           this.table.setHeadingsSetting(this.data.withHeadings);
         }
-      }, {
+      },
+      {
+        label: this.data.withCaption ? this.api.i18n.t('Without caption') : this.api.i18n.t('With caption'),
+        icon: IconAlignCenter,
+        isActive: this.data.withCaption,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.withCaption = this.table.toggleCaptionSetting(); 
+        },
+      }, 
+      {
         label: this.api.i18n.t('Without headings'),
         icon: IconTableWithoutHeadings,
         isActive: !this.data.withHeadings,
@@ -135,6 +149,7 @@ export default class TableBlock {
 
     const result = {
       withHeadings: this.data.withHeadings,
+      withCaption: this.data.withCaption,
       content: tableContent
     };
 

@@ -21,7 +21,9 @@ const CSS = {
   cell: 'tc-cell',
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
-  addColumn: 'tc-add-column'
+  addColumn: 'tc-add-column',
+  caption: 'tc-caption',
+  tableContainer: 'tc-table-container'
 };
 
 /**
@@ -46,6 +48,7 @@ export default class Table {
     /**
      * DOM nodes
      */
+    this.tableContainer = null
     this.wrapper = null;
     this.table = null;
 
@@ -74,7 +77,8 @@ export default class Table {
 
     // Additional settings for the table
     this.tunes = {
-      withHeadings: false
+      withHeadings: false,
+      withCaption: false
     };
 
     /**
@@ -135,6 +139,15 @@ export default class Table {
    */
   getWrapper() {
     return this.wrapper;
+  }
+  
+  /**
+   * Returns the rendered table container
+   *
+   * @returns {Element}
+   */
+  getTableContainer() {
+    return this.tableContainer;
   }
 
   /**
@@ -445,17 +458,17 @@ export default class Table {
    * @returns {HTMLElement} wrapper - where all buttons for a table and the table itself will be
    */
   createTableWrapper() {
+    this.tableContainer = $.make('div', CSS.tableContainer)
     this.wrapper = $.make('div', CSS.wrapper);
     this.table = $.make('div', CSS.table);
 
     if (this.readOnly) {
       this.wrapper.classList.add(CSS.wrapperReadOnly);
     }
-
     this.wrapper.appendChild(this.toolboxRow.element);
     this.wrapper.appendChild(this.toolboxColumn.element);
     this.wrapper.appendChild(this.table);
-
+    
     if (!this.readOnly) {
       const addColumnButton = $.make('div', CSS.addColumn, {
         innerHTML: IconPlus
@@ -463,9 +476,10 @@ export default class Table {
       const addRowButton = $.make('div', CSS.addRow, {
         innerHTML: IconPlus
       });
-
+      
       this.wrapper.appendChild(addColumnButton);
       this.wrapper.appendChild(addRowButton);
+      this.tableContainer.appendChild(this.wrapper)
     }
   }
 
@@ -736,6 +750,47 @@ export default class Table {
         });
       }
     }
+  }
+
+
+  /**
+   * Add caption after the table
+   *
+   * @param {boolean} isCaptionSelected - use caption or not
+   */
+  initCaption(isCaptionSelected) {
+    this.tunes.withCaption = !isCaptionSelected
+    this.toggleCaptionSetting()
+  }
+
+  /** 
+   * toggle caption after the table 
+   */
+  toggleCaptionSetting() {
+    const tableContainer = this.getTableContainer()
+
+    if (this.tunes.withCaption) {
+      this.tunes.withCaption = false
+      const caption = document.getElementById("caption")
+      if (caption) {
+        caption.remove()
+      }
+    } else {
+      this.tunes.withCaption = true
+      const caption = document.createElement("div")
+      caption.contentEditable = true
+      caption.id = 'caption'
+      caption.className = CSS.caption
+      caption.innerText = 'Enter your caption'
+      // empty the div on keydown event
+      caption.addEventListener('keydown', (e) => {  
+        caption.innerText = ''
+      }, {once: true})
+      
+      tableContainer.appendChild(caption)
+    }
+
+    return this.tunes.withCaption
   }
 
   /**
