@@ -25,6 +25,20 @@ const CSS = {
 };
 
 /**
+ * @typedef {object} TableConfig
+ * @description Tool's config from Editor
+ * @property {boolean} withHeadings — Uses the first line as headings
+ * @property {string[][]} withHeadings — two-dimensional array with table contents
+ */
+
+/**
+ * @typedef {object} TableData - object with the data transferred to form a table
+ * @property {number} rows - number of rows in the table
+ * @property {number} cols - number of columns in the table
+ */
+
+
+/**
  * Generates and manages table contents.
  */
 export default class Table {
