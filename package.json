@@ -14,7 +14,7 @@
     ".": {
       "import": "./dist/table.mjs",
       "require": "./dist/table.umd.js",
-      "types": "./dist/table.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
