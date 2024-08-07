@@ -9,7 +9,7 @@
   ],
   "main": "./dist/table.umd.js",
   "module": "./dist/table.mjs",
-  "types": "./dist/table.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/table.mjs",
