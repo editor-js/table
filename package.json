@@ -1,7 +1,7 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "license": "MIT",
   "repository": "https://github.com/editor-js/table",
   "files": [
@@ -38,7 +38,7 @@
     "css-loader": "^1.0.0",
     "cssnano": "^4.1.7",
     "eslint": "^5.8.0",
-    "eslint-config-codex": "github:codex-team/eslint-config",
+    "eslint-config-codex": "^2.0.1",
     "postcss-import": "^12.0.1",
     "postcss-nested": "^4.1.0",
     "postcss-nesting": "^7.0.0",
