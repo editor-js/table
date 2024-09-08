@@ -184,6 +184,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add column to left'),
           icon: IconDirectionLeftDown,
+          hideIf: () => {
+            return  this.numberOfColumns === this.config.maxcols
+          },
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
             this.hideToolboxes();
@@ -192,6 +195,10 @@ export default class Table {
         {
           label: this.api.i18n.t('Add column to right'),
           icon: IconDirectionRightDown,
+          hideIf: () => {
+            return  this.numberOfColumns === this.config.maxcols
+          }
+          ,
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
             this.hideToolboxes();
@@ -233,6 +240,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add row above'),
           icon: IconDirectionUpRight,
+          hideIf: () => {
+            return  this.numberOfRows === this.config.maxrows
+          },
           onClick: () => {
             this.addRow(this.selectedRow, true);
             this.hideToolboxes();
@@ -241,6 +251,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add row below'),
           icon: IconDirectionDownRight,
+          hideIf: () => {
+            return  this.numberOfRows === this.config.maxrows
+          },
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
             this.hideToolboxes();
@@ -349,6 +362,10 @@ export default class Table {
   addColumn(columnIndex = -1, setFocus = false) {
     let numberOfColumns = this.numberOfColumns;
 
+    if ((this.config && this.config.maxcols && this.numberOfColumns) >= ((this.config.maxcols))) {
+        return;
+    }
+
     /**
      * Iterate all rows and add a new cell to them for creating a column
      */
@@ -376,7 +393,15 @@ export default class Table {
       }
     }
 
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if ((this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1) && (addColButton) ){
+      addColButton.disabled = true;
+      addColButton.classList.add(CSS.disabled); 
+      addColButton.textContent =''
+    }
     this.addHeadingAttrToFirstRow();
+      
+  
   };
 
   /**
@@ -401,6 +426,10 @@ export default class Table {
      */
     let numberOfColumns = this.numberOfColumns;
 
+    if ((this.config && this.config?.maxrows && this.numberOfRows) >= (this.config?.maxrows)) {
+      return;
+  }
+
     if (index > 0 && index <= this.numberOfRows) {
       let row = this.getRow(index);
 
@@ -421,6 +450,12 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    if (((this.config && this.config?.maxrows && this.numberOfRows) > (this.config?.maxrows-1)) && (addRowButton))   {
+      addRowButton.disabled = true;
+      addRowButton.classList.add(CSS.disabled); 
+      addRowButton.textContent =''
+    }
     return insertedRow;
   };
 
@@ -439,6 +474,14 @@ export default class Table {
 
       cell.remove();
     }
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if (addColButton) {
+      addColButton.innerHTML = IconPlus;
+      addColButton.disabled = false;
+      addColButton.classList.remove(CSS.disabled); 
+      
+    }
+
   }
 
   /**
@@ -448,6 +491,12 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    if (addRowButton) {
+      addRowButton.innerHTML = IconPlus;
+      addRowButton.disabled = false;
+      addRowButton.classList.remove(CSS.disabled); 
+    }
 
     this.addHeadingAttrToFirstRow();
   }
