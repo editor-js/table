@@ -451,7 +451,7 @@ export default class Table {
     }
 
     const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
-    if (((this.config && this.config?.maxrows && this.numberOfRows) > (this.config?.maxrows-1)) && (addRowButton))   {
+    if ((this.config && this.config?.maxrows) && (this.numberOfRows >= this.config?.maxrows) && (addRowButton))   {
       addRowButton.disabled = true;
       addRowButton.classList.add(CSS.disabled); 
       addRowButton.textContent =''
