@@ -362,7 +362,7 @@ export default class Table {
   addColumn(columnIndex = -1, setFocus = false) {
     let numberOfColumns = this.numberOfColumns;
 
-    if ((this.config && this.config.maxcols && this.numberOfColumns) >= ((this.config.maxcols))) {
+    if ((this.config && this.config.maxcols) && (this.numberOfColumns >= this.config.maxcols)) {
         return;
     }
 
