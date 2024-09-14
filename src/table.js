@@ -394,16 +394,17 @@ export default class Table {
         }
       }
     }
-
+    
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
-    if ((this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1) && (addColButton) ){
-      addColButton.disabled = true;
-      addColButton.classList.add("disabled"); 
-      addColButton.textContent =''
+    
+    if (this.config?.maxcols && this.numberOfColumns >= this.config.maxcols && addColButton) {
+      if(addColButton){
+        addColButton.remove(); 
+      }
+      this.wrapper.style.setProperty('grid-template-columns', 'calc(100% - var(--cell-size))');
     }
-    this.addHeadingAttrToFirstRow();
-      
   
+    this.addHeadingAttrToFirstRow();
   };
 
   /**
@@ -455,7 +456,7 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
-    let addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
     if ((this.config && this.config?.maxrows) && (this.numberOfRows >= this.config?.maxrows) && (addRowButton))   {
       addRowButton.remove();
       
@@ -478,12 +479,18 @@ export default class Table {
 
       cell.remove();
     }
-    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
-    if (addColButton) {
-      addColButton.innerHTML = IconPlus;
-      addColButton.disabled = false;
-      addColButton.classList.remove("disabled"); 
-      
+    /**  
+     * To add addcolumn , when it is lesser than maxcol
+     */
+    const addColumnButton = $.make('div', CSS.addColumn, {
+      innerHTML: IconPlus
+    })
+    const table = this.wrapper.querySelector(`.tc-table`)
+    if (!this.wrapper.querySelector(`.${CSS.addColumn}`)) {
+      this.wrapper.style.setProperty('grid-template-columns', 'calc(100% - var(--cell-size)) var(--cell-size)');
+      if(addColumnButton){
+        $.insertAfter(addColumnButton,table)      
+      }
     }
   }
 
@@ -494,6 +501,10 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
+     /** 
+      * To add addrow , when it is lesser than maxrow
+      */ 
+
     const RowButton = $.make('div', CSS.addRow, {
       innerHTML: IconPlus
     })
