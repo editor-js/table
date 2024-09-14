@@ -455,11 +455,10 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
-    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    let addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
     if ((this.config && this.config?.maxrows) && (this.numberOfRows >= this.config?.maxrows) && (addRowButton))   {
-      addRowButton.disabled = true;
-      addRowButton.classList.add("disabled"); 
-      addRowButton.textContent =''
+      addRowButton.remove();
+      
     }
     return insertedRow;
   };
@@ -495,12 +494,16 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
-    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
-    if (addRowButton) {
-      addRowButton.innerHTML = IconPlus;
-      addRowButton.disabled = false;
-      addRowButton.classList.remove("disabled"); 
-    }
+    const RowButton = $.make('div', CSS.addRow, {
+      innerHTML: IconPlus
+    })
+      if((!this.wrapper.querySelector(`.${CSS.addRow}`)) &&(!this.wrapper.querySelector(`.${CSS.addColumn}`))){
+        $.insertAfter(RowButton,this.wrapper.querySelector(`.${CSS.table}`))
+      }
+      else if (!this.wrapper.querySelector(`.${CSS.addRow}`)) {
+      $.insertAfter(RowButton,this.wrapper.querySelector(`.${CSS.addColumn}`))
+      }
+  
 
     this.addHeadingAttrToFirstRow();
   }
