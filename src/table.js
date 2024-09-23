@@ -197,7 +197,8 @@ export default class Table {
           icon: IconDirectionRightDown,
           hideIf: () => {
             return  this.numberOfColumns === this.config.maxcols
-          },
+          }
+          ,
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
             this.hideToolboxes();
@@ -394,17 +395,14 @@ export default class Table {
         }
       }
     }
-    
+
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
-    
-    if (this.config?.maxcols && this.numberOfColumns >= this.config.maxcols && addColButton) {
-      if(addColButton){
-        addColButton.remove(); 
-      }
-      this.wrapper.style.setProperty('grid-template-columns', 'calc(100% - var(--cell-size))');
+    if ((this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1) && (addColButton) ){
+      addColButton.style.visibility ="hidden"
     }
-  
     this.addHeadingAttrToFirstRow();
+      
+  
   };
 
   /**
@@ -458,8 +456,7 @@ export default class Table {
 
     const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
     if ((this.config && this.config?.maxrows) && (this.numberOfRows >= this.config?.maxrows) && (addRowButton))   {
-      addRowButton.remove();
-      
+      addRowButton.style.display = "none"
     }
     return insertedRow;
   };
@@ -479,18 +476,9 @@ export default class Table {
 
       cell.remove();
     }
-    /**  
-     * To add addcolumn , when it is lesser than maxcol
-     */
-    const addColumnButton = $.make('div', CSS.addColumn, {
-      innerHTML: IconPlus
-    })
-    const table = this.wrapper.querySelector(`.tc-table`)
-    if (!this.wrapper.querySelector(`.${CSS.addColumn}`)) {
-      this.wrapper.style.setProperty('grid-template-columns', 'calc(100% - var(--cell-size)) var(--cell-size)');
-      if(addColumnButton){
-        $.insertAfter(addColumnButton,table)      
-      }
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if (addColButton) {
+      addColButton.style.visibility = "visible"
     }
   }
 
@@ -501,20 +489,10 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
-     /** 
-      * To add addrow , when it is lesser than maxrow
-      */ 
-
-    const RowButton = $.make('div', CSS.addRow, {
-      innerHTML: IconPlus
-    })
-      if((!this.wrapper.querySelector(`.${CSS.addRow}`)) &&(!this.wrapper.querySelector(`.${CSS.addColumn}`))){
-        $.insertAfter(RowButton,this.wrapper.querySelector(`.${CSS.table}`))
-      }
-      else if (!this.wrapper.querySelector(`.${CSS.addRow}`)) {
-      $.insertAfter(RowButton,this.wrapper.querySelector(`.${CSS.addColumn}`))
-      }
-  
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    if (addRowButton) {
+      addRowButton.style.display ="flex"
+    }
 
     this.addHeadingAttrToFirstRow();
   }
