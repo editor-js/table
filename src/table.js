@@ -198,7 +198,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to right'),
           icon: IconDirectionRightDown,
           hideIf: () => {
-            return  this.numberOfColumns === this.config.maxcols
+            return this.numberOfColumns === this.config.maxcols
           }
           ,
           onClick: () => {
