@@ -100,6 +100,9 @@
   padding: 4px 0;
   justify-content: center;
   border-top: 1px solid var(--color-border);
+  &--disabled{
+    visibility:hidden;
+  }
 
   @media print {
     display: none;
@@ -111,6 +114,9 @@
   align-items: center;
   padding-left: 4px;
   position: relative;
+  &--disabled{
+    display : none;
+  }
 
   &::before {
     content: "";
@@ -145,6 +151,7 @@
       transition: 0.1s;
       background-color: var(--color-background);
     }
+
   }
 }
 

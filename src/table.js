@@ -21,7 +21,9 @@ const CSS = {
   cell: 'tc-cell',
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
-  addColumn: 'tc-add-column'
+  addColumn: 'tc-add-column',
+  disabledCol : 'tc-add-column--disabled',
+  disabledRow : 'tc-add-row--disabled',
 };
 
 /**
@@ -398,7 +400,7 @@ export default class Table {
 
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
     if ((this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1) && (addColButton) ){
-      addColButton.style.visibility ="hidden"
+      addColButton.classList.add(CSS.disabledCol);
     }
     this.addHeadingAttrToFirstRow();
       
@@ -456,7 +458,7 @@ export default class Table {
 
     const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
     if ((this.config && this.config?.maxrows) && (this.numberOfRows >= this.config?.maxrows) && (addRowButton))   {
-      addRowButton.style.display = "none"
+      addRowButton.classList.add(CSS.disabledRow);
     }
     return insertedRow;
   };
@@ -478,7 +480,7 @@ export default class Table {
     }
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addColButton) {
-      addColButton.style.visibility = "visible"
+    addColButton.classList.remove(CSS.disabledCol);
     }
   }
 
@@ -491,7 +493,7 @@ export default class Table {
     this.getRow(index).remove();
     const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
     if (addRowButton) {
-      addRowButton.style.display ="flex"
+      addRowButton.classList.remove(CSS.disabledRow);
     }
 
     this.addHeadingAttrToFirstRow();
