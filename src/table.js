@@ -187,7 +187,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to left'),
           icon: IconDirectionLeftDown,
           hideIf: () => {
-            return  this.numberOfColumns === this.config.maxcols
+            return this.numberOfColumns === this.config.maxcols
           },
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
