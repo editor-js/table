@@ -21,9 +21,9 @@ const CSS = {
   cell: 'tc-cell',
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
+  addRowDisabled: 'tc-add-row--disabled',
   addColumn: 'tc-add-column',
-  disabledCol : 'tc-add-column--disabled',
-  disabledRow : 'tc-add-row--disabled',
+  addColumnDisabled: 'tc-add-column--disabled',
 };
 
 /**
@@ -403,8 +403,6 @@ export default class Table {
       addColButton.classList.add(CSS.disabledCol);
     }
     this.addHeadingAttrToFirstRow();
-      
-  
   };
 
   /**

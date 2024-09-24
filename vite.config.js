@@ -29,6 +29,4 @@ export default {
     cssInjectedByJsPlugin({ useStrictCSP: true }),
     dts({ tsconfigPath: './tsconfig.json' })
   ],
-  
-  
 };
