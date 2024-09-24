@@ -480,7 +480,7 @@ export default class Table {
     }
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addColButton) {
-    addColButton.classList.remove(CSS.disabledCol);
+      addColButton.classList.remove(CSS.disabledCol);
     }
   }
 
