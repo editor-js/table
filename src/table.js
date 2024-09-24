@@ -254,7 +254,7 @@ export default class Table {
           label: this.api.i18n.t('Add row below'),
           icon: IconDirectionDownRight,
           hideIf: () => {
-            return  this.numberOfRows === this.config.maxrows
+            return this.numberOfRows === this.config.maxrows
           },
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
