@@ -40,7 +40,7 @@
   <pre class="output"></pre>
 
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-  <script src="dist/table.js"></script>
+  <script src="./dist/table.umd.js"></script>
 
   <script>
 
@@ -51,7 +51,9 @@
           class: Table,
           inlineToolbar: true,
           config: {
-            withHeadings: true
+            withHeadings: true,
+            maxRows: 5,
+            maxCols: 5
           }
         }
       },

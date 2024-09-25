@@ -19,9 +19,14 @@ export default {
     NODE_ENV: JSON.stringify(NODE_ENV),
     VERSION: JSON.stringify(VERSION),
   },
-
+  server: {
+    open: true, 
+    watch: {
+      usePolling: true, 
+    },
+  },
   plugins: [
-    cssInjectedByJsPlugin({useStrictCSP: true}),
-    dts({tsconfigPath: './tsconfig.json'})
-  ]
+    cssInjectedByJsPlugin({ useStrictCSP: true }),
+    dts({ tsconfigPath: './tsconfig.json' })
+  ],
 };

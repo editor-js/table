@@ -21,7 +21,9 @@ const CSS = {
   cell: 'tc-cell',
   cellSelected: 'tc-cell--selected',
   addRow: 'tc-add-row',
-  addColumn: 'tc-add-column'
+  addRowDisabled: 'tc-add-row--disabled',
+  addColumn: 'tc-add-column',
+  addColumnDisabled: 'tc-add-column--disabled',
 };
 
 /**
@@ -184,6 +186,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add column to left'),
           icon: IconDirectionLeftDown,
+          hideIf: () => {
+            return this.numberOfColumns === this.config.maxcols
+          },
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
             this.hideToolboxes();
@@ -192,6 +197,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add column to right'),
           icon: IconDirectionRightDown,
+          hideIf: () => {
+            return this.numberOfColumns === this.config.maxcols
+          },
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
             this.hideToolboxes();
@@ -233,6 +241,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add row above'),
           icon: IconDirectionUpRight,
+          hideIf: () => {
+            return this.numberOfRows === this.config.maxrows
+          },
           onClick: () => {
             this.addRow(this.selectedRow, true);
             this.hideToolboxes();
@@ -241,6 +252,9 @@ export default class Table {
         {
           label: this.api.i18n.t('Add row below'),
           icon: IconDirectionDownRight,
+          hideIf: () => {
+            return this.numberOfRows === this.config.maxrows
+          },
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
             this.hideToolboxes();
@@ -348,6 +362,13 @@ export default class Table {
    */
   addColumn(columnIndex = -1, setFocus = false) {
     let numberOfColumns = this.numberOfColumns;
+     /**
+      * Check if the number of columns has reached the maximum allowed columns specified in the configuration,
+      * and if so, exit the function to prevent adding more columns beyond the limit.
+      */
+    if (this.config && this.config.maxcols && this.numberOfColumns >= this.config.maxcols) {
+      return;
+  }
 
     /**
      * Iterate all rows and add a new cell to them for creating a column
@@ -376,6 +397,10 @@ export default class Table {
       }
     }
 
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if (this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1 && addColButton ){
+      addColButton.classList.add(CSS.addColumnDisabled);
+    }
     this.addHeadingAttrToFirstRow();
   };
 
@@ -400,6 +425,13 @@ export default class Table {
      * It is necessary that the first line is filled in correctly
      */
     let numberOfColumns = this.numberOfColumns;
+     /**
+      * Check if the number of rows has reached the maximum allowed rows specified in the configuration,
+      * and if so, exit the function to prevent adding more columns beyond the limit.
+      */  
+    if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
+      return;
+    }
 
     if (index > 0 && index <= this.numberOfRows) {
       let row = this.getRow(index);
@@ -421,6 +453,10 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
+      addRowButton.classList.add(CSS.addRowDisabled);
+    }
     return insertedRow;
   };
 
@@ -439,6 +475,10 @@ export default class Table {
 
       cell.remove();
     }
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if (addColButton) {
+      addColButton.classList.remove(CSS.addColumnDisabled);
+    }
   }
 
   /**
@@ -448,6 +488,10 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+    if (addRowButton) {
+      addRowButton.classList.remove(CSS.addRowDisabled);
+    }
 
     this.addHeadingAttrToFirstRow();
   }
