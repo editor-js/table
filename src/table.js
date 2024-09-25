@@ -199,8 +199,7 @@ export default class Table {
           icon: IconDirectionRightDown,
           hideIf: () => {
             return this.numberOfColumns === this.config.maxcols
-          }
-          ,
+          },
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
             this.hideToolboxes();
