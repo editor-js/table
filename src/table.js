@@ -430,8 +430,8 @@ export default class Table {
       * and if so, exit the function to prevent adding more columns beyond the limit.
       */  
     if ((this.config && this.config.maxrows) && (this.numberOfRows >= this.config.maxrows) && (addRowButton)) {
-          return ;
-        }
+      return;
+    }
 
     if (index > 0 && index <= this.numberOfRows) {
       let row = this.getRow(index);
