@@ -47,8 +47,6 @@ var editor = EditorJS({
       config: {
         rows: 2,
         cols: 3,
-        maxRows: 5,
-        maxCols: 5,
       },
     },
   },
@@ -59,11 +57,9 @@ var editor = EditorJS({
 
 | Field              | Type     | Description          |
 | ------------------ | -------- | ---------------------------------------- |
-| `rows`             | `number` | initial number of rows. `2` by default |
+| `rows`             | `number` | initial number of rows. `2`  by default |
 | `cols`             | `number` | initial number of columns. `2` by default |
-| `maxRows`          | `number` | maximum number of rows. `5` by params |
-| `maxCols`          | `number` | maximum number of columns. `5` by params |
-| `withHeadings`     | `boolean` | toggle table headings. `false` by default |
+| `withHeadings`             | `boolean` | toggle table headings. `false` by default |
 
 ## Output data
 
