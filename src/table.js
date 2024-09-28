@@ -356,19 +356,21 @@ export default class Table {
   /**
   * Update the state of the add button based on the current count and maximum allowed count.
   *
-  * @param {'Row'|'Column'} type - The type of element ('row' or 'column') to update.
+  * @param {'Row'|'Column'} type - The type of element ('Row' or 'Column') to update.
   */
-  updateButtonState(elementType) {
-    const limit = (elementType === "Row") ? this.config.maxRows : this.config.maxCols;
-    const currentCount = (elementType === "Row") ? this.numberOfRows : this.numberOfColumns;
-    const addButton = this.wrapper.querySelector(`.${CSS[`add${elementType}`]}`);
-  
+  updateButtonState(type) {
+    const maxLimit = (type =="Row") ? this.config.maxRows : this.config.maxCols;
+    const currentCount = (type == "Row") ? this.numberOfRows : this.numberOfColumns;
+    const addButton =(type == "Row") ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
-      const isDisabled = limit && currentCount >= limit;
-      addButton.classList.toggle(CSS[`add${elementType}Disabled`], isDisabled);
+      if (maxLimit && currentCount >= maxLimit ) {
+        addButton.classList.add(CSS[`add${type}Disabled`]);
+      }
+      else {
+        addButton.classList.remove(CSS[`add${type}Disabled`]);
+      }
     }
-  }
-  
+  } 
 
   /**
    * Add column in table on index place
