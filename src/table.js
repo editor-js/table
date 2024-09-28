@@ -358,19 +358,17 @@ export default class Table {
   *
   * @param {'Row'|'Column'} type - The type of element ('row' or 'column') to update.
   */
-  updateButtonState(type) {
-    const max = (type =="Row") ? this.config.maxRows : this.config.maxCols;
-    const number = (type == "Row") ? this.numberOfRows : this.numberOfColumns;
-    const addButton =(type == "Row") ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
+  updateButtonState(elementType) {
+    const limit = (elementType === "Row") ? this.config.maxRows : this.config.maxCols;
+    const currentCount = (elementType === "Row") ? this.numberOfRows : this.numberOfColumns;
+    const addButton = this.wrapper.querySelector(`.${CSS[`add${elementType}`]}`);
+  
     if (addButton) {
-      if (max && number >= max ) {
-        addButton.classList.add(CSS[`add${type}Disabled`]);
-      }
-      else {
-        addButton.classList.remove(CSS[`add${type}Disabled`]);
-      }
+      const isDisabled = limit && currentCount >= limit;
+      addButton.classList.toggle(CSS[`add${elementType}Disabled`], isDisabled);
     }
-  } 
+  }
+  
 
   /**
    * Add column in table on index place
