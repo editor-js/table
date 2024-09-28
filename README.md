@@ -61,8 +61,8 @@ var editor = EditorJS({
 | ------------------ | -------- | ---------------------------------------- |
 | `rows`             | `number` | initial number of rows. `2` by default |
 | `cols`             | `number` | initial number of columns. `2` by default |
-| `maxRows`          | `number` | Sets the maximun number of rows allowd in the table. `No limit` by default |
-| `maxCols`          | `number` | Sets the maximun number of columns allowed in the table. `No limit` by default |
+| maxRows            | `number` | Sets the maximum number of rows allowed in the table. `Defaults` to `undefined` (no limit) |
+| `maxCols`          | `number` | Sets the maximum number of columns allowed in the table. Defaults to `undefined` (no limit) |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
 
 ## Output data
