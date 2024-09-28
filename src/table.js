@@ -172,7 +172,7 @@ export default class Table {
     // Determine the position of the cell in focus
     this.table.addEventListener('focusin', event => this.focusInTableListener(event));
   }
-  
+
   /**
    * Configures and creates the toolbox for manipulating with columns
    *
@@ -811,14 +811,6 @@ export default class Table {
       this.table.classList.remove(CSS.withHeadings);
       this.removeHeadingAttrFromFirstRow();
     }
-  }
-
-  /**
-   * Changes data stretched value and calls the stretchBlock api method
-   */
-  setStretchSetting() {
-    this.data.stretched = !this.data.stretched;
-    this.api.blocks.stretchBlock(this.api.blocks.getCurrentBlockIndex(), this.data.stretched);
   }
 
   /**

@@ -59,7 +59,7 @@ export default class TableBlock {
    *
    * @param {TableConstructor} init
    */
-  constructor({data, config, api, readOnly}) {
+  constructor({data, config, api, readOnly, block}) {
     this.api = api;
     this.readOnly = readOnly;
     this.config = config;
@@ -69,6 +69,7 @@ export default class TableBlock {
       content: data && data.content ? data.content : []
     };
     this.table = null;
+    this.block = block;
   }
 
   /**
@@ -136,7 +137,9 @@ export default class TableBlock {
         closeOnActivate: true,
         toggle: true,
         onActivate: () => {
-          this.table.setStretchSetting();
+          this.data.stretched = !this.data.stretched;
+          this.block.stretched = this.data.stretched;
+          
         }
       }
     ];
@@ -151,6 +154,7 @@ export default class TableBlock {
 
     const result = {
       withHeadings: this.data.withHeadings,
+      stretched: this.data.stretched,
       content: tableContent
     };
 

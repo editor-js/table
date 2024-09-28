@@ -64,6 +64,7 @@ var editor = EditorJS({
 | `maxRows`          | `number` | maximum number of rows. `5` by params |
 | `maxCols`          | `number` | maximum number of columns. `5` by params |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
+| `stretched`        | `boolean` | toggle table stretch state. `false` by default |
 
 ## Output data
 
@@ -72,6 +73,7 @@ This Tool returns `data` in the following format
 | Field          | Type         | Description           |
 | -------------- | ------------ | ----------------------------------------- |
 | `withHeadings` | `boolean`    | Uses the first line as headings |
+| `stretched`    | `boolean`    | table stretch state |
 | `content`      | `string[][]` | two-dimensional array with table contents |
 
 ```json
@@ -79,6 +81,7 @@ This Tool returns `data` in the following format
   "type" : "table",
   "data" : {
     "withHeadings": true,
+    "stretched": false,
     "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ]
   }
 }
