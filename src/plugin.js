@@ -2,6 +2,7 @@ import Table from './table';
 import * as $ from './utils/dom';
 
 import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch, IconCollapse } from '@codexteam/icons';
+import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch, IconCollapse } from '@codexteam/icons';
 
 /**
  * @typedef {object} TableData - configuration that the user can set for the table
@@ -66,6 +67,7 @@ export default class TableBlock {
     this.config = config;
     this.data = {
       withHeadings: this.getConfig('withHeadings', false, data),
+      stretched: this.getConfig('stretched', false, data),
       stretched: this.getConfig('stretched', false, data),
       content: data && data.content ? data.content : []
     };
