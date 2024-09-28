@@ -352,17 +352,22 @@ export default class Table {
 
     cell.innerHTML = content;
   }
-  updateButtonState(type){
-    // console.log(type)
-    const max = (type =="Row") ? this.config.maxRows : this.config.maxCols
-    const number = (type == "Row") ? this.numberOfRows : this.numberOfColumns
+
+  /**
+  * Update the state of the add button based on the current count and maximum allowed count.
+  *
+  * @param {'Row'|'Column'} type - The type of element ('row' or 'column') to update.
+  */
+  updateButtonState(type) {
+    const max = (type =="Row") ? this.config.maxRows : this.config.maxCols;
+    const number = (type == "Row") ? this.numberOfRows : this.numberOfColumns;
     const addButton =(type == "Row") ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
       if (max && number >= max ) {
-        addButton.classList.add(CSS[`add${type}Disabled`])
+        addButton.classList.add(CSS[`add${type}Disabled`]);
       }
-      else{
-        addButton.classList.remove(CSS[`add${type}Disabled`])
+      else {
+        addButton.classList.remove(CSS[`add${type}Disabled`]);
       }
     }
   } 
@@ -410,7 +415,7 @@ export default class Table {
         }
       }
     }
-
+    
     this.updateButtonState("Column");
     this.addHeadingAttrToFirstRow();
   };
@@ -483,6 +488,7 @@ export default class Table {
 
       cell.remove();
     }
+    
     this.updateButtonState("Column");
   }
 
