@@ -172,55 +172,6 @@ export default class Table {
     // Determine the position of the cell in focus
     this.table.addEventListener('focusin', event => this.focusInTableListener(event));
   }
-
-  /**
-   * Configures and creates the toolbox for manipulating with columns
-   *
-   * @returns {Toolbox}
-   */
-  createColumnToolbox() {
-    return new Toolbox({
-      api: this.api,
-      cssModifier: 'column',
-      items: [
-        {
-          label: this.api.i18n.t('Add column to left'),
-          icon: IconDirectionLeftDown,
-          onClick: () => {
-            this.addColumn(this.selectedColumn, true);
-            this.hideToolboxes();
-          }
-        },
-        {
-          label: this.api.i18n.t('Add column to right'),
-          icon: IconDirectionRightDown,
-          onClick: () => {
-            this.addColumn(this.selectedColumn + 1, true);
-            this.hideToolboxes();
-          }
-        },
-        {
-          label: this.api.i18n.t('Delete column'),
-          icon: IconCross,
-          hideIf: () => {
-            return this.numberOfColumns === 1;
-          },
-          confirmationRequired: true,
-          onClick: () => {
-            this.deleteColumn(this.selectedColumn);
-            this.hideToolboxes();
-          }
-        }
-      ],
-      onOpen: () => {
-        this.selectColumn(this.hoveredColumn);
-        this.hideRowToolbox();
-      },
-      onClose: () => {
-        this.unselectColumn();
-      }
-    });
-  }
   
   /**
    * Configures and creates the toolbox for manipulating with columns
