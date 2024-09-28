@@ -25,6 +25,7 @@ export default {
       usePolling: true, 
     },
   },
+  
   plugins: [
     cssInjectedByJsPlugin({ useStrictCSP: true }),
     dts({ tsconfigPath: './tsconfig.json' })
