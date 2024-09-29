@@ -363,7 +363,7 @@ export default class Table {
     const currentCount = (type == "Row") ? this.numberOfRows : this.numberOfColumns;
     const addButton =(type == "Row") ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
-      if (maxLimit && currentCount >= maxLimit ) {
+      if (maxLimit && currentCount >= maxLimit) {
         addButton.classList.add(CSS[`add${type}Disabled`]);
       }
       else {
