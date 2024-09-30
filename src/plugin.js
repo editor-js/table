@@ -112,6 +112,7 @@ export default class TableBlock {
     return [
       {
         label: this.api.i18n.t('With headings'),
+        name: 'with-headings',
         icon: IconTableWithHeadings,
         isActive: this.data.withHeadings,
         closeOnActivate: true,
@@ -122,6 +123,7 @@ export default class TableBlock {
         }
       }, {
         label: this.api.i18n.t('Without headings'),
+        name: 'without-headings',
         icon: IconTableWithoutHeadings,
         isActive: !this.data.withHeadings,
         closeOnActivate: true,
