@@ -1009,3 +1009,4 @@ export default class Table {
     document.removeEventListener('click', this.documentClicked);
   }
 }
+
