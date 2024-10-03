@@ -139,7 +139,6 @@ export default class TableBlock {
         onActivate: () => {
           this.data.stretched = !this.data.stretched;
           this.block.stretched = this.data.stretched;
-          
         }
       }
     ];
