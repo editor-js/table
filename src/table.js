@@ -354,7 +354,7 @@ export default class Table {
   }
 
   /**
-  * Update the state of the add button based on the current count and maximum allowed count.
+  * Update the state of the "Add Column" or "Add Row" button based on the current rows/cols count and maximum allowed count.
   *
   * @param {'Row'|'Column'} type - The type of element ('Row' or 'Column') to update.
   */
@@ -363,7 +363,7 @@ export default class Table {
     const currentCount = type == "Row" ? this.numberOfRows : this.numberOfColumns;
     const addButton = type == "Row" ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
-      if (maxLimit && currentCount >= maxLimit ) {
+      if (maxLimit && currentCount >= maxLimit) {
         addButton.classList.add(CSS[`add${type}Disabled`]);
       }
       else {
