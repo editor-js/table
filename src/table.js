@@ -354,7 +354,7 @@ export default class Table {
   }
 
   /**
-  * Update the state of the add button based on the current count and maximum allowed count.
+  * Update the state of the "Add Column" or "Add Row" button based on the current rows/cols count and maximum allowed count.
   *
   * @param {'Row'|'Column'} type - The type of element ('Row' or 'Column') to update.
   */
