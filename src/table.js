@@ -361,7 +361,7 @@ export default class Table {
   updateButtonState(type) {
     const maxLimit = type == "Row" ? this.config.maxRows : this.config.maxCols;
     const currentCount = type == "Row" ? this.numberOfRows : this.numberOfColumns;
-    const addButton = type == "Row" ?this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
+    const addButton = type == "Row" ? this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
       if (maxLimit && currentCount >= maxLimit) {
         addButton.classList.add(CSS[`add${type}Disabled`]);
