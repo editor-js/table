@@ -64,6 +64,7 @@ var editor = EditorJS({
 | `maxRows`        | `number` | Sets the maximum number of rows allowed in the table. `undefined` by default (no limit set) |
 | `maxCols`          | `number` | Sets the maximum number of columns allowed in the table. `undefined` by default (no limit set)  |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
+| `stretched`        | `boolean` | whether the table is stretched to fill the full width of the container |
 
 ## Output data
 
@@ -72,6 +73,7 @@ This Tool returns `data` in the following format
 | Field          | Type         | Description           |
 | -------------- | ------------ | ----------------------------------------- |
 | `withHeadings` | `boolean`    | Uses the first line as headings |
+| `stretched`    | `boolean`    | whether the table is stretched to fill the full width of the container |
 | `content`      | `string[][]` | two-dimensional array with table contents |
 
 ```json
@@ -79,6 +81,7 @@ This Tool returns `data` in the following format
   "type" : "table",
   "data" : {
     "withHeadings": true,
+    "stretched": false,
     "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ]
   }
 }

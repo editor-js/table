@@ -1,8 +1,7 @@
 import Table from './table';
 import * as $ from './utils/dom';
 
-import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings } from '@codexteam/icons';
-
+import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch, IconCollapse } from '@codexteam/icons';
 /**
  * @typedef {object} TableData - configuration that the user can set for the table
  * @property {number} rows - number of rows in the table
@@ -60,15 +59,17 @@ export default class TableBlock {
    *
    * @param {TableConstructor} init
    */
-  constructor({data, config, api, readOnly}) {
+  constructor({data, config, api, readOnly, block}) {
     this.api = api;
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
       withHeadings: this.getConfig('withHeadings', false, data),
+      stretched: this.getConfig('stretched', false, data),
       content: data && data.content ? data.content : []
     };
     this.table = null;
+    this.block = block;
   }
 
   /**
@@ -130,6 +131,15 @@ export default class TableBlock {
           this.data.withHeadings = false;
           this.table.setHeadingsSetting(this.data.withHeadings);
         }
+      }, {
+        label: this.data.stretched ? this.api.i18n.t('Collapse') : this.api.i18n.t('Stretch'),
+        icon: this.data.stretched ? IconCollapse : IconStretch,
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.stretched = !this.data.stretched;
+          this.block.stretched = this.data.stretched;
+        }
       }
     ];
   }
@@ -143,6 +153,7 @@ export default class TableBlock {
 
     const result = {
       withHeadings: this.data.withHeadings,
+      stretched: this.data.stretched,
       content: tableContent
     };
 
