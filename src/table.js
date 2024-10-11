@@ -132,9 +132,11 @@ export default class Table {
        */
       if (clickedOnAddRowButton && clickedOnAddRowButton.parentNode === this.wrapper) {
         this.addRow(undefined, true);
+        this.updateButtonState("Row");
         this.hideToolboxes();
       } else if (clickedOnAddColumnButton && clickedOnAddColumnButton.parentNode === this.wrapper) {
         this.addColumn(undefined, true);
+        this.updateButtonState("Column"); 
         this.hideToolboxes();
       }
     };
@@ -191,6 +193,7 @@ export default class Table {
           },
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
+            this.updateButtonState("Column");
             this.hideToolboxes();
           }
         },
@@ -202,6 +205,7 @@ export default class Table {
           },
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
+            this.updateButtonState("Column");
             this.hideToolboxes();
           }
         },
@@ -214,6 +218,7 @@ export default class Table {
           confirmationRequired: true,
           onClick: () => {
             this.deleteColumn(this.selectedColumn);
+            this.updateButtonState("Column");
             this.hideToolboxes();
           }
         }
@@ -246,6 +251,7 @@ export default class Table {
           },
           onClick: () => {
             this.addRow(this.selectedRow, true);
+            this.updateButtonState("Row");
             this.hideToolboxes();
           }
         },
@@ -257,6 +263,7 @@ export default class Table {
           },
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
+            this.updateButtonState("Row");
             this.hideToolboxes();
           }
         },
@@ -269,6 +276,7 @@ export default class Table {
           confirmationRequired: true,
           onClick: () => {
             this.deleteRow(this.selectedRow);
+            this.updateButtonState("Row"); 
             this.hideToolboxes();
           }
         }
@@ -359,9 +367,12 @@ export default class Table {
   * @param {'Row'|'Column'} type - The type of element ('Row' or 'Column') to update.
   */
   updateButtonState(type) {
-    const maxLimit = type == "Row" ? this.config.maxRows : this.config.maxCols;
-    const currentCount = type == "Row" ? this.numberOfRows : this.numberOfColumns;
-    const addButton = type == "Row" ? this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
+    if (!this.config.maxRows && !this.config.maxCols) {
+      return;
+    }
+    const maxLimit = type === "Row" ? this.config.maxRows : this.config.maxCols;
+    const currentCount = type === "Row" ? this.numberOfRows : this.numberOfColumns;
+    const addButton = type === "Row" ? this.wrapper.querySelector(`.${CSS.addRow}`) : this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addButton) {
       if (maxLimit && currentCount >= maxLimit) {
         addButton.classList.add(CSS[`add${type}Disabled`]);
@@ -416,7 +427,6 @@ export default class Table {
       }
     }
     
-    this.updateButtonState("Column");
     this.addHeadingAttrToFirstRow();
   };
 
@@ -469,7 +479,6 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
-    this.updateButtonState("Row");
     return insertedRow;
   };
 
@@ -485,11 +494,8 @@ export default class Table {
       if (!cell) {
         return;
       }
-
       cell.remove();
     }
-    
-    this.updateButtonState("Column");
   }
 
   /**
@@ -499,7 +505,6 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
-    this.updateButtonState("Row");
     this.addHeadingAttrToFirstRow();
   }
 
