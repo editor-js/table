@@ -1,6 +1,16 @@
 import Popover from "./utils/popover";
 import * as $ from "./utils/dom";
 import { IconMenuSmall } from "@codexteam/icons";
+
+/**
+ * @typedef {object} PopoverItem
+ * @property {string} label - button text
+ * @property {string} icon - button icon
+ * @property {boolean} confirmationRequired - if true, a confirmation state will be applied on the first click
+ * @property {function} hideIf - if provided, item will be hid, if this method returns true
+ * @property {function} onClick - click callback
+ */
+
 /**
  * Toolbox is a menu for manipulation of rows/cols
  *
@@ -14,11 +24,12 @@ export default class Toolbox {
   /**
    * Creates toolbox buttons and toolbox menus
    *
-   * @param {object} api - Editor.js api
-   * @param {PopoverItem[]} items - Editor.js api
-   * @param {function} onOpen - callback fired when the Popover is opening
-   * @param {function} onClose - callback fired when the Popover is closing
-   * @param {string} [cssModifier] - the modifier for the Toolbox. Allows to add some specific styles.
+   * @param {Object} config
+   * @param {any} config.api - Editor.js api
+   * @param {PopoverItem[]} config.items - Editor.js api
+   * @param {function} config.onOpen - callback fired when the Popover is opening
+   * @param {function} config.onClose - callback fired when the Popover is closing
+   * @param {string} config.cssModifier - the modifier for the Toolbox. Allows to add some specific styles.
    */
   constructor({ api, items, onOpen, onClose, cssModifier = "" }) {
     this.api = api;
