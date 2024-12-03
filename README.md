@@ -66,6 +66,41 @@ var editor = EditorJS({
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
 | `stretched`        | `boolean` | whether the table is stretched to fill the full width of the container |
 
+## I18n support
+
+This tool supports the [i18n api](https://editorjs.io/i18n-api).
+To localize UI labels, put this object to your i18n dictionary under the `tools` section:
+
+```json
+{
+    "messages": {
+        "blockTunes": {
+            
+        },
+        "ui": {
+            
+        },
+        "toolNames": {
+            
+        },
+        "tools": {
+            "table": {
+                "With headings": "עם כותרת",
+                "Without headings": "ללא כותרת",
+                "Add row above": "הוספת שורה למעלה",
+                "Add row below": "הוספת שורה למטה",
+                "Delete row": "מחיקת שורה",
+                "Delete column": "מחיקת עמודה",
+                "Add column to left": "הוספת עמודה משמאל",
+                "Add column to right": "הוספת עמודה מימין"
+            }
+        }
+    }
+}
+```
+
+See more instructions about Editor.js internationalization here: [https://editorjs.io/internationalization](https://editorjs.io/internationalization)
+
 ## Output data
 
 This Tool returns `data` in the following format
