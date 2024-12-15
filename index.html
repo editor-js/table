@@ -51,6 +51,7 @@
           inlineToolbar: true,
           config: {
             withHeadings: true,
+            presetColors: ["#ccaaaa", "#ffffff", "#6699cc"],
             maxRows: 5,
             maxCols: 5
           }
@@ -65,9 +66,9 @@
             data: {
               withHeadings: true,
               content: [
-                ["English", "Russian", "Japanese"], 
-                ["Sweet", "Сладкий", "あまい"], 
-                ["Good morning", "Доброе утро", "おはようございます"]]
+                [{ content: "English", backgroundColor: "#ccaaaa", width: 1.5 }, "Russian", "Japanese"],
+                [{ content: "Sweet", width: 1.5 }, "Сладкий", "あまい"],
+                [{ content: "Good morning", width: 1.5 }, "Доброе утро", "おはようございます"]]
             }
           }
         ],

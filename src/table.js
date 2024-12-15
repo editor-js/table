@@ -8,7 +8,10 @@ import {
   IconDirectionUpRight,
   IconDirectionDownRight,
   IconCross,
-  IconPlus
+  IconPlus,
+  IconAddBackground,
+  IconStretch,
+  IconCollapse
 } from '@codexteam/icons';
 
 const CSS = {
@@ -30,7 +33,16 @@ const CSS = {
  * @typedef {object} TableConfig
  * @description Tool's config from Editor
  * @property {boolean} withHeadings — Uses the first line as headings
- * @property {string[][]} withHeadings — two-dimensional array with table contents
+ * @property {TableCell[][]} withHeadings — two-dimensional array with table contents
+ * @property {string[]} presetColors - array of preset colors
+ */
+
+/**
+ * @typedef {object} TableCell
+ * @description Data per table cell
+ * @property {string} content - string content for table
+ * @property {string} backgroundColor - color of the cell
+ * @property {float} width - relative width of the cell ( 1 == 1fr)
  */
 
 /**
@@ -70,6 +82,8 @@ export default class Table {
      */
     this.toolboxColumn = this.createColumnToolbox();
     this.toolboxRow = this.createRowToolbox();
+    this.toolboxCell = this.createCellToolbox();
+    this.cellColorPicker = null;
 
     /**
      * Create table and wrapper elements
@@ -215,17 +229,147 @@ export default class Table {
           onClick: () => {
             this.deleteColumn(this.selectedColumn);
             this.hideToolboxes();
+          },
+        },
+        {
+          label: this.api.i18n.t('Increase Width'),
+          icon: IconStretch,
+          onClick: () => {
+            this.increaseWidth(this.selectedColumn)
+            this.hideToolboxes();
+          }
+        },
+        {
+          label: this.api.i18n.t('Decrease Width'),
+          icon: IconCollapse,
+          onClick: () => {
+            this.decreaseWidth(this.selectedColumn)
+            this.hideToolboxes();
           }
         }
       ],
       onOpen: () => {
         this.selectColumn(this.hoveredColumn);
         this.hideRowToolbox();
+        this.hideCellToolbox();
       },
       onClose: () => {
         this.unselectColumn();
       }
     });
+  }
+
+  /**
+   * Increase the width of the specified columns by 0.1
+   * EditorJS represents tables as CSS Grid
+   *
+   * @param {number} column - column index
+   */
+  increaseWidth(column) {
+    for(let row = 1; row <= this.numberOfRows; row++) {
+      this.setCellWidth({row, column, adjustedWidth: 0.1, defaultWidth: 1});
+    }
+
+    this.adjustColumnWidths();
+  }
+
+  /**
+   * Decrease the width of the specified columns by 0.1
+   * EditorJS represents tables as CSS Grid
+   *
+   * @param {number} column - column index
+   */
+  decreaseWidth(column) {
+    for(let row = 1; row <= this.numberOfRows; row++) {
+      this.setCellWidth({row, column, adjustedWidth: -0.1, defaultWidth: 1});
+    }
+
+    this.adjustColumnWidths();
+  }
+
+  setCellWidth({row, column, adjustedWidth = 0, defaultWidth = 1}) {
+    const cell = this.getCell(row, column);
+    const width = parseFloat(cell.dataset.width) + adjustedWidth || defaultWidth;
+    cell.dataset.width = Math.max(width, 0.1);
+  }
+
+  /**
+   * Adjust the widths of all columns in the table to be displayed
+   * EditorJS represents tables as CSS Grid, so we need to go through each
+   * row and adjust the width of each column
+   */
+  adjustColumnWidths() {
+    for(let rowNumber = 1; rowNumber <= this.numberOfRows; rowNumber++) {
+      const row = this.getRow(rowNumber);
+
+      const rowGridTemplate = []
+      for(let columnNumber = 1; columnNumber <= this.numberOfColumns; columnNumber++) {
+        const cell = this.getCell(rowNumber, columnNumber);
+        const width = cell.dataset.width || 1;
+
+        rowGridTemplate.push(`${width}fr`)
+      }
+
+      row.style.gridTemplateColumns = rowGridTemplate.join(" ")
+    }
+  }
+
+  /**
+   * Configures and creates the toolbox for manipulating with cells
+   *
+   * @returns {Toolbox}
+   */
+  createCellToolbox() {
+    return new Toolbox({
+      api: this.api,
+      cssModifier: 'cell',
+      items: [
+        {
+          label: this.api.i18n.t('Change background color'),
+          icon: IconAddBackground,
+          onClick: () => {
+            this.hideToolboxes();
+
+            this.cellColorPicker = $.make('div', 'tc-color-picker-container');
+            this.cellColorPicker.style.position = 'absolute';
+
+            const colorInput = $.make('input', 'tc-color-picker');
+            colorInput.type = 'color';
+            colorInput.setAttribute('list', 'tc-color-presets');
+
+            const presets = $.make('datalist');
+            presets.id = 'tc-color-presets';
+
+            (this.config.presetColors || []).forEach(color => {
+              const option = $.make('option');
+              option.value = color;
+              presets.appendChild(option);
+            });
+
+            colorInput.addEventListener('change', (event) => {
+              const cell = this.getCell(this.focusedCell.row, this.focusedCell.column);
+              if (cell) {
+                this.setCellBackgroundColor(this.focusedCell.row, this.focusedCell.column, event.target.value);
+              }
+              this.hideToolboxes();
+            });
+
+            this.cellColorPicker.appendChild(colorInput);
+            this.cellColorPicker.appendChild(presets);
+
+            this.toolboxCell.element.appendChild(this.cellColorPicker);
+          }
+        },
+      ],
+      onOpen: () => {
+        this.hideColumnToolbox();
+        this.hideRowToolbox();
+      },
+      onClose: () => {
+        this.unselectRow();
+        this.unselectColumn();
+      }
+    })
   }
 
   /**
@@ -353,6 +497,15 @@ export default class Table {
     cell.innerHTML = content;
   }
 
+  setCellBackgroundColor(row, column, color) {
+    if(color == null) { return; }
+
+    const cell = this.getCell(row, column);
+
+    cell.dataset.backgroundColor = color;
+    cell.style.backgroundColor = color;
+  }
+
   /**
    * Add column in table on index place
    * Add cells in each row
@@ -428,7 +581,7 @@ export default class Table {
      /**
       * Check if the number of rows has reached the maximum allowed rows specified in the configuration,
       * and if so, exit the function to prevent adding more columns beyond the limit.
-      */  
+      */
     if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
       return;
     }
@@ -512,6 +665,8 @@ export default class Table {
 
     this.wrapper.appendChild(this.toolboxRow.element);
     this.wrapper.appendChild(this.toolboxColumn.element);
+    this.wrapper.appendChild(this.toolboxCell.element);
+
     this.wrapper.appendChild(this.table);
 
     if (!this.readOnly) {
@@ -585,9 +740,17 @@ export default class Table {
     if (data && data.content) {
       for (let i = 0; i < data.content.length; i++) {
         for (let j = 0; j < data.content[i].length; j++) {
-          this.setCellContent(i + 1, j + 1, data.content[i][j]);
+          const cellData = data.content[i][j];
+          if (typeof cellData === 'object') {
+            this.setCellContent(i + 1, j + 1, cellData.content);
+            this.setCellBackgroundColor(i + 1, j + 1, cellData.backgroundColor);
+            this.setCellWidth({ row: i+1, column: j+1, defaultWidth: cellData.width })
+          } else {
+            this.setCellContent(i + 1, j + 1, data.content[i][j]);
+          }
         }
       }
+      this.adjustColumnWidths();
     }
   }
 
@@ -650,6 +813,10 @@ export default class Table {
    */
   get isRowMenuShowing() {
     return this.selectedRow !== 0;
+  }
+
+  get isCellMenuShowing() {
+    return this.focusedCell.row > 0 && this.focusedCell.column > 0 && this.focusedCellElem;
   }
 
   /**
@@ -721,6 +888,7 @@ export default class Table {
   hideToolboxes() {
     this.hideRowToolbox();
     this.hideColumnToolbox();
+    this.hideCellToolbox();
     this.updateToolboxesPosition();
   }
 
@@ -742,6 +910,18 @@ export default class Table {
     this.unselectColumn();
 
     this.toolboxColumn.hide();
+  }
+
+
+  /**
+   * close cellToolbox
+   */
+  hideCellToolbox() {
+    this.toolboxCell.hide();
+    if (this.cellColorPicker) {
+      this.cellColorPicker.remove()
+      this.cellColorPicker = null
+    }
   }
 
   /**
@@ -793,6 +973,21 @@ export default class Table {
           };
         });
       }
+    }
+
+    // Display the cell toolbox icon if focused
+    if (this.isCellMenuShowing) {
+      const cell = this.focusedCellElem;
+      const cellRect = cell.getBoundingClientRect();
+      const toolboxRect = this.toolboxCell.element.getBoundingClientRect();
+      const { fromTopBorder, fromLeftBorder } = $.getRelativeCoordsOfTwoElems(this.table, cell);
+
+      this.toolboxCell.show(() => {
+        return {
+          top: `${fromTopBorder}px`,
+          left: `${fromLeftBorder + cellRect.width - toolboxRect.width}px`
+        }
+      });
     }
   }
 
@@ -996,7 +1191,19 @@ export default class Table {
         continue;
       }
 
-      data.push(cells.map(cell => cell.innerHTML));
+      data.push(cells.map(cell => {
+        const obj = { content: cell.innerHTML }
+
+        if (cell.dataset.backgroundColor) {
+          obj.backgroundColor = cell.dataset.backgroundColor;
+        }
+
+        if (cell.dataset.width) {
+          obj.width = cell.dataset.width;
+        }
+
+        return obj;
+      }));
     }
 
     return data;

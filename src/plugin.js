@@ -17,6 +17,7 @@ import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch
 /**
  * @typedef {object} TableConfig - object with the data transferred to form a table
  * @property {boolean} withHeading - setting to use cells of the first row as headings
+ * @property {string[]} presetColors - array of preset colors
  * @property {string[][]} content - two-dimensional array which contains table content
  */
 /**
