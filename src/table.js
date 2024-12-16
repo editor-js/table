@@ -972,7 +972,7 @@ export default class Table {
   }
 
   /**
-   * Update toolboxes position
+   * Update toolboxes position, this is used to display the controls at column/row/cell level
    *
    * @param {number} row - hovered row
    * @param {number} column - hovered column
@@ -980,9 +980,13 @@ export default class Table {
   updateToolboxesPosition(row = this.hoveredRow, column = this.hoveredColumn) {
     if (!this.isColumnMenuShowing) {
       if (column > 0 && column <= this.numberOfColumns) { // not sure this statement is needed. Maybe it should be fixed in getHoveredCell()
+        const hoveredColumnElement = this.getCell(1, column)
+        const { fromLeftBorder } = $.getRelativeCoordsOfTwoElems(this.table, hoveredColumnElement);
+        const { width } = hoveredColumnElement.getBoundingClientRect();
+
         this.toolboxColumn.show(() => {
           return {
-            left: `calc((100% - var(--cell-size)) / (${this.numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`
+            left: `${fromLeftBorder + width / 2}px`
           };
         });
       }
