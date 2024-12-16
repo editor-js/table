@@ -289,8 +289,8 @@ export default class Table {
 
   setCellWidth({row, column, adjustedWidth = 0, defaultWidth = 1}) {
     const cell = this.getCell(row, column);
-    const width = parseFloat(cell.dataset.width) + adjustedWidth || defaultWidth;
-    cell.dataset.width = Math.max(width, 0.1);
+    const width = parseFloat(cell.dataset.width) || defaultWidth;
+    cell.dataset.width = Math.max(width + adjustedWidth, 0.1);
   }
 
   /**
@@ -555,6 +555,7 @@ export default class Table {
       addColButton.classList.add(CSS.addColumnDisabled);
     }
     this.addHeadingAttrToFirstRow();
+    this.adjustColumnWidths();
   };
 
   /**
@@ -567,6 +568,7 @@ export default class Table {
   addRow(index = -1, setFocus = false) {
     let insertedRow;
     let rowElem = $.make('div', CSS.row);
+    const rowBlueprint = this.getRow(1); // Use this row as the blueprint to copy the width of the columns
 
     if (this.tunes.withHeadings) {
       this.removeHeadingAttrFromFirstRow();
@@ -595,6 +597,7 @@ export default class Table {
     }
 
     this.fillRow(insertedRow, numberOfColumns);
+    this.copyColumnWidthsFromBlueprint(rowBlueprint, insertedRow);
 
     if (this.tunes.withHeadings) {
       this.addHeadingAttrToFirstRow();
@@ -610,8 +613,32 @@ export default class Table {
     if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
       addRowButton.classList.add(CSS.addRowDisabled);
     }
+
+    this.adjustColumnWidths();
     return insertedRow;
   };
+
+  /**
+   * Copy the width of the columns from the blueprint row to the target row
+   *
+   * @param {HTMLElement} blueprintRow - the row to copy the width from
+   * @param {HTMLElement} targetRow - the row to copy the width to
+   */
+  copyColumnWidthsFromBlueprint(blueprintRow, targetRow) {
+    console.log('copyColumnWidthsFromBlueprint', blueprintRow, targetRow);
+    if (!blueprintRow || !targetRow) {
+      return;
+    }
+
+    const blueprintCells = blueprintRow.querySelectorAll(`.${CSS.cell}`);
+    const targetCells = targetRow.querySelectorAll(`.${CSS.cell}`);
+
+    blueprintCells.forEach((cell, index) => {
+      if (cell.dataset.width) {
+        targetCells[index].dataset.width = cell.dataset.width;
+      }
+    });
+  }
 
   /**
    * Delete a column by index
