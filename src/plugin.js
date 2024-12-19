@@ -55,6 +55,24 @@ export default class TableBlock {
   }
 
   /**
+   * Do not sanitize <br> while inline toolbar enabled
+   *
+   * @returns {object}
+   * @public
+   */
+  static get sanitize() {
+    return {
+      br: true,
+      u: true,
+      b: true,
+      i: true,
+      del: true,
+      p: true,
+      a: true
+    }
+  }
+
+  /**
    * Render plugin`s main Element and fill it with saved data
    *
    * @param {TableConstructor} init
