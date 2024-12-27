@@ -775,7 +775,11 @@ export default class Table {
       if (column > 0 && column <= this.numberOfColumns) { // not sure this statement is needed. Maybe it should be fixed in getHoveredCell()
         this.toolboxColumn.show(() => {
           return {
-            left: `calc((100% - var(--cell-size)) / (${this.numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`
+            style: {
+              left: `calc((100% - var(--cell-size)) / (${this.numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`
+            },
+            numberOfColumns: this.numberOfColumns,
+            currentColumn: column
           };
         });
       }
@@ -789,7 +793,11 @@ export default class Table {
           const { height } = hoveredRowElement.getBoundingClientRect();
 
           return {
-            top: `${Math.ceil(fromTopBorder + height / 2)}px`
+            style: {
+              top: `${Math.ceil(fromTopBorder + height / 2)}px`
+            },
+            numberOfRows: this.numberOfRows,
+            currentRow: row
           };
         });
       }

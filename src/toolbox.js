@@ -41,6 +41,11 @@ export default class Toolbox {
 
     this.popover = null;
     this.wrapper = this.createToolbox();
+
+    this.numberOfColumns = 0;
+    this.numberOfRows = 0;
+    this.currentColumn = 0;
+    this.currentRow = 0;
   }
 
   /**
@@ -109,7 +114,30 @@ export default class Toolbox {
       items: this.items,
     });
 
-    return this.popover.render();
+    // default: 
+    // left: var(--popover-margin)
+      // top: 0
+    let styles = {};
+    if (this.currentColumn > 0) {
+      if (this.currentColumn > Math.ceil(this.numberOfColumns / 2)) {
+        styles.right = "var(--popover-margin)";
+      } else {
+        styles.left = "var(--popover-margin)";
+      }
+    } else if (this.currentRow > 0)  {
+      if (this.currentRow > Math.ceil(this.numberOfRows / 2)) {
+        styles.bottom = 0;
+      } else {
+        styles.top = 0;
+      }
+    } else {
+      styles = {
+        left: 'var(--popover-margin)',
+        top: 0 
+      }
+    }
+
+    return this.popover.render(styles);
   }
 
   /**
@@ -139,9 +167,21 @@ export default class Toolbox {
     /**
      * Set 'top' or 'left' style
      */
-    Object.entries(position).forEach(([prop, value]) => {
+    Object.entries(position.style).forEach(([prop, value]) => {
       this.wrapper.style[prop] = value;
     });
+
+    if (position.numberOfRows) {
+      // row
+      this.numberOfRows = position.numberOfRows;
+      this.currentRow = position.currentRow;
+      this.currentColumn = 0
+    } else if (position.numberOfColumns) {
+      // column 
+      this.numberOfColumns = position.numberOfColumns;
+      this.currentColumn = position.currentColumn;
+      this.currentRow = 0;
+    }
 
     this.wrapper.classList.add(Toolbox.CSS.toolboxShowed);
   }

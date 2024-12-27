@@ -45,8 +45,16 @@ export default class Popover {
    *
    * @returns {Element}
    */
-  render() {
+  render(styles) {
     this.wrapper = $.make('div', Popover.CSS.popover);
+
+    /**
+     * Set 'top' or 'bottom' style
+     * Set 'left' or 'right' style
+     */
+    Object.entries(styles).forEach(([prop, value]) => {
+      this.wrapper.style[prop] = value;
+    });
 
     this.items.forEach((item, index) => {
       const itemEl = $.make('div', Popover.CSS.item);
