@@ -114,30 +114,7 @@ export default class Toolbox {
       items: this.items,
     });
 
-    // default: 
-    // left: var(--popover-margin)
-      // top: 0
-    let styles = {};
-    if (this.currentColumn > 0) {
-      if (this.currentColumn > Math.ceil(this.numberOfColumns / 2)) {
-        styles.right = "var(--popover-margin)";
-      } else {
-        styles.left = "var(--popover-margin)";
-      }
-    } else if (this.currentRow > 0)  {
-      if (this.currentRow > Math.ceil(this.numberOfRows / 2)) {
-        styles.bottom = 0;
-      } else {
-        styles.top = 0;
-      }
-    } else {
-      styles = {
-        left: 'var(--popover-margin)',
-        top: 0 
-      }
-    }
-
-    return this.popover.render(styles);
+    return this.popover.render();
   }
 
   /**
@@ -146,6 +123,35 @@ export default class Toolbox {
    * @returns {void}
    */
   togglerClicked() {
+    // default: 
+    // left: var(--popover-margin)
+    // top: 0
+    let styles = {};
+
+    if (this.currentColumn > Math.ceil(this.numberOfColumns / 2)) {
+      styles.right = "var(--popover-margin)";
+      styles.left = "auto";
+    } else {
+      styles.left = "var(--popover-margin)";
+      styles.right = "auto";
+    }
+
+    if (this.currentRow > Math.ceil(this.numberOfRows / 2)) {
+      styles.bottom = 0;
+      styles.top = 'auto';
+    } else {
+      styles.top = 0;
+      styles.bottom = 'auto';
+    }
+
+    /**
+     * Set 'top','bottom' style
+     * Set 'left','right' style
+     */
+    Object.entries(styles).forEach(([prop, value]) => {
+      this.popover.wrapper.style[prop] = value;
+    });
+
     if (this.popover.opened) {
       this.popover.close();
       this.onClose();
@@ -163,7 +169,6 @@ export default class Toolbox {
    */
   show(computePositionMethod) {
     const position = computePositionMethod();
-
     /**
      * Set 'top' or 'left' style
      */
@@ -171,16 +176,15 @@ export default class Toolbox {
       this.wrapper.style[prop] = value;
     });
 
-    if (position.numberOfRows) {
+    console.log(position, this.cssModifier)
+    if (this.cssModifier == 'row') {
       // row
       this.numberOfRows = position.numberOfRows;
       this.currentRow = position.currentRow;
-      this.currentColumn = 0
-    } else if (position.numberOfColumns) {
+    } else if (this.cssModifier == 'column') {
       // column 
       this.numberOfColumns = position.numberOfColumns;
       this.currentColumn = position.currentColumn;
-      this.currentRow = 0;
     }
 
     this.wrapper.classList.add(Toolbox.CSS.toolboxShowed);
