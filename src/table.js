@@ -694,6 +694,10 @@ export default class Table {
     if (event.key === 'Tab') {
       event.stopPropagation();
     }
+
+    if (event.key === 'Backspace') {
+      event.stopPropagation();
+    }
   }
 
   /**
