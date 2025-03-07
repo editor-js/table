@@ -1,7 +1,7 @@
 {
   "name": "@editorjs/table",
   "description": "Table for Editor.js",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "license": "MIT",
   "repository": "https://github.com/editor-js/table",
   "files": [
