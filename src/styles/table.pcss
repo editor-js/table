@@ -18,6 +18,8 @@
   box-sizing: border-box;
   display: grid;
   grid-template-columns: calc(100% - var(--cell-size)) var(--cell-size);
+  /* Bug-fix: https://github.com/editor-js/table/issues/175 */
+  z-index: 0;
 
   &--readonly {
     grid-template-columns: 100% var(--cell-size);
