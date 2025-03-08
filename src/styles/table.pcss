@@ -72,6 +72,10 @@
     & .tc-row:first-child {
       font-weight: 600;
       border-bottom: 2px solid var(--color-border);
+      position: sticky;
+      top: 0px;
+      z-index: 2;
+      background-color: var(--color-background);
 
       & [contenteditable]:empty::before {
         content: attr(heading);
