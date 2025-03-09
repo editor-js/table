@@ -920,34 +920,6 @@ export default class Table {
    * @returns hovered cell coordinates as an integer row and column
    */
   getHoveredCell(event) {
-    // let hoveredRow = this.hoveredRow;
-    // let hoveredColumn = this.hoveredColumn;
-    // const { width, height, x, y } = $.getCursorPositionRelativeToElement(this.table, event);
-
-    // // Looking for hovered column
-    // if (x >= 0) {
-    //   hoveredColumn = this.binSearch(
-    //     this.numberOfColumns,
-    //     (mid) => this.getCell(1, mid),
-    //     ({ fromLeftBorder }) => x < fromLeftBorder,
-    //     ({ fromRightBorder }) => x > (width - fromRightBorder)
-    //   );
-    // }
-
-    // // Looking for hovered row
-    // if (y >= 0) {
-    //   hoveredRow = this.binSearch(
-    //     this.numberOfRows,
-    //     (mid) => this.getCell(mid, 1),
-    //     ({ fromTopBorder }) => y < fromTopBorder,
-    //     ({ fromBottomBorder }) => y > (height - fromBottomBorder)
-    //   );
-    // }
-
-    // return {
-    //   row: hoveredRow || this.hoveredRow,
-    //   column: hoveredColumn || this.hoveredColumn
-    // };
     const target = event.target
     let columnIndex = 0;
     const currentRow = target.parentElement
