@@ -920,24 +920,23 @@ export default class Table {
    * @returns hovered cell coordinates as an integer row and column
    */
   getHoveredCell(event) {
-    const target = event.target
-    let columnIndex = 0;
-    const currentRow = target.parentElement
-    for (columnIndex; columnIndex < currentRow.children.length; columnIndex++) {
-      if (target.parentElement?.children[columnIndex] === target) {
-        break
-      }
+    const target = event.target;
+    let hoveredRow = this.hoveredRow;
+    let hoveredColumn = this.hoveredColumn;
+
+    if (target && this.table) {
+        const currentRow = target.parentElement;
+
+        if (currentRow) {
+            hoveredColumn = Array.prototype.indexOf.call(currentRow.children, target) + 1;
+            hoveredRow = Array.prototype.indexOf.call(this.table.children, currentRow) + 1;
+        }
     }
-    let rowIndex = 0;
-    for (rowIndex; rowIndex < this.table?.children.length; rowIndex++) {
-      if (this.table?.children[rowIndex] === currentRow) {
-        break
-      }
-    }
+
     return {
-      row: rowIndex + 1,
-      column: columnIndex + 1
-    }
+        row: hoveredRow || this.hoveredRow,
+        column: hoveredColumn || this.hoveredColumn
+    };
   }
 
   /**
