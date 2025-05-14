@@ -2,3 +2,24 @@
 @import './toolboxes.pcss';
 @import './settings.pcss';
 @import './popover.pcss';
+
+html[dir=rtl] {
+  .tc-table {
+    &::after {
+      right: calc(-1 * var(--cell-size));
+      left: unset;
+    }
+
+    &::before {
+      right: 0;
+      left: unset
+    }
+  }
+
+  .tc-row {
+    &::after {
+        left: calc(var(--cell-size)* -1);
+        right: unset
+    }
+  }
+}

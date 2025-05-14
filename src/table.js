@@ -173,6 +173,10 @@ export default class Table {
     this.table.addEventListener('focusin', event => this.focusInTableListener(event));
   }
 
+  isRtl() {
+    return document.querySelector('html[dir=rtl]') !== undefined 
+  }
+
   /**
    * Configures and creates the toolbox for manipulating with columns
    *
@@ -190,7 +194,8 @@ export default class Table {
             return this.numberOfColumns === this.config.maxcols
           },
           onClick: () => {
-            this.addColumn(this.selectedColumn, true);
+            const selectedColumn = this.isRtl() ? this.selectedColumn + 1 : this.selectedColumn;
+            this.addColumn(selectedColumn, true);
             this.hideToolboxes();
           }
         },
@@ -201,7 +206,8 @@ export default class Table {
             return this.numberOfColumns === this.config.maxcols
           },
           onClick: () => {
-            this.addColumn(this.selectedColumn + 1, true);
+            const selectedColumn = this.isRtl() ? this.selectedColumn : this.selectedColumn + 1;
+            this.addColumn(selectedColumn, true);
             this.hideToolboxes();
           }
         },
@@ -774,9 +780,11 @@ export default class Table {
     if (!this.isColumnMenuShowing) {
       if (column > 0 && column <= this.numberOfColumns) { // not sure this statement is needed. Maybe it should be fixed in getHoveredCell()
         this.toolboxColumn.show(() => {
-          return {
+          return this.isRtl() ? {
+            right: `calc((100% - var(--cell-size)) / (${this.numberOfColumns} * 2) * (1 + (${column} - 1) * 2) - var(--cell-size))`
+          } : {
             left: `calc((100% - var(--cell-size)) / (${this.numberOfColumns} * 2) * (1 + (${column} - 1) * 2))`
-          };
+          }
         });
       }
     }
@@ -912,33 +920,22 @@ export default class Table {
    * @returns hovered cell coordinates as an integer row and column
    */
   getHoveredCell(event) {
+    const target = event.target;
     let hoveredRow = this.hoveredRow;
     let hoveredColumn = this.hoveredColumn;
-    const { width, height, x, y } = $.getCursorPositionRelativeToElement(this.table, event);
 
-    // Looking for hovered column
-    if (x >= 0) {
-      hoveredColumn = this.binSearch(
-        this.numberOfColumns,
-        (mid) => this.getCell(1, mid),
-        ({ fromLeftBorder }) => x < fromLeftBorder,
-        ({ fromRightBorder }) => x > (width - fromRightBorder)
-      );
-    }
+    if (target && this.table) {
+        const currentRow = target.parentElement;
 
-    // Looking for hovered row
-    if (y >= 0) {
-      hoveredRow = this.binSearch(
-        this.numberOfRows,
-        (mid) => this.getCell(mid, 1),
-        ({ fromTopBorder }) => y < fromTopBorder,
-        ({ fromBottomBorder }) => y > (height - fromBottomBorder)
-      );
+        if (currentRow) {
+            hoveredColumn = Array.prototype.indexOf.call(currentRow.children, target) + 1;
+            hoveredRow = Array.prototype.indexOf.call(this.table.children, currentRow) + 1;
+        }
     }
 
     return {
-      row: hoveredRow || this.hoveredRow,
-      column: hoveredColumn || this.hoveredColumn
+        row: hoveredRow || this.hoveredRow,
+        column: hoveredColumn || this.hoveredColumn
     };
   }
 
