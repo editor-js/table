@@ -691,7 +691,7 @@ export default class Table {
    * @param {KeyboardEvent} event - keydown event
    */
   onKeyDownListener(event) {
-    if (event.key === 'Tab') {
+    if (event.key === 'Tab' || event.key === 'Backspace') {
       event.stopPropagation();
     }
   }
