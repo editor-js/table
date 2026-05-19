@@ -1,0 +1,13 @@
+name: Publish package to NPM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish-and-notify:
+    uses: codex-team/github-workflows/.github/workflows/npm-publish-and-notify-reusable.yml@main
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT: ${{ secrets.CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT }}
