@@ -8,6 +8,9 @@ import {
   IconDirectionUpRight,
   IconDirectionDownRight,
   IconCross,
+  IconAlignCenter,
+  IconAlignLeft,
+  IconAlignRight,
   IconPlus
 } from '@codexteam/icons';
 
@@ -98,10 +101,14 @@ export default class Table {
      */
     this.resize();
 
+    this.data.columnAlign ||= this.initAlign()
+
     /**
      * Fill the table with data
      */
     this.fill();
+
+    this.setAllColumnAlign();
 
     /**
      * The cell in which the focus is currently located, if 0 and 0 then there is no focus
@@ -202,6 +209,39 @@ export default class Table {
           },
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
+            this.hideToolboxes();
+          }
+        },
+        {
+          label: this.api.i18n.t('Left'),
+          icon: IconAlignLeft,
+          hideIf: () => {
+            return false;
+          },
+          onClick: () => {
+            this.setColumnAlign(this.selectedColumn, "left");
+            this.hideToolboxes();
+          }
+        },
+        {
+          label: this.api.i18n.t('Center'),
+          icon: IconAlignCenter,
+          hideIf: () => {
+            return false;
+          },
+          onClick: () => {
+            this.setColumnAlign(this.selectedColumn, "center");
+            this.hideToolboxes();
+          }
+        },
+        {
+          label: this.api.i18n.t('Right'),
+          icon: IconAlignRight,
+          hideIf: () => {
+            return false;
+          },
+          onClick: () => {
+            this.setColumnAlign(this.selectedColumn, "right");
             this.hideToolboxes();
           }
         },
@@ -361,6 +401,7 @@ export default class Table {
    * @param {boolean} [setFocus] - pass true to focus the first cell
    */
   addColumn(columnIndex = -1, setFocus = false) {
+
     let numberOfColumns = this.numberOfColumns;
      /**
       * Check if the number of columns has reached the maximum allowed columns specified in the configuration,
@@ -397,6 +438,10 @@ export default class Table {
       }
     }
 
+    if (columnIndex > -1) {
+      this.data.columnAlign = this.data.columnAlign.toSpliced(columnIndex - 1, 0, "left")
+    }
+
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1 && addColButton ){
       addColButton.classList.add(CSS.addColumnDisabled);
@@ -428,7 +473,7 @@ export default class Table {
      /**
       * Check if the number of rows has reached the maximum allowed rows specified in the configuration,
       * and if so, exit the function to prevent adding more columns beyond the limit.
-      */  
+      */
     if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
       return;
     }
@@ -475,10 +520,12 @@ export default class Table {
 
       cell.remove();
     }
+    this.data.columnAlign.splice(index - 1, 1)
     const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
     if (addColButton) {
       addColButton.classList.remove(CSS.addColumnDisabled);
     }
+
   }
 
   /**
@@ -1000,6 +1047,26 @@ export default class Table {
     }
 
     return data;
+  }
+
+  setColumnAlign(columnIndex, align) {
+    this.data.columnAlign[columnIndex - 1] = align
+    for (let rowIndex = 1; rowIndex <= this.numberOfRows; rowIndex++) {
+      const cell = this.getCell(rowIndex, columnIndex);
+      cell.classList.remove("align-left", "align-right", "align-center")
+      cell.classList.add(`align-${align}`)
+    }
+  }
+
+  setAllColumnAlign() {
+    for (let colIndex = 1; colIndex <= this.numberOfColumns; colIndex++) {
+      const align = this.data.columnAlign[colIndex - 1]
+      this.setColumnAlign(colIndex, align)
+    }
+  }
+
+  initAlign() {
+    return Array(this.numberOfColumns).fill("left")
   }
 
   /**

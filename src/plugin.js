@@ -64,6 +64,7 @@ export default class TableBlock {
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
+      columnAlign: data.columnAlign,
       withHeadings: this.getConfig('withHeadings', false, data),
       stretched: this.getConfig('stretched', false, data),
       content: data && data.content ? data.content : []
@@ -131,16 +132,37 @@ export default class TableBlock {
           this.data.withHeadings = false;
           this.table.setHeadingsSetting(this.data.withHeadings);
         }
-      }, {
-        label: this.data.stretched ? this.api.i18n.t('Collapse') : this.api.i18n.t('Stretch'),
-        icon: this.data.stretched ? IconCollapse : IconStretch,
+      },
+      {
+        label: this.api.i18n.t('align left'),
+        icon: "<",
+        isActive: this.data.align == "left",
         closeOnActivate: true,
         toggle: true,
         onActivate: () => {
-          this.data.stretched = !this.data.stretched;
-          this.block.stretched = this.data.stretched;
+          this.data.align = "left";
         }
-      }
+      },
+      {
+        label: this.api.i18n.t('align center'),
+        icon: ">|<",
+        isActive: this.data.align == "center",
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.align = "center";
+        }
+      },
+      {
+        label: this.api.i18n.t('stretch'),
+        icon: "<|>",
+        isActive: this.data.align == "stretch",
+        closeOnActivate: true,
+        toggle: true,
+        onActivate: () => {
+          this.data.align = "stretch";
+        }
+      },
     ];
   }
   /**
@@ -152,8 +174,9 @@ export default class TableBlock {
     const tableContent = this.table.getData();
 
     const result = {
+      align: this.data.align,
+      columnAlign: this.data.columnAlign,
       withHeadings: this.data.withHeadings,
-      stretched: this.data.stretched,
       content: tableContent
     };
 
