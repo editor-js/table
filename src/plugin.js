@@ -2,6 +2,9 @@ import Table from './table';
 import * as $ from './utils/dom';
 
 import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch, IconCollapse } from '@codexteam/icons';
+/** 
+ * @typedef {import('@editorjs/editorjs').BlockAPI} BlockAPI 
+ */
 /**
  * @typedef {object} TableData - configuration that the user can set for the table
  * @property {number} rows - number of rows in the table
