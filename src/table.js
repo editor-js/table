@@ -685,13 +685,13 @@ export default class Table {
   };
 
   /**
-   * Prevents tab keydown event from bubbling
+   * Prevents tab/backspace keydown event from bubbling
    * so that it only works inside the table
    *
    * @param {KeyboardEvent} event - keydown event
    */
   onKeyDownListener(event) {
-    if (event.key === 'Tab') {
+    if (event.key === 'Tab' || event.key === 'Backspace') {
       event.stopPropagation();
     }
   }
