@@ -2,6 +2,9 @@ import Table from './table';
 import * as $ from './utils/dom';
 
 import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch, IconCollapse } from '@codexteam/icons';
+/** 
+ * @typedef {import('@editorjs/editorjs').BlockAPI} BlockAPI 
+ */
 /**
  * @typedef {object} TableData - configuration that the user can set for the table
  * @property {number} rows - number of rows in the table
@@ -25,6 +28,7 @@ import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch
  * @property {TableConfig} config - user config for Tool
  * @property {object} api - Editor.js API
  * @property {boolean} readOnly - read-only mode flag
+ * @property {BlockAPI} block - interact with current block
  */
 /**
  * @typedef {import('@editorjs/editorjs').PasteEvent} PasteEvent
