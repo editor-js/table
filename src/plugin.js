@@ -109,6 +109,18 @@ export default class TableBlock {
   }
 
   /**
+   * Hook called after the block is fully rendered and mounted
+   * Set this.block.stretched here as block is not initialized in render().
+   *
+   * @returns {void}
+   */
+  rendered() {
+    if (this.block) {
+      this.block.stretched = !!this.data.stretched;
+    }
+  }
+
+  /**
    * Returns plugin settings
    *
    * @returns {Array}
@@ -123,7 +135,7 @@ export default class TableBlock {
         toggle: true,
         onActivate: () => {
           this.data.withHeadings = true;
-          this.table.setHeadingsSetting(this.data.withHeadings);
+          this._updateTunes();
         }
       }, {
         label: this.api.i18n.t('Without headings'),
@@ -133,7 +145,7 @@ export default class TableBlock {
         toggle: true,
         onActivate: () => {
           this.data.withHeadings = false;
-          this.table.setHeadingsSetting(this.data.withHeadings);
+          this._updateTunes();
         }
       }, {
         label: this.data.stretched ? this.api.i18n.t('Collapse') : this.api.i18n.t('Stretch'),
@@ -142,11 +154,26 @@ export default class TableBlock {
         toggle: true,
         onActivate: () => {
           this.data.stretched = !this.data.stretched;
-          this.block.stretched = this.data.stretched;
+          this._updateTunes();
         }
       }
     ];
   }
+
+  /**
+   * Handle updating UI for tunes
+   * 
+   * @returns {void}
+   */
+  _updateTunes() {
+    this.table.setHeadingsSetting(this.data.withHeadings);
+
+    if (this.block) {
+      this.block.stretched = !!this.data.stretched;
+      this.block.dispatchChange();
+    }
+  }
+
   /**
    * Extract table data from the view
    *
@@ -226,6 +253,7 @@ export default class TableBlock {
     /** Update Tool's data */
     this.data = {
       withHeadings: firstRowHeading !== null,
+      stretched: false,
       content
     };
 
