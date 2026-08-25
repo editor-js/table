@@ -50,6 +50,7 @@ export default class Popover {
 
     this.items.forEach((item, index) => {
       const itemEl = $.make('div', Popover.CSS.item);
+      itemEl.setAttribute('data-item-name', item.name);
       const icon = $.make('div', Popover.CSS.itemIcon, {
         innerHTML: item.icon
       });

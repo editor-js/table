@@ -59,6 +59,24 @@ export default class TableBlock {
   }
 
   /**
+   * Do not sanitize <br> while inline toolbar enabled
+   *
+   * @returns {object}
+   * @public
+   */
+  static get sanitize() {
+    return {
+      br: true,
+      u: true,
+      b: true,
+      i: true,
+      del: true,
+      p: true,
+      a: true
+    }
+  }
+
+  /**
    * Render plugin`s main Element and fill it with saved data
    *
    * @param {TableConstructor} init
@@ -117,6 +135,7 @@ export default class TableBlock {
     return [
       {
         label: this.api.i18n.t('With headings'),
+        name: 'with-headings',
         icon: IconTableWithHeadings,
         isActive: this.data.withHeadings,
         closeOnActivate: true,
@@ -127,6 +146,7 @@ export default class TableBlock {
         }
       }, {
         label: this.api.i18n.t('Without headings'),
+        name: 'without-headings',
         icon: IconTableWithoutHeadings,
         isActive: !this.data.withHeadings,
         closeOnActivate: true,
