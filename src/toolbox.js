@@ -41,6 +41,11 @@ export default class Toolbox {
 
     this.popover = null;
     this.wrapper = this.createToolbox();
+
+    this.numberOfColumns = 0;
+    this.numberOfRows = 0;
+    this.currentColumn = 0;
+    this.currentRow = 0;
   }
 
   /**
@@ -118,6 +123,35 @@ export default class Toolbox {
    * @returns {void}
    */
   togglerClicked() {
+    // default: 
+    // left: var(--popover-margin)
+    // top: 0
+    let styles = {};
+
+    if (this.currentColumn > Math.ceil(this.numberOfColumns / 2)) {
+      styles.right = "var(--popover-margin)";
+      styles.left = "auto";
+    } else {
+      styles.left = "var(--popover-margin)";
+      styles.right = "auto";
+    }
+
+    if (this.currentRow > Math.ceil(this.numberOfRows / 2)) {
+      styles.bottom = 0;
+      styles.top = 'auto';
+    } else {
+      styles.top = 0;
+      styles.bottom = 'auto';
+    }
+
+    /**
+     * Set 'top','bottom' style
+     * Set 'left','right' style
+     */
+    Object.entries(styles).forEach(([prop, value]) => {
+      this.popover.wrapper.style[prop] = value;
+    });
+
     if (this.popover.opened) {
       this.popover.close();
       this.onClose();
@@ -135,13 +169,23 @@ export default class Toolbox {
    */
   show(computePositionMethod) {
     const position = computePositionMethod();
-
     /**
      * Set 'top' or 'left' style
      */
-    Object.entries(position).forEach(([prop, value]) => {
+    Object.entries(position.style).forEach(([prop, value]) => {
       this.wrapper.style[prop] = value;
     });
+
+    console.log(position, this.cssModifier)
+    if (this.cssModifier == 'row') {
+      // row
+      this.numberOfRows = position.numberOfRows;
+      this.currentRow = position.currentRow;
+    } else if (this.cssModifier == 'column') {
+      // column 
+      this.numberOfColumns = position.numberOfColumns;
+      this.currentColumn = position.currentColumn;
+    }
 
     this.wrapper.classList.add(Toolbox.CSS.toolboxShowed);
   }
